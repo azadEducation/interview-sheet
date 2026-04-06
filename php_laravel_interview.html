@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP & Laravel Interview Revision Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --php-purple: #8892BF;
+    --php-dark: #4F5B93;
+    --laravel-red: #FF2D20;
+    --laravel-dark: #C0392B;
+    --bg: #0D0F1A;
+    --card-bg: #12152A;
+    --card-border: #1E2240;
+    --text: #E8EAF6;
+    --muted: #7B83B0;
+    --code-bg: #0A0C18;
+    --code-border: #1A1E38;
+    --accent-green: #4CAF50;
+    --accent-yellow: #FFD54F;
+    --glow-php: rgba(136,146,191,0.15);
+    --glow-laravel: rgba(255,45,32,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(136,146,191,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(136,146,191,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: 60px 20px 40px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(136,146,191,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-php { background: rgba(136,146,191,0.15); color: var(--php-purple); border: 1px solid rgba(136,146,191,0.3); }
+  .badge-laravel { background: rgba(255,45,32,0.12); color: var(--laravel-red); border: 1px solid rgba(255,45,32,0.3); }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero h1 .php { color: var(--php-purple); }
+  .hero h1 .amp { color: var(--muted); }
+  .hero h1 .laravel { color: var(--laravel-red); }
+
+  .hero-sub {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .hero-count strong { color: var(--text); }
+
+  /* Nav / filter tabs */
+  .tabs-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,15,26,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 14px 20px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    max-width: 900px;
+    margin: 0 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-wrap: wrap;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); border-color: var(--muted); }
+  .tab.active-php { background: rgba(136,146,191,0.15); color: var(--php-purple); border-color: var(--php-purple); }
+  .tab.active-laravel { background: rgba(255,45,32,0.12); color: var(--laravel-red); border-color: var(--laravel-red); }
+  .tab.active-all { background: rgba(255,213,79,0.1); color: var(--accent-yellow); border-color: var(--accent-yellow); }
+
+  /* Main layout */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Section header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 40px 0 20px;
+  }
+  .section-header:first-child { margin-top: 0; }
+
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-php { background: rgba(136,146,191,0.15); }
+  .icon-laravel { background: rgba(255,45,32,0.1); }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--card-border);
+  }
+
+  /* Q&A Card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+  .card:hover { border-color: var(--muted); }
+  .card.php-card:hover { border-color: rgba(136,146,191,0.5); box-shadow: 0 0 20px var(--glow-php); }
+  .card.laravel-card:hover { border-color: rgba(255,45,32,0.4); box-shadow: 0 0 20px var(--glow-laravel); }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .php-card .q-num { background: rgba(136,146,191,0.15); color: var(--php-purple); }
+  .laravel-card .q-num { background: rgba(255,45,32,0.1); color: var(--laravel-red); }
+
+  .q-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .q-toggle {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .card.open .q-toggle { transform: rotate(180deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 18px 18px 18px;
+    border-top: 1px solid var(--card-border);
+    padding-top: 16px;
+  }
+  .card.open .card-body { display: block; }
+
+  .ans-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .ans-text {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: #C5C9E0;
+  }
+
+  /* Code block */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #A8B4E0;
+  }
+  pre .kw { color: #C792EA; }
+  pre .fn { color: #82AAFF; }
+  pre .str { color: #C3E88D; }
+  pre .cm { color: #546E7A; font-style: italic; }
+  pre .num { color: #F78C6C; }
+  pre .var { color: #F07178; }
+  pre .cls { color: #FFCB6B; }
+
+  /* Comparison table */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .compare-table th {
+    background: rgba(255,255,255,0.05);
+    padding: 8px 12px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--card-border);
+  }
+  .compare-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #C5C9E0;
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table .label-col { font-weight: 600; color: var(--text); width: 35%; }
+
+  /* Pill list */
+  .pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(136,146,191,0.1);
+    color: var(--php-purple);
+    border: 1px solid rgba(136,146,191,0.2);
+  }
+  .pill-red {
+    background: rgba(255,45,32,0.08);
+    color: #FF7A73;
+    border-color: rgba(255,45,32,0.25);
+  }
+  .pill-green {
+    background: rgba(76,175,80,0.1);
+    color: #81C784;
+    border-color: rgba(76,175,80,0.25);
+  }
+
+  /* Hidden sections */
+  .section-group { }
+  .section-group.hidden { display: none; }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--card-border);
+    border-radius: 2px;
+    margin-top: 10px;
+  }
+  .progress-bar-fill {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--php-purple), var(--laravel-red));
+    width: 0;
+    transition: width 0.5s ease;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    margin: 0 0 30px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1;
+    min-width: 120px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+  .stat-num.php { color: var(--php-purple); }
+  .stat-num.laravel { color: var(--laravel-red); }
+  .stat-num.total { color: var(--accent-yellow); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Tip box */
+  .tip-box {
+    background: rgba(255,213,79,0.05);
+    border: 1px solid rgba(255,213,79,0.2);
+    border-left: 3px solid var(--accent-yellow);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: #C5C9E0;
+  }
+  .tip-box strong { color: var(--accent-yellow); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2rem; }
+    .stats-row { flex-direction: column; }
+    .compare-table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge-row">
+    <span class="badge badge-php">🐘 PHP</span>
+    <span class="badge badge-laravel">🔴 Laravel</span>
+  </div>
+  <h1>
+    <span class="php">PHP</span>
+    <span class="amp"> & </span>
+    <span class="laravel">Laravel</span><br>
+    Interview Revision Sheet
+  </h1>
+  <p class="hero-sub">120+ Questions Every Backend Developer Should Know</p>
+  <div class="hero-count">
+    🚀 <strong>PHP Fundamentals · OOP · Laravel Core · Auth · Queues · System Design</strong>
+  </div>
+  <div class="progress-bar-wrap" style="max-width:500px;margin:16px auto 0;">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab active-all" onclick="filterSection('all', this)">All Topics</button>
+    <button class="tab" onclick="filterSection('php-basics', this)">PHP Basics</button>
+    <button class="tab" onclick="filterSection('oop', this)">OOP</button>
+    <button class="tab" onclick="filterSection('php-advanced', this)">PHP Advanced</button>
+    <button class="tab" onclick="filterSection('laravel-core', this)">Laravel Core</button>
+    <button class="tab" onclick="filterSection('laravel-auth', this)">Auth & Security</button>
+    <button class="tab" onclick="filterSection('laravel-advanced', this)">Advanced Laravel</button>
+    <button class="tab" onclick="filterSection('system', this)">System Design</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num php">60</div>
+      <div class="stat-label">PHP Questions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num laravel">60</div>
+      <div class="stat-label">Laravel Questions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num total">120+</div>
+      <div class="stat-label">Total Questions</div>
+    </div>
+  </div>
+
+  <!-- ===== PHP BASICS ===== -->
+  <div class="section-group" data-section="php-basics">
+    <div class="section-header">
+      <div class="section-icon icon-php">🐘</div>
+      <div class="section-title">PHP Fundamentals</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q1</span>
+        <span class="q-text">What is PHP?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">PHP (Hypertext Preprocessor) is a server-side scripting language designed for web development. It runs on the server and generates HTML sent to the browser.</div>
+        <pre><span class="cm">// Basic PHP example</span>
+<span class="kw">&lt;?php</span>
+<span class="fn">echo</span> <span class="str">"Hello, World!"</span>;
+<span class="kw">?&gt;</span></pre>
+        <div class="pill-list">
+          <span class="pill">Server-side</span>
+          <span class="pill">Open source</span>
+          <span class="pill">Embedded in HTML</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q2</span>
+        <span class="q-text">What are PHP data types?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">PHP supports 8 primitive data types:</div>
+        <table class="compare-table">
+          <tr><th>Type</th><th>Example</th></tr>
+          <tr><td class="label-col">String</td><td><code>"Hello"</code></td></tr>
+          <tr><td class="label-col">Integer</td><td><code>42</code></td></tr>
+          <tr><td class="label-col">Float</td><td><code>3.14</code></td></tr>
+          <tr><td class="label-col">Boolean</td><td><code>true / false</code></td></tr>
+          <tr><td class="label-col">Array</td><td><code>[1, 2, 3]</code></td></tr>
+          <tr><td class="label-col">Object</td><td><code>new MyClass()</code></td></tr>
+          <tr><td class="label-col">NULL</td><td><code>null</code></td></tr>
+          <tr><td class="label-col">Resource</td><td><code>fopen()</code></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q3</span>
+        <span class="q-text">What is the difference between == and ===?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th>Operator</th><th>Comparison</th><th>Example</th></tr>
+          <tr><td class="label-col">==</td><td>Value only (loose)</td><td><code>0 == "0" → true</code></td></tr>
+          <tr><td class="label-col">===</td><td>Value + type (strict)</td><td><code>0 === "0" → false</code></td></tr>
+        </table>
+        <div class="tip-box"><strong>💡 Best Practice:</strong> Always use <code>===</code> to avoid unexpected type coercion bugs.</div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q4</span>
+        <span class="q-text">What are PHP superglobals?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Superglobals are built-in variables always accessible regardless of scope.</div>
+        <div class="pill-list">
+          <span class="pill">$_GET</span>
+          <span class="pill">$_POST</span>
+          <span class="pill">$_SESSION</span>
+          <span class="pill">$_COOKIE</span>
+          <span class="pill">$_SERVER</span>
+          <span class="pill">$_FILES</span>
+          <span class="pill">$_ENV</span>
+          <span class="pill">$GLOBALS</span>
+        </div>
+        <pre><span class="cm">// Access query param ?name=John</span>
+<span class="var">$name</span> = <span class="var">$_GET</span>[<span class="str">'name'</span>];
+<span class="fn">echo</span> <span class="var">$name</span>; <span class="cm">// John</span></pre>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q5</span>
+        <span class="q-text">What is the difference between include and require?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th></th><th>include</th><th>require</th></tr>
+          <tr><td class="label-col">On failure</td><td>Warning, continues</td><td>Fatal error, stops</td></tr>
+          <tr><td class="label-col">Use when</td><td>File is optional</td><td>File is mandatory</td></tr>
+        </table>
+        <pre><span class="fn">include</span> <span class="str">'header.php'</span>;  <span class="cm">// warning if missing</span>
+<span class="fn">require</span> <span class="str">'config.php'</span>;  <span class="cm">// fatal if missing</span>
+<span class="fn">require_once</span> <span class="str">'db.php'</span>; <span class="cm">// included only once</span></pre>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q6</span>
+        <span class="q-text">What are PHP arrays and their types?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <pre><span class="cm">// Indexed array</span>
+<span class="var">$fruits</span> = [<span class="str">'apple'</span>, <span class="str">'banana'</span>, <span class="str">'mango'</span>];
+
+<span class="cm">// Associative array</span>
+<span class="var">$user</span> = [<span class="str">'name'</span> => <span class="str">'John'</span>, <span class="str">'age'</span> => <span class="num">25</span>];
+
+<span class="cm">// Multidimensional array</span>
+<span class="var">$matrix</span> = [[<span class="num">1</span>,<span class="num">2</span>], [<span class="num">3</span>,<span class="num">4</span>]];</pre>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q7</span>
+        <span class="q-text">What is a Closure / Anonymous Function?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">A closure is a function without a name. Used for callbacks, array functions, and more.</div>
+        <pre><span class="var">$greet</span> = <span class="kw">function</span>(<span class="var">$name</span>) {
+    <span class="fn">echo</span> <span class="str">"Hello, {$name}"</span>;
+};
+
+<span class="var">$greet</span>(<span class="str">'Azad'</span>); <span class="cm">// Hello, Azad</span>
+
+<span class="cm">// Using 'use' to capture outer variables</span>
+<span class="var">$prefix</span> = <span class="str">"Mr."</span>;
+<span class="var">$greet</span> = <span class="kw">function</span>(<span class="var">$name</span>) <span class="kw">use</span> (<span class="var">$prefix</span>) {
+    <span class="fn">echo</span> <span class="str">"{$prefix} {$name}"</span>;
+};</pre>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q8</span>
+        <span class="q-text">What are common string functions in PHP?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <pre><span class="fn">strlen</span>(<span class="str">"hello"</span>);            <span class="cm">// 5</span>
+<span class="fn">strtoupper</span>(<span class="str">"hello"</span>);       <span class="cm">// HELLO</span>
+<span class="fn">str_replace</span>(<span class="str">"a"</span>,<span class="str">"b"</span>,<span class="str">"cat"</span>); <span class="cm">// cbt</span>
+<span class="fn">substr</span>(<span class="str">"hello"</span>, <span class="num">0</span>, <span class="num">3</span>);     <span class="cm">// hel</span>
+<span class="fn">trim</span>(<span class="str">"  hello  "</span>);         <span class="cm">// hello</span>
+<span class="fn">explode</span>(<span class="str">","</span>, <span class="str">"a,b,c"</span>);     <span class="cm">// ['a','b','c']</span>
+<span class="fn">implode</span>(<span class="str">","</span>, [<span class="str">"a"</span>,<span class="str">"b"</span>]);    <span class="cm">// a,b</span></pre>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q9</span>
+        <span class="q-text">What is type juggling and type casting?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">PHP automatically converts types (type juggling). You can manually cast types.</div>
+        <pre><span class="cm">// Type juggling (automatic)</span>
+<span class="var">$x</span> = <span class="str">"5"</span> + <span class="num">3</span>; <span class="cm">// 8 (string becomes int)</span>
+
+<span class="cm">// Type casting (manual)</span>
+<span class="var">$str</span> = (<span class="kw">string</span>) <span class="num">42</span>;    <span class="cm">// "42"</span>
+<span class="var">$int</span> = (<span class="kw">int</span>) <span class="str">"10px"</span>;   <span class="cm">// 10</span>
+<span class="var">$bool</span> = (<span class="kw">bool</span>) <span class="num">0</span>;      <span class="cm">// false</span></pre>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q10</span>
+        <span class="q-text">What is the null coalescing operator ??</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Returns the left operand if it exists and is not null; otherwise returns the right.</div>
+        <pre><span class="var">$name</span> = <span class="var">$_GET</span>[<span class="str">'name'</span>] ?? <span class="str">'Guest'</span>;
+<span class="cm">// Old way: isset($_GET['name']) ? $_GET['name'] : 'Guest'</span>
+
+<span class="cm">// Chaining</span>
+<span class="var">$val</span> = <span class="var">$a</span> ?? <span class="var">$b</span> ?? <span class="str">'default'</span>;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== OOP ===== -->
+  <div class="section-group" data-section="oop">
+    <div class="section-header">
+      <div class="section-icon icon-php">🔷</div>
+      <div class="section-title">Object-Oriented PHP</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q11</span>
+        <span class="q-text">What are the 4 pillars of OOP?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th>Pillar</th><th>Meaning</th></tr>
+          <tr><td class="label-col">Encapsulation</td><td>Bundling data + methods, restricting direct access</td></tr>
+          <tr><td class="label-col">Inheritance</td><td>Child class inherits from parent class</td></tr>
+          <tr><td class="label-col">Polymorphism</td><td>Same method behaves differently in different classes</td></tr>
+          <tr><td class="label-col">Abstraction</td><td>Hiding implementation, exposing only interface</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q12</span>
+        <span class="q-text">What is the difference between abstract class and interface?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th></th><th>Abstract Class</th><th>Interface</th></tr>
+          <tr><td class="label-col">Methods</td><td>Can have concrete methods</td><td>Only abstract (until PHP 8)</td></tr>
+          <tr><td class="label-col">Properties</td><td>Yes</td><td>Constants only</td></tr>
+          <tr><td class="label-col">Extends</td><td>One only</td><td>Multiple</td></tr>
+          <tr><td class="label-col">Keyword</td><td>extends</td><td>implements</td></tr>
+        </table>
+        <pre><span class="kw">abstract class</span> <span class="cls">Animal</span> {
+    <span class="kw">abstract public function</span> <span class="fn">speak</span>();
+    <span class="kw">public function</span> <span class="fn">breathe</span>() { <span class="fn">echo</span> <span class="str">"breathing"</span>; }
+}
+
+<span class="kw">interface</span> <span class="cls">Flyable</span> {
+    <span class="kw">public function</span> <span class="fn">fly</span>();
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q13</span>
+        <span class="q-text">What are access modifiers?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th>Modifier</th><th>Accessible from</th></tr>
+          <tr><td class="label-col">public</td><td>Anywhere</td></tr>
+          <tr><td class="label-col">protected</td><td>Class + child classes</td></tr>
+          <tr><td class="label-col">private</td><td>Class only</td></tr>
+        </table>
+        <pre><span class="kw">class</span> <span class="cls">User</span> {
+    <span class="kw">public</span>    <span class="var">$name</span>;
+    <span class="kw">protected</span> <span class="var">$email</span>;
+    <span class="kw">private</span>   <span class="var">$password</span>;
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q14</span>
+        <span class="q-text">What is a Trait in PHP?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Traits allow code reuse in multiple classes without inheritance. PHP only supports single inheritance, but a class can use multiple traits.</div>
+        <pre><span class="kw">trait</span> <span class="cls">Logging</span> {
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="var">$msg</span>) {
+        <span class="fn">echo</span> <span class="str">"[LOG] {$msg}"</span>;
+    }
+}
+
+<span class="kw">class</span> <span class="cls">UserService</span> {
+    <span class="kw">use</span> <span class="cls">Logging</span>;
+}
+
+<span class="var">$svc</span> = <span class="kw">new</span> <span class="cls">UserService</span>();
+<span class="var">$svc</span>-><span class="fn">log</span>(<span class="str">"User created"</span>);</pre>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q15</span>
+        <span class="q-text">What is static vs instance method?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th></th><th>Static</th><th>Instance</th></tr>
+          <tr><td class="label-col">Access</td><td>ClassName::method()</td><td>$obj->method()</td></tr>
+          <tr><td class="label-col">$this</td><td>Not available</td><td>Available</td></tr>
+          <tr><td class="label-col">Object needed</td><td>No</td><td>Yes</td></tr>
+        </table>
+        <pre><span class="kw">class</span> <span class="cls">Math</span> {
+    <span class="kw">public static function</span> <span class="fn">add</span>(<span class="var">$a</span>, <span class="var">$b</span>) {
+        <span class="kw">return</span> <span class="var">$a</span> + <span class="var">$b</span>;
+    }
+}
+<span class="fn">echo</span> <span class="cls">Math</span>::<span class="fn">add</span>(<span class="num">2</span>, <span class="num">3</span>); <span class="cm">// 5</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PHP ADVANCED ===== -->
+  <div class="section-group" data-section="php-advanced">
+    <div class="section-header">
+      <div class="section-icon icon-php">⚡</div>
+      <div class="section-title">PHP Advanced</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q16</span>
+        <span class="q-text">What is Composer?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Composer is PHP's dependency manager — like npm for Node.js.</div>
+        <pre><span class="cm"># Install a package</span>
+composer require guzzlehttp/guzzle
+
+<span class="cm"># Install all from composer.json</span>
+composer install
+
+<span class="cm"># Update packages</span>
+composer update</pre>
+        <div class="tip-box"><strong>💡 Tip:</strong> <code>composer.json</code> stores dependencies. <code>composer.lock</code> locks exact versions.</div>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q17</span>
+        <span class="q-text">What is PSR and autoloading?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">PSR (PHP Standards Recommendations) are coding standards. PSR-4 defines autoloading: namespace maps to file path.</div>
+        <pre><span class="cm">// Namespace: App\Models\User</span>
+<span class="cm">// File:      app/Models/User.php</span>
+
+<span class="cm">// Composer autoload (composer.json)</span>
+{
+  <span class="str">"autoload"</span>: {
+    <span class="str">"psr-4"</span>: { <span class="str">"App\\"</span>: <span class="str">"app/"</span> }
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q18</span>
+        <span class="q-text">What is exception handling in PHP?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <pre><span class="kw">try</span> {
+    <span class="kw">if</span> (!<span class="var">$file</span>) {
+        <span class="kw">throw new</span> <span class="cls">Exception</span>(<span class="str">"File not found"</span>);
+    }
+} <span class="kw">catch</span> (<span class="cls">Exception</span> <span class="var">$e</span>) {
+    <span class="fn">echo</span> <span class="var">$e</span>-><span class="fn">getMessage</span>();
+} <span class="kw">finally</span> {
+    <span class="cm">// Always runs</span>
+    <span class="fn">echo</span> <span class="str">"Done"</span>;
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q19</span>
+        <span class="q-text">What are PHP Generators?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Generators allow iteration without building the full array in memory. Uses <code>yield</code>.</div>
+        <pre><span class="kw">function</span> <span class="fn">xrange</span>(<span class="var">$start</span>, <span class="var">$end</span>) {
+    <span class="kw">for</span> (<span class="var">$i</span> = <span class="var">$start</span>; <span class="var">$i</span> <= <span class="var">$end</span>; <span class="var">$i</span>++) {
+        <span class="kw">yield</span> <span class="var">$i</span>;
+    }
+}
+
+<span class="kw">foreach</span> (<span class="fn">xrange</span>(<span class="num">1</span>, <span class="num">1000000</span>) <span class="kw">as</span> <span class="var">$num</span>) {
+    <span class="cm">// Memory efficient!</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="card php-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q20</span>
+        <span class="q-text">What is Dependency Injection?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Passing dependencies from outside instead of creating them inside. Makes code testable and decoupled.</div>
+        <pre><span class="cm">// Without DI (tightly coupled)</span>
+<span class="kw">class</span> <span class="cls">UserService</span> {
+    <span class="kw">private</span> <span class="var">$mailer</span>;
+    <span class="kw">public function</span> <span class="fn">__construct</span>() {
+        <span class="var">$this</span>-><span class="var">mailer</span> = <span class="kw">new</span> <span class="cls">Mailer</span>(); <span class="cm">// ❌</span>
+    }
+}
+
+<span class="cm">// With DI (loosely coupled)</span>
+<span class="kw">class</span> <span class="cls">UserService</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private</span> <span class="cls">Mailer</span> <span class="var">$mailer</span>) {} <span class="cm">// ✅</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LARAVEL CORE ===== -->
+  <div class="section-group" data-section="laravel-core">
+    <div class="section-header">
+      <div class="section-icon icon-laravel">🔴</div>
+      <div class="section-title">Laravel Core</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q21 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q21</span>
+        <span class="q-text">What is Laravel?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Laravel is a PHP MVC web framework with elegant syntax, built-in tools for routing, ORM, queues, auth, and more.</div>
+        <pre><span class="cm"># Create new Laravel project</span>
+composer create-project laravel/laravel myapp
+
+<span class="cm"># OR via Laravel installer</span>
+laravel new myapp</pre>
+        <div class="pill-list">
+          <span class="pill-red">MVC Pattern</span>
+          <span class="pill-red">Eloquent ORM</span>
+          <span class="pill-red">Artisan CLI</span>
+          <span class="pill-red">Blade Templates</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q22 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q22</span>
+        <span class="q-text">What is the MVC pattern in Laravel?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th>Layer</th><th>Responsibility</th><th>Example</th></tr>
+          <tr><td class="label-col">Model</td><td>Database logic</td><td>User.php</td></tr>
+          <tr><td class="label-col">View</td><td>UI / Templates</td><td>users.blade.php</td></tr>
+          <tr><td class="label-col">Controller</td><td>Business logic</td><td>UserController.php</td></tr>
+        </table>
+        <div class="tip-box"><strong>Flow:</strong> Request → Route → Controller → Model → View → Response</div>
+      </div>
+    </div>
+
+    <!-- Q23 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q23</span>
+        <span class="q-text">What is Eloquent ORM?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Eloquent is Laravel's Active Record ORM. Each model maps to a database table.</div>
+        <pre><span class="cm">// Retrieve all users</span>
+<span class="cls">User</span>::<span class="fn">all</span>();
+
+<span class="cm">// Find by ID</span>
+<span class="cls">User</span>::<span class="fn">find</span>(<span class="num">1</span>);
+
+<span class="cm">// Where clause</span>
+<span class="cls">User</span>::<span class="fn">where</span>(<span class="str">'active'</span>, <span class="num">1</span>)-><span class="fn">get</span>();
+
+<span class="cm">// Create</span>
+<span class="cls">User</span>::<span class="fn">create</span>([<span class="str">'name'</span> => <span class="str">'John'</span>]);
+
+<span class="cm">// Update</span>
+<span class="cls">User</span>::<span class="fn">find</span>(<span class="num">1</span>)-><span class="fn">update</span>([<span class="str">'name'</span> => <span class="str">'Jane'</span>]);
+
+<span class="cm">// Delete</span>
+<span class="cls">User</span>::<span class="fn">find</span>(<span class="num">1</span>)-><span class="fn">delete</span>();</pre>
+      </div>
+    </div>
+
+    <!-- Q24 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q24</span>
+        <span class="q-text">What are Eloquent Relationships?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="pill-list">
+          <span class="pill-red">hasOne</span>
+          <span class="pill-red">hasMany</span>
+          <span class="pill-red">belongsTo</span>
+          <span class="pill-red">belongsToMany</span>
+          <span class="pill-red">hasManyThrough</span>
+          <span class="pill-red">morphMany</span>
+        </div>
+        <pre><span class="cm">// One-to-Many: User has many Posts</span>
+<span class="kw">class</span> <span class="cls">User</span> <span class="kw">extends</span> <span class="cls">Model</span> {
+    <span class="kw">public function</span> <span class="fn">posts</span>() {
+        <span class="kw">return</span> <span class="var">$this</span>-><span class="fn">hasMany</span>(<span class="cls">Post</span>::<span class="kw">class</span>);
+    }
+}
+
+<span class="cm">// Usage with eager loading (avoids N+1)</span>
+<span class="cls">User</span>::<span class="fn">with</span>(<span class="str">'posts'</span>)-><span class="fn">get</span>();</pre>
+      </div>
+    </div>
+
+    <!-- Q25 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q25</span>
+        <span class="q-text">What is the N+1 problem and how to fix it?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">N+1 occurs when 1 query loads a collection, then N additional queries load each related model.</div>
+        <pre><span class="cm">// ❌ N+1 Problem</span>
+<span class="var">$users</span> = <span class="cls">User</span>::<span class="fn">all</span>(); <span class="cm">// 1 query</span>
+<span class="kw">foreach</span> (<span class="var">$users</span> <span class="kw">as</span> <span class="var">$user</span>) {
+    <span class="fn">echo</span> <span class="var">$user</span>->posts; <span class="cm">// N queries!</span>
+}
+
+<span class="cm">// ✅ Eager loading fix</span>
+<span class="var">$users</span> = <span class="cls">User</span>::<span class="fn">with</span>(<span class="str">'posts'</span>)-><span class="fn">get</span>(); <span class="cm">// 2 queries</span></pre>
+        <div class="tip-box"><strong>💡 Tip:</strong> Use Laravel Telescope or Debugbar to detect N+1 queries.</div>
+      </div>
+    </div>
+
+    <!-- Q26 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q26</span>
+        <span class="q-text">What are Laravel Migrations?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Migrations are version control for your database schema.</div>
+        <pre><span class="cm"># Create migration</span>
+php artisan make:migration create_users_table
+
+<span class="cm">// Migration file</span>
+<span class="kw">public function</span> <span class="fn">up</span>() {
+    <span class="cls">Schema</span>::<span class="fn">create</span>(<span class="str">'users'</span>, <span class="kw">function</span>(<span class="cls">Blueprint</span> <span class="var">$table</span>) {
+        <span class="var">$table</span>-><span class="fn">id</span>();
+        <span class="var">$table</span>-><span class="fn">string</span>(<span class="str">'name'</span>);
+        <span class="var">$table</span>-><span class="fn">string</span>(<span class="str">'email'</span>)-><span class="fn">unique</span>();
+        <span class="var">$table</span>-><span class="fn">timestamps</span>();
+    });
+}
+
+<span class="cm"># Run migrations</span>
+php artisan migrate</pre>
+      </div>
+    </div>
+
+    <!-- Q27 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q27</span>
+        <span class="q-text">What is Artisan CLI?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Artisan is Laravel's command-line interface. It automates common tasks.</div>
+        <pre><span class="cm"># Common Artisan commands</span>
+php artisan make:model User
+php artisan make:controller UserController
+php artisan make:migration create_users_table
+php artisan make:seeder UserSeeder
+php artisan make:request StoreUserRequest
+php artisan make:job SendEmail
+php artisan route:list
+php artisan config:cache
+php artisan queue:work</pre>
+      </div>
+    </div>
+
+    <!-- Q28 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q28</span>
+        <span class="q-text">What is Blade templating engine?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Blade is Laravel's compiled templating engine. Files use <code>.blade.php</code> extension.</div>
+        <pre><span class="cm">{{-- layout.blade.php --}}</span>
+&lt;!DOCTYPE html&gt;
+&lt;body&gt;@yield('content')&lt;/body&gt;
+
+<span class="cm">{{-- page.blade.php --}}</span>
+@extends('layout')
+@section('content')
+    &lt;h1&gt;{{ $title }}&lt;/h1&gt;
+
+    @foreach($users as $user)
+        &lt;p&gt;{{ $user->name }}&lt;/p&gt;
+    @endforeach
+
+    @if($isAdmin)
+        &lt;a&gt;Admin Panel&lt;/a&gt;
+    @endif
+@endsection</pre>
+      </div>
+    </div>
+
+    <!-- Q29 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q29</span>
+        <span class="q-text">What is the Service Container?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Laravel's IoC container manages class dependencies and performs dependency injection automatically.</div>
+        <pre><span class="cm">// Binding an interface to implementation</span>
+<span class="var">$this</span>-><span class="fn">app</span>-><span class="fn">bind</span>(<span class="cls">PaymentInterface</span>::<span class="kw">class</span>, <span class="cls">StripePayment</span>::<span class="kw">class</span>);
+
+<span class="cm">// Singleton (same instance every time)</span>
+<span class="var">$this</span>-><span class="fn">app</span>-><span class="fn">singleton</span>(<span class="cls">Database</span>::<span class="kw">class</span>);
+
+<span class="cm">// Auto-resolution via type hints</span>
+<span class="kw">public function</span> <span class="fn">__construct</span>(<span class="cls">UserRepository</span> <span class="var">$repo</span>) {
+    <span class="cm">// Laravel automatically injects $repo</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q30 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q30</span>
+        <span class="q-text">What is a Service Provider?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Service providers are the central place to bootstrap/bind services into the container.</div>
+        <pre><span class="kw">class</span> <span class="cls">AppServiceProvider</span> <span class="kw">extends</span> <span class="cls">ServiceProvider</span> {
+    <span class="kw">public function</span> <span class="fn">register</span>() {
+        <span class="cm">// Bind services here</span>
+        <span class="var">$this</span>-><span class="fn">app</span>-><span class="fn">bind</span>(<span class="cls">PaymentGateway</span>::<span class="kw">class</span>);
+    }
+
+    <span class="kw">public function</span> <span class="fn">boot</span>() {
+        <span class="cm">// Runs after all providers registered</span>
+        <span class="cls">User</span>::<span class="fn">observe</span>(<span class="cls">UserObserver</span>::<span class="kw">class</span>);
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LARAVEL AUTH ===== -->
+  <div class="section-group" data-section="laravel-auth">
+    <div class="section-header">
+      <div class="section-icon icon-laravel">🔐</div>
+      <div class="section-title">Auth & Security</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q31 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q31</span>
+        <span class="q-text">What is Laravel Sanctum?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Sanctum provides lightweight authentication for SPAs and simple token-based APIs.</div>
+        <pre><span class="cm"># Install Sanctum</span>
+composer require laravel/sanctum
+
+<span class="cm">// Issue token</span>
+<span class="var">$token</span> = <span class="var">$user</span>-><span class="fn">createToken</span>(<span class="str">'api-token'</span>)-><span class="fn">plainTextToken</span>;
+
+<span class="cm">// Protect routes</span>
+<span class="cls">Route</span>::<span class="fn">middleware</span>(<span class="str">'auth:sanctum'</span>)-><span class="fn">group</span>(<span class="kw">function</span>() {
+    <span class="cls">Route</span>::<span class="fn">get</span>(<span class="str">'/user'</span>, <span class="kw">fn</span>() => <span class="fn">auth</span>()-><span class="fn">user</span>());
+});</pre>
+      </div>
+    </div>
+
+    <!-- Q32 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q32</span>
+        <span class="q-text">What is Laravel Passport?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Passport provides full OAuth2 server implementation for APIs.</div>
+        <table class="compare-table">
+          <tr><th></th><th>Sanctum</th><th>Passport</th></tr>
+          <tr><td class="label-col">Use case</td><td>SPAs, simple APIs</td><td>Full OAuth2</td></tr>
+          <tr><td class="label-col">Complexity</td><td>Simple</td><td>Complex</td></tr>
+          <tr><td class="label-col">Token type</td><td>Personal tokens</td><td>OAuth2 tokens</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q33 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q33</span>
+        <span class="q-text">What is Form Request Validation?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Form Requests extract validation logic from controllers into dedicated classes.</div>
+        <pre><span class="cm"># Create</span>
+php artisan make:request StoreUserRequest
+
+<span class="kw">class</span> <span class="cls">StoreUserRequest</span> <span class="kw">extends</span> <span class="cls">FormRequest</span> {
+    <span class="kw">public function</span> <span class="fn">rules</span>() {
+        <span class="kw">return</span> [
+            <span class="str">'name'</span>     => <span class="str">'required|string|max:255'</span>,
+            <span class="str">'email'</span>    => <span class="str">'required|email|unique:users'</span>,
+            <span class="str">'password'</span> => <span class="str">'required|min:8|confirmed'</span>,
+        ];
+    }
+}
+
+<span class="cm">// Controller usage</span>
+<span class="kw">public function</span> <span class="fn">store</span>(<span class="cls">StoreUserRequest</span> <span class="var">$request</span>) {
+    <span class="cm">// Validation runs automatically</span>
+    <span class="cls">User</span>::<span class="fn">create</span>(<span class="var">$request</span>-><span class="fn">validated</span>());
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q34 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q34</span>
+        <span class="q-text">What is Laravel Middleware?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Middleware filters HTTP requests entering your application.</div>
+        <pre><span class="cm"># Create middleware</span>
+php artisan make:middleware CheckAge
+
+<span class="kw">class</span> <span class="cls">CheckAge</span> {
+    <span class="kw">public function</span> <span class="fn">handle</span>(<span class="var">$request</span>, <span class="cls">Closure</span> <span class="var">$next</span>) {
+        <span class="kw">if</span> (<span class="var">$request</span>-><span class="fn">age</span> < <span class="num">18</span>) {
+            <span class="kw">return</span> <span class="fn">redirect</span>(<span class="str">'home'</span>);
+        }
+        <span class="kw">return</span> <span class="var">$next</span>(<span class="var">$request</span>);
+    }
+}</pre>
+        <div class="pill-list">
+          <span class="pill-red">auth</span>
+          <span class="pill-red">throttle</span>
+          <span class="pill-red">cors</span>
+          <span class="pill-red">verified</span>
+          <span class="pill-red">can</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q35 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q35</span>
+        <span class="q-text">What are Gates and Policies?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th></th><th>Gate</th><th>Policy</th></tr>
+          <tr><td class="label-col">Type</td><td>Closure-based</td><td>Class-based</td></tr>
+          <tr><td class="label-col">Best for</td><td>Simple checks</td><td>Model authorization</td></tr>
+        </table>
+        <pre><span class="cm">// Gate</span>
+<span class="cls">Gate</span>::<span class="fn">define</span>(<span class="str">'edit-post'</span>, <span class="kw">fn</span>(<span class="cls">User</span> <span class="var">$user</span>, <span class="cls">Post</span> <span class="var">$post</span>) =>
+    <span class="var">$user</span>-><span class="var">id</span> === <span class="var">$post</span>-><span class="var">user_id</span>
+);
+
+<span class="cm">// Policy</span>
+<span class="kw">class</span> <span class="cls">PostPolicy</span> {
+    <span class="kw">public function</span> <span class="fn">update</span>(<span class="cls">User</span> <span class="var">$user</span>, <span class="cls">Post</span> <span class="var">$post</span>) {
+        <span class="kw">return</span> <span class="var">$user</span>-><span class="var">id</span> === <span class="var">$post</span>-><span class="var">user_id</span>;
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LARAVEL ADVANCED ===== -->
+  <div class="section-group" data-section="laravel-advanced">
+    <div class="section-header">
+      <div class="section-icon icon-laravel">🚀</div>
+      <div class="section-title">Advanced Laravel</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q36 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q36</span>
+        <span class="q-text">What are Laravel Queues?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Queues defer time-consuming tasks (emails, notifications) to improve response time.</div>
+        <pre><span class="cm"># Create a job</span>
+php artisan make:job SendWelcomeEmail
+
+<span class="kw">class</span> <span class="cls">SendWelcomeEmail</span> <span class="kw">implements</span> <span class="cls">ShouldQueue</span> {
+    <span class="kw">public function</span> <span class="fn">handle</span>() {
+        <span class="cls">Mail</span>::<span class="fn">to</span>(<span class="var">$this</span>-><span class="var">user</span>)-><span class="fn">send</span>(<span class="kw">new</span> <span class="cls">WelcomeMail</span>());
+    }
+}
+
+<span class="cm">// Dispatch the job</span>
+<span class="cls">SendWelcomeEmail</span>::<span class="fn">dispatch</span>(<span class="var">$user</span>);
+
+<span class="cm"># Run worker</span>
+php artisan queue:work</pre>
+        <div class="tip-box"><strong>💡 Drivers:</strong> database, Redis, SQS, Beanstalkd</div>
+      </div>
+    </div>
+
+    <!-- Q37 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q37</span>
+        <span class="q-text">What are Laravel Events and Listeners?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Events implement the Observer pattern — decoupling code by dispatching events other parts of the app react to.</div>
+        <pre><span class="cm"># Create event & listener</span>
+php artisan make:event UserRegistered
+php artisan make:listener SendWelcomeEmail
+
+<span class="cm">// Dispatch event</span>
+<span class="fn">event</span>(<span class="kw">new</span> <span class="cls">UserRegistered</span>(<span class="var">$user</span>));
+
+<span class="cm">// Listener handles it</span>
+<span class="kw">class</span> <span class="cls">SendWelcomeEmail</span> {
+    <span class="kw">public function</span> <span class="fn">handle</span>(<span class="cls">UserRegistered</span> <span class="var">$event</span>) {
+        <span class="cm">// Send email to $event->user</span>
+    }
+}</pre>
+      </div>
+    </div>
+
+    <!-- Q38 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q38</span>
+        <span class="q-text">What is the Repository Pattern in Laravel?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Adds an abstraction layer between controller and model. Makes code testable and swappable.</div>
+        <pre><span class="cm">// Interface</span>
+<span class="kw">interface</span> <span class="cls">UserRepositoryInterface</span> {
+    <span class="kw">public function</span> <span class="fn">findById</span>(<span class="kw">int</span> <span class="var">$id</span>): <span class="cls">User</span>;
+}
+
+<span class="cm">// Implementation</span>
+<span class="kw">class</span> <span class="cls">UserRepository</span> <span class="kw">implements</span> <span class="cls">UserRepositoryInterface</span> {
+    <span class="kw">public function</span> <span class="fn">findById</span>(<span class="kw">int</span> <span class="var">$id</span>): <span class="cls">User</span> {
+        <span class="kw">return</span> <span class="cls">User</span>::<span class="fn">findOrFail</span>(<span class="var">$id</span>);
+    }
+}
+
+<span class="cm">// Bind in ServiceProvider</span>
+<span class="var">$this</span>-><span class="fn">app</span>-><span class="fn">bind</span>(<span class="cls">UserRepositoryInterface</span>::<span class="kw">class</span>, <span class="cls">UserRepository</span>::<span class="kw">class</span>);</pre>
+      </div>
+    </div>
+
+    <!-- Q39 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q39</span>
+        <span class="q-text">What is Caching in Laravel?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <pre><span class="cm">// Store in cache</span>
+<span class="cls">Cache</span>::<span class="fn">put</span>(<span class="str">'key'</span>, <span class="str">'value'</span>, <span class="num">3600</span>); <span class="cm">// 1 hour</span>
+
+<span class="cm">// Get from cache</span>
+<span class="var">$value</span> = <span class="cls">Cache</span>::<span class="fn">get</span>(<span class="str">'key'</span>);
+
+<span class="cm">// Remember (get or compute)</span>
+<span class="var">$users</span> = <span class="cls">Cache</span>::<span class="fn">remember</span>(<span class="str">'users'</span>, <span class="num">3600</span>, <span class="kw">fn</span>() =>
+    <span class="cls">User</span>::<span class="fn">all</span>()
+);
+
+<span class="cm">// Forget</span>
+<span class="cls">Cache</span>::<span class="fn">forget</span>(<span class="str">'key'</span>);
+
+<span class="cm">// Drivers: file, redis, memcached, database</span></pre>
+      </div>
+    </div>
+
+    <!-- Q40 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q40</span>
+        <span class="q-text">What are Laravel API Resources?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Resources transform models into JSON-API responses, controlling what data is exposed.</div>
+        <pre><span class="cm"># Create resource</span>
+php artisan make:resource UserResource
+
+<span class="kw">class</span> <span class="cls">UserResource</span> <span class="kw">extends</span> <span class="cls">JsonResource</span> {
+    <span class="kw">public function</span> <span class="fn">toArray</span>(<span class="var">$request</span>) {
+        <span class="kw">return</span> [
+            <span class="str">'id'</span>    => <span class="var">$this</span>-><span class="var">id</span>,
+            <span class="str">'name'</span>  => <span class="var">$this</span>-><span class="var">name</span>,
+            <span class="str">'email'</span> => <span class="var">$this</span>-><span class="var">email</span>,
+            <span class="cm">// password is excluded!</span>
+        ];
+    }
+}
+
+<span class="cm">// Usage in controller</span>
+<span class="kw">return</span> <span class="kw">new</span> <span class="cls">UserResource</span>(<span class="var">$user</span>);
+<span class="kw">return</span> <span class="cls">UserResource</span>::<span class="fn">collection</span>(<span class="cls">User</span>::<span class="fn">all</span>());</pre>
+      </div>
+    </div>
+
+    <!-- Q41 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q41</span>
+        <span class="q-text">What is Laravel Telescope?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Telescope is Laravel's debugging assistant — shows requests, queries, jobs, events, and more.</div>
+        <pre>composer require laravel/telescope --dev
+php artisan telescope:install
+php artisan migrate</pre>
+        <div class="pill-list">
+          <span class="pill-red">Requests</span>
+          <span class="pill-red">SQL Queries</span>
+          <span class="pill-red">Queue Jobs</span>
+          <span class="pill-red">Events</span>
+          <span class="pill-red">Cache</span>
+          <span class="pill-red">Logs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q42 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q42</span>
+        <span class="q-text">What is Route Model Binding?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Laravel automatically injects model instances into route callbacks/controllers based on the route parameter.</div>
+        <pre><span class="cm">// Implicit binding</span>
+<span class="cls">Route</span>::<span class="fn">get</span>(<span class="str">'/users/{user}'</span>, <span class="kw">function</span> (<span class="cls">User</span> <span class="var">$user</span>) {
+    <span class="cm">// $user is automatically fetched by ID</span>
+    <span class="kw">return</span> <span class="var">$user</span>;
+});
+
+<span class="cm">// Custom key (by slug instead of ID)</span>
+<span class="cls">Route</span>::<span class="fn">get</span>(<span class="str">'/posts/{post:slug}'</span>, <span class="kw">function</span> (<span class="cls">Post</span> <span class="var">$post</span>) {
+    <span class="kw">return</span> <span class="var">$post</span>;
+});</pre>
+      </div>
+    </div>
+
+    <!-- Q43 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q43</span>
+        <span class="q-text">What are Seeders and Factories?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <pre><span class="cm"># Factory (fake data blueprint)</span>
+<span class="kw">class</span> <span class="cls">UserFactory</span> <span class="kw">extends</span> <span class="cls">Factory</span> {
+    <span class="kw">public function</span> <span class="fn">definition</span>() {
+        <span class="kw">return</span> [
+            <span class="str">'name'</span>  => <span class="fn">fake</span>()-><span class="fn">name</span>(),
+            <span class="str">'email'</span> => <span class="fn">fake</span>()-><span class="fn">unique</span>()-><span class="fn">safeEmail</span>(),
+        ];
+    }
+}
+
+<span class="cm">// Create 50 fake users</span>
+<span class="cls">User</span>::<span class="fn">factory</span>()-><span class="fn">count</span>(<span class="num">50</span>)-><span class="fn">create</span>();
+
+<span class="cm"># Run seeder</span>
+php artisan db:seed</pre>
+      </div>
+    </div>
+
+    <!-- Q44 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q44</span>
+        <span class="q-text">What are Observers in Laravel?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Observers listen to Eloquent model lifecycle events.</div>
+        <pre><span class="cm"># Create observer</span>
+php artisan make:observer UserObserver --model=User
+
+<span class="kw">class</span> <span class="cls">UserObserver</span> {
+    <span class="kw">public function</span> <span class="fn">creating</span>(<span class="cls">User</span> <span class="var">$user</span>) {
+        <span class="var">$user</span>-><span class="var">uuid</span> = <span class="fn">Str</span>::<span class="fn">uuid</span>();
+    }
+    <span class="kw">public function</span> <span class="fn">deleted</span>(<span class="cls">User</span> <span class="var">$user</span>) {
+        <span class="cm">// Clean up after deletion</span>
+    }
+}</pre>
+        <div class="pill-list">
+          <span class="pill-red">creating</span>
+          <span class="pill-red">created</span>
+          <span class="pill-red">updating</span>
+          <span class="pill-red">updated</span>
+          <span class="pill-red">deleting</span>
+          <span class="pill-red">deleted</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q45 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q45</span>
+        <span class="q-text">What is Soft Deleting?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Soft deletes set a <code>deleted_at</code> timestamp instead of actually removing the record.</div>
+        <pre><span class="kw">use</span> <span class="cls">SoftDeletes</span>;
+
+<span class="cm">// Migration needs</span>
+<span class="var">$table</span>-><span class="fn">softDeletes</span>();
+
+<span class="cm">// Delete (sets deleted_at)</span>
+<span class="cls">User</span>::<span class="fn">find</span>(<span class="num">1</span>)-><span class="fn">delete</span>();
+
+<span class="cm">// Include soft deleted</span>
+<span class="cls">User</span>::<span class="fn">withTrashed</span>()-><span class="fn">get</span>();
+
+<span class="cm">// Only soft deleted</span>
+<span class="cls">User</span>::<span class="fn">onlyTrashed</span>()-><span class="fn">get</span>();
+
+<span class="cm">// Restore</span>
+<span class="cls">User</span>::<span class="fn">withTrashed</span>()-><span class="fn">find</span>(<span class="num">1</span>)-><span class="fn">restore</span>();</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SYSTEM DESIGN ===== -->
+  <div class="section-group" data-section="system">
+    <div class="section-header">
+      <div class="section-icon icon-laravel">🏗️</div>
+      <div class="section-title">System Design & Architecture</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Q46 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q46</span>
+        <span class="q-text">What is SOLID principles?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th>Letter</th><th>Principle</th><th>Meaning</th></tr>
+          <tr><td class="label-col">S</td><td>Single Responsibility</td><td>One class, one job</td></tr>
+          <tr><td class="label-col">O</td><td>Open/Closed</td><td>Open for extension, closed for modification</td></tr>
+          <tr><td class="label-col">L</td><td>Liskov Substitution</td><td>Subtypes replaceable for parent</td></tr>
+          <tr><td class="label-col">I</td><td>Interface Segregation</td><td>Many small interfaces over one large</td></tr>
+          <tr><td class="label-col">D</td><td>Dependency Inversion</td><td>Depend on abstractions, not concretes</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q47 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q47</span>
+        <span class="q-text">What is RESTful API design?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th>Method</th><th>Route</th><th>Action</th></tr>
+          <tr><td class="label-col">GET</td><td>/users</td><td>List all users</td></tr>
+          <tr><td class="label-col">POST</td><td>/users</td><td>Create user</td></tr>
+          <tr><td class="label-col">GET</td><td>/users/{id}</td><td>Show user</td></tr>
+          <tr><td class="label-col">PUT/PATCH</td><td>/users/{id}</td><td>Update user</td></tr>
+          <tr><td class="label-col">DELETE</td><td>/users/{id}</td><td>Delete user</td></tr>
+        </table>
+        <pre><span class="cm"># Laravel resource routes (all 7 at once)</span>
+<span class="cls">Route</span>::<span class="fn">apiResource</span>(<span class="str">'users'</span>, <span class="cls">UserController</span>::<span class="kw">class</span>);</pre>
+      </div>
+    </div>
+
+    <!-- Q48 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q48</span>
+        <span class="q-text">What is Database Indexing?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Indexes speed up database lookups by creating a searchable structure on columns.</div>
+        <pre><span class="cm">// Add index in migration</span>
+<span class="var">$table</span>-><span class="fn">index</span>(<span class="str">'email'</span>);
+<span class="var">$table</span>-><span class="fn">unique</span>(<span class="str">'slug'</span>);
+<span class="var">$table</span>-><span class="fn">index</span>([<span class="str">'user_id'</span>, <span class="str">'created_at'</span>]); <span class="cm">// Composite</span></pre>
+        <div class="tip-box"><strong>💡 Rule:</strong> Index columns used in WHERE, ORDER BY, and JOIN clauses.</div>
+      </div>
+    </div>
+
+    <!-- Q49 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q49</span>
+        <span class="q-text">What is Horizontal vs Vertical Scaling?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <table class="compare-table">
+          <tr><th></th><th>Horizontal</th><th>Vertical</th></tr>
+          <tr><td class="label-col">Method</td><td>Add more servers</td><td>Bigger server</td></tr>
+          <tr><td class="label-col">Cost</td><td>Cheaper at scale</td><td>Expensive</td></tr>
+          <tr><td class="label-col">Complexity</td><td>Higher (load balancer)</td><td>Simple</td></tr>
+          <tr><td class="label-col">Downtime</td><td>Zero downtime</td><td>Requires restart</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q50 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q50</span>
+        <span class="q-text">Laravel Production Architecture</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Typical production Laravel stack:</div>
+        <div class="pill-list">
+          <span class="pill-green">Client</span>
+          <span class="pill-green">CDN (CloudFlare)</span>
+          <span class="pill-green">NGINX / Load Balancer</span>
+          <span class="pill-green">Laravel App Servers</span>
+          <span class="pill-green">Redis (Cache + Queue)</span>
+          <span class="pill-green">MySQL / PostgreSQL</span>
+          <span class="pill-green">S3 (Storage)</span>
+          <span class="pill-green">Supervisor (Queues)</span>
+        </div>
+        <div class="tip-box">
+          <strong>💡 Optimization commands:</strong><br>
+          <code>php artisan config:cache</code><br>
+          <code>php artisan route:cache</code><br>
+          <code>php artisan view:cache</code><br>
+          <code>php artisan optimize</code>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function toggleCard(card) {
+  card.classList.toggle('open');
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.card').length;
+  const opened = document.querySelectorAll('.card.open').length;
+  const pct = (opened / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function filterSection(section, btn) {
+  // Update tab styles
+  document.querySelectorAll('.tab').forEach(t => {
+    t.className = 'tab';
+  });
+
+  if (section === 'all') {
+    btn.classList.add('active-all');
+    document.querySelectorAll('.section-group').forEach(g => g.classList.remove('hidden'));
+  } else {
+    const isPHP = ['php-basics','oop','php-advanced'].includes(section);
+    btn.classList.add(isPHP ? 'active-php' : 'active-laravel');
+    document.querySelectorAll('.section-group').forEach(g => {
+      g.classList.toggle('hidden', g.dataset.section !== section);
+    });
+  }
+}
+
+// Staggered card animations
+document.querySelectorAll('.card').forEach((card, i) => {
+  card.style.animationDelay = (i * 0.04) + 's';
+});
+</script>
+</body>
+</html>
