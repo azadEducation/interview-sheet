@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySQL Deep Practical — Senior Interview Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090F;
+  --s1:#0C0F1A;
+  --s2:#111520;
+  --bd:#1A2030;
+  --bd2:#232B40;
+  --text:#DDE4F0;
+  --muted:#5A6880;
+  --code:#060810;
+  --g1:#F29111; /* mysql orange */
+  --g2:#00758F; /* mysql blue  */
+  --g3:#38A169; /* green       */
+  --g4:#E53E3E; /* red         */
+  --g5:#805AD5; /* purple      */
+  --g6:#D69E2E; /* yellow      */
+  --glow1:rgba(242,145,17,.13);
+  --glow2:rgba(0,117,143,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* grid bg */
+body::after{content:'';position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(0,117,143,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,117,143,.025) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;z-index:0}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;padding:60px 20px 40px;text-align:center;overflow:hidden;border-bottom:1px solid var(--bd)}
+.hero-blob{position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+  width:800px;height:500px;
+  background:radial-gradient(ellipse,rgba(242,145,17,.08) 0%,rgba(0,117,143,.05) 45%,transparent 70%);
+  pointer-events:none}
+.label{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(128,90,213,.1);border:1px solid rgba(128,90,213,.3);
+  border-radius:100px;padding:6px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:#B794F4;
+  margin-bottom:20px;animation:up .5s ease both}
+h1{font-size:clamp(2.2rem,6vw,4.5rem);font-weight:800;letter-spacing:-2px;line-height:1;animation:up .6s .1s ease both}
+h1 .o{color:var(--g1)}h1 .b{color:var(--g2)}h1 .d{color:#2A3550}
+.sub{margin:16px auto 0;max-width:650px;font-size:.95rem;font-weight:300;color:var(--muted);line-height:1.7;animation:up .6s .2s ease both}
+.tag-row{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin-top:20px;animation:up .6s .3s ease both}
+.tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:4px 11px;border-radius:4px;border:1px solid var(--bd2);color:var(--muted)}
+.to{border-color:rgba(242,145,17,.3);color:var(--g1);background:rgba(242,145,17,.06)}
+.tb{border-color:rgba(0,117,143,.3);color:var(--g2);background:rgba(0,117,143,.06)}
+.tg{border-color:rgba(56,161,105,.3);color:var(--g3);background:rgba(56,161,105,.06)}
+.tr{border-color:rgba(229,62,62,.3);color:var(--g4);background:rgba(229,62,62,.06)}
+.tp{border-color:rgba(128,90,213,.3);color:var(--g5);background:rgba(128,90,213,.06)}
+
+/* progress */
+.prog-wrap{max-width:500px;margin:24px auto 0;animation:up .6s .4s ease both}
+.prog-meta{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:6px}
+.prog-bar{height:3px;background:var(--bd2);border-radius:2px}
+.prog-fill{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--g1),var(--g2),var(--g5));width:0;transition:width .5s ease}
+
+/* ── STICKY NAV ── */
+.nav{position:sticky;top:0;z-index:200;background:rgba(7,9,15,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd)}
+.nav-inner{max-width:1060px;margin:0 auto;padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
+.nav-inner::-webkit-scrollbar{display:none}
+.nt{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:6px 12px;border-radius:5px;
+  border:1px solid var(--bd2);background:transparent;color:var(--muted);cursor:pointer;
+  transition:all .18s;white-space:nowrap}
+.nt:hover{color:var(--text);border-color:var(--muted)}
+.ao{background:rgba(242,145,17,.1);color:var(--g1);border-color:rgba(242,145,17,.4)}
+.ab{background:rgba(0,117,143,.1);color:var(--g2);border-color:rgba(0,117,143,.4)}
+.ag{background:rgba(56,161,105,.1);color:var(--g3);border-color:rgba(56,161,105,.4)}
+.ar{background:rgba(229,62,62,.1);color:var(--g4);border-color:rgba(229,62,62,.4)}
+.ap{background:rgba(128,90,213,.1);color:var(--g5);border-color:rgba(128,90,213,.4)}
+
+/* ── MAIN ── */
+.main{max-width:1060px;margin:0 auto;padding:32px 20px 100px;position:relative;z-index:1}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px;margin-bottom:34px}
+.stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px 10px;text-align:center}
+.sn{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:700;line-height:1}
+.sn.o{color:var(--g1)}.sn.b{color:var(--g2)}.sn.g{color:var(--g3)}.sn.r{color:var(--g4)}.sn.p{color:var(--g5)}.sn.y{color:var(--g6)}
+.sl{font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:5px}
+
+/* section head */
+.sh{display:flex;align-items:center;gap:12px;margin:46px 0 16px}
+.sh:first-of-type{margin-top:0}
+.si{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.si.o{background:rgba(242,145,17,.12)}.si.b{background:rgba(0,117,143,.12)}.si.g{background:rgba(56,161,105,.1)}
+.si.r{background:rgba(229,62,62,.1)}.si.p{background:rgba(128,90,213,.1)}.si.y{background:rgba(214,158,46,.1)}
+.sl2{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.sl3{flex:1;height:1px;background:var(--bd)}
+
+/* card */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;animation:up .3s ease both}
+.card:hover{border-color:var(--bd2)}
+.oc:hover{border-color:rgba(242,145,17,.4);box-shadow:0 0 28px var(--glow1)}
+.bc:hover{border-color:rgba(0,117,143,.35);box-shadow:0 0 28px var(--glow2)}
+.gc:hover{border-color:rgba(56,161,105,.3);box-shadow:0 0 20px rgba(56,161,105,.08)}
+.rc:hover{border-color:rgba(229,62,62,.3);box-shadow:0 0 20px rgba(229,62,62,.08)}
+.pc:hover{border-color:rgba(128,90,213,.3);box-shadow:0 0 20px rgba(128,90,213,.08)}
+.yc:hover{border-color:rgba(214,158,46,.3);box-shadow:0 0 20px rgba(214,158,46,.08)}
+
+.ch{display:flex;align-items:flex-start;gap:12px;padding:15px 17px;cursor:pointer;user-select:none}
+.qn{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;flex-shrink:0;margin-top:2px}
+.oc .qn{background:rgba(242,145,17,.12);color:var(--g1)}
+.bc .qn{background:rgba(0,117,143,.12);color:var(--g2)}
+.gc .qn{background:rgba(56,161,105,.1);color:#68D391}
+.rc .qn{background:rgba(229,62,62,.1);color:#FC8181}
+.pc .qn{background:rgba(128,90,213,.1);color:#B794F4}
+.yc .qn{background:rgba(214,158,46,.1);color:#F6C766}
+.qt{font-size:.9rem;font-weight:600;flex:1;line-height:1.45}
+.diff{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:3px}
+.de{background:rgba(56,161,105,.12);color:#68D391}
+.dm{background:rgba(214,158,46,.12);color:#F6C766}
+.dh{background:rgba(229,62,62,.12);color:#FC8181}
+.dp{background:rgba(128,90,213,.12);color:#B794F4}
+.qtog{font-size:16px;color:var(--muted);transition:transform .22s;flex-shrink:0;margin-top:3px}
+.card.open .qtog{transform:rotate(180deg)}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--bd);padding-top:14px}
+.card.open .cb{display:block}
+.al{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.an{font-size:.86rem;line-height:1.75;color:#AAB8C8}
+
+/* sub-heading inside card */
+.csub{font-size:.78rem;font-weight:700;font-family:'JetBrains Mono',monospace;margin:14px 0 7px;letter-spacing:.5px}
+.csub.o{color:var(--g1)}.csub.b{color:var(--g2)}.csub.g{color:#68D391}.csub.r{color:#FC8181}.csub.p{color:#B794F4}.csub.y{color:#F6C766}
+
+/* code */
+pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:14px 16px;margin:12px 0;overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.65;color:#7A9BB5}
+.kw{color:#C792EA;font-weight:600}.fn{color:#82AAFF}.str{color:#C3E88D}
+.cm{color:#2E4050;font-style:italic}.num{color:#F78C6C}.tb{color:#FFCB6B}
+.op{color:#89DDFF}.vr{color:#F07178}.ok{color:#68D391}.bad{color:#FC8181}
+
+/* output block */
+.out{background:#030408;border:1px solid var(--bd);border-left:3px solid var(--g2);border-radius:6px;
+  padding:12px 14px;margin:8px 0;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#4D8FA8}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
+.tbl th{background:rgba(255,255,255,.04);padding:8px 12px;text-align:left;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);
+  border-bottom:1px solid var(--bd);white-space:nowrap}
+.tbl td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.03);color:#AAB8C8;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .lc{font-weight:600;color:var(--text);width:30%}
+.tbl .gd{color:#68D391}.tbl .bd{color:#FC8181}
+
+/* pills */
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pill{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 9px;border-radius:3px}
+.po{background:rgba(242,145,17,.1);color:var(--g1);border:1px solid rgba(242,145,17,.2)}
+.pb{background:rgba(0,117,143,.1);color:#5FC8DC;border:1px solid rgba(0,117,143,.2)}
+.pg{background:rgba(56,161,105,.1);color:#68D391;border:1px solid rgba(56,161,105,.2)}
+.pr{background:rgba(229,62,62,.1);color:#FC8181;border:1px solid rgba(229,62,62,.2)}
+.pp{background:rgba(128,90,213,.1);color:#B794F4;border:1px solid rgba(128,90,213,.2)}
+.py{background:rgba(214,158,46,.1);color:#F6C766;border:1px solid rgba(214,158,46,.2)}
+
+/* callout */
+.box{border-radius:7px;padding:11px 14px;margin:12px 0;font-size:13px;line-height:1.65;color:#AAB8C8}
+.bw{background:rgba(214,158,46,.05);border:1px solid rgba(214,158,46,.22);border-left:3px solid var(--g6)}
+.bt{background:rgba(0,117,143,.05);border:1px solid rgba(0,117,143,.22);border-left:3px solid var(--g2)}
+.br{background:rgba(229,62,62,.05);border:1px solid rgba(229,62,62,.22);border-left:3px solid var(--g4)}
+.bp{background:rgba(128,90,213,.05);border:1px solid rgba(128,90,213,.22);border-left:3px solid var(--g5)}
+.bg{background:rgba(56,161,105,.05);border:1px solid rgba(56,161,105,.22);border-left:3px solid var(--g3)}
+.bw strong{color:var(--g6)}.bt strong{color:var(--g2)}.br strong{color:var(--g4)}.bp strong{color:#B794F4}.bg strong{color:#68D391}
+
+/* two-col layout for challenges */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:680px){.cols2{grid-template-columns:1fr}}
+.col-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.col-label.r{color:#FC8181}.col-label.g{color:#68D391}
+
+/* section groups */
+.sg.hidden{display:none}
+
+/* challenge badge */
+.challenge-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(128,90,213,.1);
+  border:1px solid rgba(128,90,213,.3);border-radius:100px;padding:3px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:#B794F4;margin-bottom:10px}
+
+/* step list */
+.steps{counter-reset:step;list-style:none;margin:10px 0}
+.steps li{counter-increment:step;display:flex;gap:12px;margin-bottom:10px;font-size:.86rem;color:#AAB8C8;line-height:1.6}
+.steps li::before{content:counter(step);min-width:24px;height:24px;background:rgba(0,117,143,.15);
+  border:1px solid rgba(0,117,143,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--g2);flex-shrink:0;margin-top:2px}
+
+/* explain row highlight */
+.explain-row{background:var(--code);border:1px solid var(--bd);border-radius:6px;padding:10px 14px;margin:6px 0;
+  font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6}
+.explain-key{color:#F6C766}.explain-val{color:#C3E88D}.explain-bad{color:#FC8181}.explain-good{color:#68D391}
+
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){h1{font-size:2rem;letter-spacing:-1px}.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-blob"></div>
+  <div class="label">🔥 Senior DBA · 25 Years Production · Deep Practical</div>
+  <h1><span class="o">My</span><span class="b">SQL</span><br><span class="d">Crack Any Interview</span></h1>
+  <p class="sub">The practical layer — SQL coding challenges, real EXPLAIN analysis, live debugging patterns, MySQL 8 features, schema anti-patterns, index strategy, monitoring playbooks, and every trick a 25-year senior DBA uses daily in production.</p>
+  <div class="tag-row">
+    <span class="tag to">SQL Coding Challenges</span>
+    <span class="tag tb">Query Execution Order</span>
+    <span class="tag tg">EXPLAIN Mastery</span>
+    <span class="tag tr">Live Debugging</span>
+    <span class="tag tp">MySQL 8 Features</span>
+    <span class="tag to">Index Strategy</span>
+    <span class="tag tb">Schema Anti-Patterns</span>
+    <span class="tag tg">Stored Proc Patterns</span>
+    <span class="tag tr">Monitoring Playbook</span>
+    <span class="tag tp">Connection Management</span>
+    <span class="tag to">Production Scenarios</span>
+    <span class="tag tb">Interview Trap Questions</span>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span id="oc2">0 questions opened</span><span id="pc2">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="pf2"></div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <button class="nt ao" onclick="flt('all',this)">All</button>
+    <button class="nt" onclick="flt('execution',this)">Query Execution</button>
+    <button class="nt" onclick="flt('challenges',this)">SQL Challenges</button>
+    <button class="nt" onclick="flt('explain',this)">EXPLAIN Mastery</button>
+    <button class="nt" onclick="flt('index-strategy',this)">Index Strategy</button>
+    <button class="nt" onclick="flt('mysql8',this)">MySQL 8 Features</button>
+    <button class="nt" onclick="flt('schema',this)">Schema Design</button>
+    <button class="nt" onclick="flt('stored-deep',this)">Stored Procs Deep</button>
+    <button class="nt" onclick="flt('debugging',this)">Live Debugging</button>
+    <button class="nt" onclick="flt('connections',this)">Connections & Pool</button>
+    <button class="nt" onclick="flt('monitoring',this)">Monitoring</button>
+    <button class="nt" onclick="flt('traps',this)">Interview Traps</button>
+    <button class="nt" onclick="flt('scenarios',this)">Production Scenarios</button>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="stats">
+  <div class="stat"><div class="sn o">15</div><div class="sl">SQL Challenges</div></div>
+  <div class="stat"><div class="sn b">10</div><div class="sl">EXPLAIN Deep</div></div>
+  <div class="stat"><div class="sn g">12</div><div class="sl">MySQL 8 Features</div></div>
+  <div class="stat"><div class="sn r">10</div><div class="sl">Debugging</div></div>
+  <div class="stat"><div class="sn p">12</div><div class="sl">Schema Design</div></div>
+  <div class="stat"><div class="sn y">15</div><div class="sl">Trap Questions</div></div>
+  <div class="stat"><div class="sn b">74+</div><div class="sl">Total Questions</div></div>
+</div>
+
+<!-- ═══ QUERY EXECUTION ORDER ═══ -->
+<div class="sg" data-s="execution">
+<div class="sh"><div class="si b">⚙️</div><div class="sl2">SQL Query Execution Order</div><div class="sl3"></div></div>
+
+<div class="card bc" onclick="tog(this)">
+  <div class="ch"><span class="qn">P1</span><span class="qt">In what order does MySQL actually execute a SELECT statement?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">This is one of the most misunderstood fundamentals. The order you <em>write</em> SQL is not the order it <em>executes</em>. Understanding this explains WHY certain errors happen and WHY aliases work in some clauses but not others.</div>
+    <div class="csub o">Execution Order (Logical)</div>
+    <table class="tbl">
+      <tr><th>Step</th><th>Clause</th><th>What Happens</th><th>Practical Impact</th></tr>
+      <tr><td class="lc">1</td><td>FROM</td><td>Source tables identified</td><td>Table access, storage engine called</td></tr>
+      <tr><td class="lc">2</td><td>ON</td><td>JOIN condition evaluated</td><td>Filters rows during join (faster than WHERE for outer joins)</td></tr>
+      <tr><td class="lc">3</td><td>JOIN</td><td>Tables merged</td><td>INNER/LEFT/RIGHT applied</td></tr>
+      <tr><td class="lc">4</td><td>WHERE</td><td>Row-level filter</td><td>Cannot use SELECT aliases here (aliases not defined yet!)</td></tr>
+      <tr><td class="lc">5</td><td>GROUP BY</td><td>Rows grouped</td><td>Creates groups for aggregation</td></tr>
+      <tr><td class="lc">6</td><td>HAVING</td><td>Group-level filter</td><td>Can use aggregate functions</td></tr>
+      <tr><td class="lc">7</td><td>SELECT</td><td>Columns computed</td><td>Aliases defined HERE</td></tr>
+      <tr><td class="lc">8</td><td>DISTINCT</td><td>Duplicates removed</td><td>After SELECT runs</td></tr>
+      <tr><td class="lc">9</td><td>ORDER BY</td><td>Results sorted</td><td>CAN use SELECT aliases (defined in step 7)</td></tr>
+      <tr><td class="lc">10</td><td>LIMIT/OFFSET</td><td>Rows sliced</td><td>Very last step</td></tr>
+    </table>
+    <pre><span class="cm">-- WHY this fails (alias in WHERE):</span>
+<span class="kw">SELECT</span> salary * <span class="num">1.1</span> <span class="kw">AS</span> new_salary
+<span class="kw">FROM</span> <span class="tb">employees</span>
+<span class="kw">WHERE</span> new_salary > <span class="num">50000</span>; <span class="bad">-- ❌ ERROR: Unknown column 'new_salary'</span>
+<span class="cm">-- WHERE runs at step 4, alias defined at step 7</span>
+
+<span class="cm">-- Fix 1: Repeat the expression</span>
+<span class="kw">WHERE</span> salary * <span class="num">1.1</span> > <span class="num">50000</span>;
+
+<span class="cm">-- Fix 2: Subquery / CTE</span>
+<span class="kw">WITH</span> calc <span class="kw">AS</span> (<span class="kw">SELECT</span> salary * <span class="num">1.1</span> <span class="kw">AS</span> new_salary <span class="kw">FROM</span> <span class="tb">employees</span>)
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> calc <span class="kw">WHERE</span> new_salary > <span class="num">50000</span>;
+
+<span class="cm">-- WHY this WORKS (alias in ORDER BY):</span>
+<span class="kw">SELECT</span> first_name || <span class="str">' '</span> || last_name <span class="kw">AS</span> full_name
+<span class="kw">FROM</span> <span class="tb">employees</span>
+<span class="kw">ORDER BY</span> full_name; <span class="ok">-- ✅ Works! ORDER BY is step 9, alias defined step 7</span></pre>
+    <div class="box bp"><strong>🎯 Interview answer tip:</strong> Most candidates write SQL but can't explain execution order. Nail this and you instantly stand out. The interviewer will follow up with "then why does GROUP BY alias work in MySQL?" — because MySQL extends the standard and resolves GROUP BY aliases as a special case.</div>
+  </div>
+</div>
+
+<div class="card bc" onclick="tog(this)">
+  <div class="ch"><span class="qn">P2</span><span class="qt">What is the difference between ON and WHERE in a JOIN?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">For INNER JOINs, ON and WHERE produce identical results. For OUTER JOINs, they behave very differently because ON filters <em>during</em> the join (step 2) while WHERE filters <em>after</em> (step 4).</div>
+    <pre><span class="cm">-- LEFT JOIN: ON filters during join (keeps all left rows)</span>
+<span class="kw">SELECT</span> u.name, o.amount
+<span class="kw">FROM</span> <span class="tb">users</span> u
+<span class="kw">LEFT JOIN</span> <span class="tb">orders</span> o <span class="kw">ON</span> u.id = o.user_id <span class="op">AND</span> o.status = <span class="str">'completed'</span>;
+<span class="cm">-- Result: ALL users, only completed orders (NULLs for users without completed orders)</span>
+
+<span class="cm">-- LEFT JOIN: WHERE filters AFTER join (converts to INNER JOIN effectively)</span>
+<span class="kw">SELECT</span> u.name, o.amount
+<span class="kw">FROM</span> <span class="tb">users</span> u
+<span class="kw">LEFT JOIN</span> <span class="tb">orders</span> o <span class="kw">ON</span> u.id = o.user_id
+<span class="kw">WHERE</span> o.status = <span class="str">'completed'</span>;
+<span class="cm">-- Result: only users who HAVE completed orders (NULL rows eliminated by WHERE)</span></pre>
+    <div class="box br"><strong>⚠️ Classic interview trap:</strong> "Write a query to get all users and their completed orders if any." Wrong: WHERE clause. Right: ON clause with LEFT JOIN. Mixing these up is the #1 JOIN mistake in interviews.</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ SQL CODING CHALLENGES ═══ -->
+<div class="sg" data-s="challenges">
+<div class="sh"><div class="si p">💻</div><div class="sl2">SQL Coding Challenges — Asked in Real Interviews</div><div class="sl3"></div></div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C1</span><span class="qt">Find duplicate emails and delete keeping only the lowest ID</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 LeetCode #196 — Top Company Question</div>
+    <pre><span class="cm">-- Table: users (id, email)</span>
+
+<span class="cm">-- Step 1: Find duplicates</span>
+<span class="kw">SELECT</span> email, <span class="fn">COUNT</span>(*) cnt
+<span class="kw">FROM</span> <span class="tb">users</span>
+<span class="kw">GROUP BY</span> email
+<span class="kw">HAVING</span> cnt > <span class="num">1</span>;
+
+<span class="cm">-- Step 2: Delete duplicates, keep lowest id</span>
+<span class="cm">-- Method 1: Self-join (works in all versions)</span>
+<span class="kw">DELETE</span> u1
+<span class="kw">FROM</span> <span class="tb">users</span> u1
+<span class="kw">INNER JOIN</span> <span class="tb">users</span> u2
+  <span class="kw">ON</span> u1.email = u2.email
+  <span class="op">AND</span> u1.id > u2.id; <span class="cm">-- keep the lower id</span>
+
+<span class="cm">-- Method 2: Subquery (readable)</span>
+<span class="kw">DELETE FROM</span> <span class="tb">users</span>
+<span class="kw">WHERE</span> id <span class="op">NOT IN</span> (
+  <span class="kw">SELECT</span> <span class="fn">MIN</span>(id) <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">GROUP BY</span> email
+);
+<span class="cm">-- Note: MySQL doesn't allow direct subquery on same table in DELETE</span>
+<span class="cm">-- Wrap in another subquery to bypass:</span>
+<span class="kw">DELETE FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> id <span class="op">NOT IN</span> (
+  <span class="kw">SELECT</span> id <span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="fn">MIN</span>(id) id <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">GROUP BY</span> email) t
+);</pre>
+    <div class="box bt"><strong>💡 Key MySQL quirk:</strong> MySQL prohibits modifying a table in a subquery that's directly referenced in the same DELETE/UPDATE. The double-subquery trick (wrapping in an extra SELECT) forces MySQL to create a temp table, bypassing this restriction.</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C2</span><span class="qt">Consecutive login streak — find users with 3+ consecutive days logged in</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Facebook / Meta Interview Question</div>
+    <pre><span class="cm">-- Table: logins (user_id, login_date)</span>
+<span class="cm">-- Technique: row_number trick for consecutive dates</span>
+
+<span class="kw">WITH</span> dated <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    user_id,
+    login_date,
+    <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> user_id <span class="kw">ORDER BY</span> login_date) rn
+  <span class="kw">FROM</span> (
+    <span class="kw">SELECT DISTINCT</span> user_id, login_date <span class="kw">FROM</span> <span class="tb">logins</span>
+  ) d
+),
+grouped <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    user_id,
+    login_date,
+    <span class="cm">-- Subtract row_number from date to get a "group key"</span>
+    <span class="cm">-- Consecutive dates share the same group_key!</span>
+    <span class="fn">DATE_SUB</span>(login_date, <span class="kw">INTERVAL</span> rn <span class="kw">DAY</span>) <span class="kw">AS</span> group_key
+  <span class="kw">FROM</span> dated
+)
+<span class="kw">SELECT DISTINCT</span> user_id
+<span class="kw">FROM</span> grouped
+<span class="kw">GROUP BY</span> user_id, group_key
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) >= <span class="num">3</span>;  <span class="cm">-- 3+ consecutive days</span></pre>
+    <div class="box bp"><strong>🧠 The trick:</strong> If dates are consecutive, (date - row_number) gives the same constant value. This is the canonical "island detection" technique — memorize it, it appears in interviews constantly.</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C3</span><span class="qt">Find the median salary — without using any aggregate function directly</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Amazon / Goldman Sachs Interview</div>
+    <pre><span class="cm">-- Method 1: MySQL 8 with PERCENTILE_CONT equivalent</span>
+<span class="kw">WITH</span> ranked <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    salary,
+    <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> salary) rn,
+    <span class="fn">COUNT</span>(*) <span class="kw">OVER</span>() total
+  <span class="kw">FROM</span> <span class="tb">employees</span>
+)
+<span class="kw">SELECT</span> <span class="fn">AVG</span>(salary) <span class="kw">AS</span> median
+<span class="kw">FROM</span> ranked
+<span class="kw">WHERE</span> rn <span class="kw">BETWEEN</span> total/<span class="num">2.0</span> <span class="op">AND</span> total/<span class="num">2.0</span> + <span class="num">1</span>;
+<span class="cm">-- AVG handles both odd (1 middle) and even (2 middles) counts</span>
+
+<span class="cm">-- Method 2: Classic without window functions</span>
+<span class="kw">SELECT</span> <span class="fn">AVG</span>(salary) median
+<span class="kw">FROM</span> (
+  <span class="kw">SELECT</span> salary
+  <span class="kw">FROM</span> <span class="tb">employees</span>
+  <span class="kw">ORDER BY</span> salary
+  <span class="kw">LIMIT</span> <span class="num">2</span> <span class="cm">-- handles both odd and even</span>
+  <span class="kw">OFFSET</span> (<span class="kw">SELECT</span> (<span class="fn">COUNT</span>(*) - <span class="num">1</span>) / <span class="num">2</span> <span class="kw">FROM</span> <span class="tb">employees</span>)
+) m;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C4</span><span class="qt">Department-wise top 3 earners (handle ties correctly)</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 LeetCode #185 — Uber / Microsoft</div>
+    <pre><span class="cm">-- Tables: employees(id, name, salary, dept_id), departments(id, name)</span>
+
+<span class="kw">WITH</span> ranked <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    e.name,
+    e.salary,
+    d.name <span class="kw">AS</span> dept,
+    <span class="fn">DENSE_RANK</span>() <span class="kw">OVER</span> (
+      <span class="kw">PARTITION BY</span> e.dept_id
+      <span class="kw">ORDER BY</span> e.salary <span class="kw">DESC</span>
+    ) dr
+  <span class="kw">FROM</span> <span class="tb">employees</span> e
+  <span class="kw">JOIN</span> <span class="tb">departments</span> d <span class="kw">ON</span> e.dept_id = d.id
+)
+<span class="kw">SELECT</span> dept, name, salary
+<span class="kw">FROM</span> ranked
+<span class="kw">WHERE</span> dr <= <span class="num">3</span>
+<span class="kw">ORDER BY</span> dept, salary <span class="kw">DESC</span>;</pre>
+    <div class="box bw"><strong>⚠️ Use DENSE_RANK, not RANK:</strong> If two people tie for 2nd, RANK skips 3rd (gives 2,2,4). DENSE_RANK gives (2,2,3) — both show as top 3. RANK would incorrectly exclude the true 3rd place. Interviewers test this distinction deliberately.</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C5</span><span class="qt">Month-over-month revenue growth percentage</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 E-commerce / Fintech Interview</div>
+    <pre><span class="cm">-- Table: orders(id, amount, created_at)</span>
+
+<span class="kw">WITH</span> monthly <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    <span class="fn">DATE_FORMAT</span>(created_at, <span class="str">'%Y-%m'</span>) <span class="kw">AS</span> month,
+    <span class="fn">SUM</span>(amount) <span class="kw">AS</span> revenue
+  <span class="kw">FROM</span> <span class="tb">orders</span>
+  <span class="kw">WHERE</span> status = <span class="str">'completed'</span>
+  <span class="kw">GROUP BY</span> <span class="num">1</span>
+)
+<span class="kw">SELECT</span>
+  month,
+  revenue,
+  <span class="fn">LAG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> month) prev_revenue,
+  <span class="fn">ROUND</span>(
+    (revenue - <span class="fn">LAG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> month))
+    / <span class="fn">LAG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> month) * <span class="num">100</span>, <span class="num">2</span>
+  ) <span class="kw">AS</span> growth_pct,
+  <span class="fn">SUM</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> month) <span class="kw">AS</span> cumulative
+<span class="kw">FROM</span> monthly;</pre>
+    <div class="out">month    | revenue | prev_revenue | growth_pct | cumulative
+2024-01  | 50000   | NULL         | NULL       | 50000
+2024-02  | 62000   | 50000        | 24.00      | 112000
+2024-03  | 58000   | 62000        | -6.45      | 170000</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C6</span><span class="qt">Users who bought product A but NOT product B (set difference)</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Product Analytics — Google / Flipkart</div>
+    <pre><span class="cm">-- Table: purchases(user_id, product_name)</span>
+
+<span class="cm">-- Method 1: NOT EXISTS (usually fastest)</span>
+<span class="kw">SELECT DISTINCT</span> user_id
+<span class="kw">FROM</span> <span class="tb">purchases</span>
+<span class="kw">WHERE</span> product_name = <span class="str">'ProductA'</span>
+  <span class="op">AND NOT EXISTS</span> (
+    <span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tb">purchases</span> p2
+    <span class="kw">WHERE</span> p2.user_id = purchases.user_id
+      <span class="op">AND</span> p2.product_name = <span class="str">'ProductB'</span>
+  );
+
+<span class="cm">-- Method 2: LEFT JOIN anti-join (often preferred by interviewers)</span>
+<span class="kw">SELECT</span> a.user_id
+<span class="kw">FROM</span> <span class="tb">purchases</span> a
+<span class="kw">LEFT JOIN</span> <span class="tb">purchases</span> b
+  <span class="kw">ON</span> a.user_id = b.user_id <span class="op">AND</span> b.product_name = <span class="str">'ProductB'</span>
+<span class="kw">WHERE</span> a.product_name = <span class="str">'ProductA'</span>
+  <span class="op">AND</span> b.user_id <span class="kw">IS NULL</span>;
+
+<span class="cm">-- Method 3: Conditional aggregation (elegant)</span>
+<span class="kw">SELECT</span> user_id
+<span class="kw">FROM</span> <span class="tb">purchases</span>
+<span class="kw">GROUP BY</span> user_id
+<span class="kw">HAVING</span>
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> product_name=<span class="str">'ProductA'</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) > <span class="num">0</span>
+  <span class="op">AND</span> <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> product_name=<span class="str">'ProductB'</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) = <span class="num">0</span>;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C7</span><span class="qt">Find gaps in an auto-increment ID sequence</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Data Integrity — Backend Engineering</div>
+    <pre><span class="cm">-- Table: orders(id, ...) — find missing IDs (gaps)</span>
+
+<span class="cm">-- Method 1: Self-join (MySQL 5.x compatible)</span>
+<span class="kw">SELECT</span> a.id + <span class="num">1</span> <span class="kw">AS</span> gap_start
+<span class="kw">FROM</span> <span class="tb">orders</span> a
+<span class="kw">WHERE NOT EXISTS</span> (
+  <span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> <span class="tb">orders</span> b <span class="kw">WHERE</span> b.id = a.id + <span class="num">1</span>
+)
+<span class="op">AND</span> a.id < (<span class="kw">SELECT MAX</span>(id) <span class="kw">FROM</span> <span class="tb">orders</span>);
+
+<span class="cm">-- Method 2: LAG window function (MySQL 8, clean)</span>
+<span class="kw">WITH</span> gaps <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    id,
+    <span class="fn">LAG</span>(id) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> id) prev_id
+  <span class="kw">FROM</span> <span class="tb">orders</span>
+)
+<span class="kw">SELECT</span>
+  prev_id + <span class="num">1</span> <span class="kw">AS</span> gap_from,
+  id - <span class="num">1</span>      <span class="kw">AS</span> gap_to,
+  id - prev_id - <span class="num">1</span> <span class="kw">AS</span> missing_count
+<span class="kw">FROM</span> gaps
+<span class="kw">WHERE</span> id > prev_id + <span class="num">1</span>;</pre>
+    <div class="out">gap_from | gap_to | missing_count
+1005     | 1007   | 3
+2034     | 2034   | 1</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C8</span><span class="qt">Retention analysis — what % of users returned after Day 1?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Growth Analytics — Startup / Big Tech</div>
+    <pre><span class="cm">-- Table: events(user_id, event_date)</span>
+
+<span class="kw">WITH</span> first_day <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> user_id, <span class="fn">MIN</span>(event_date) signup_date
+  <span class="kw">FROM</span> <span class="tb">events</span>
+  <span class="kw">GROUP BY</span> user_id
+),
+returned <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> f.user_id
+  <span class="kw">FROM</span> first_day f
+  <span class="kw">JOIN</span> <span class="tb">events</span> e <span class="kw">ON</span> f.user_id = e.user_id
+    <span class="op">AND</span> e.event_date = <span class="fn">DATE_ADD</span>(f.signup_date, <span class="kw">INTERVAL</span> <span class="num">1</span> <span class="kw">DAY</span>)
+)
+<span class="kw">SELECT</span>
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> r.user_id) day1_retained,
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> f.user_id) total_users,
+  <span class="fn">ROUND</span>(<span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> r.user_id) * <span class="num">100.0</span> / <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> f.user_id), <span class="num">2</span>) day1_retention_pct
+<span class="kw">FROM</span> first_day f
+<span class="kw">LEFT JOIN</span> returned r <span class="kw">ON</span> f.user_id = r.user_id;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C9</span><span class="qt">Write a query to detect billing fraud: same card, different users within 10 minutes</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Fintech / Payment Systems Interview</div>
+    <pre><span class="cm">-- Table: transactions(id, user_id, card_last4, txn_time, amount)</span>
+
+<span class="kw">SELECT</span>
+  t1.card_last4,
+  t1.user_id  <span class="kw">AS</span> user1,
+  t2.user_id  <span class="kw">AS</span> user2,
+  t1.txn_time <span class="kw">AS</span> time1,
+  t2.txn_time <span class="kw">AS</span> time2,
+  <span class="fn">TIMESTAMPDIFF</span>(<span class="kw">SECOND</span>, t1.txn_time, t2.txn_time) gap_secs
+<span class="kw">FROM</span> <span class="tb">transactions</span> t1
+<span class="kw">JOIN</span> <span class="tb">transactions</span> t2
+  <span class="kw">ON</span>  t1.card_last4 = t2.card_last4
+  <span class="op">AND</span> t1.user_id   != t2.user_id
+  <span class="op">AND</span> t2.txn_time  >  t1.txn_time
+  <span class="op">AND</span> <span class="fn">TIMESTAMPDIFF</span>(<span class="kw">SECOND</span>, t1.txn_time, t2.txn_time) <= <span class="num">600</span>
+<span class="kw">ORDER BY</span> t1.card_last4, t1.txn_time;</pre>
+    <div class="box bp"><strong>🧠 Performance note:</strong> This self-join is expensive on large tables. In production, add index on (card_last4, txn_time) and run in time-windowed batches, not on the full history. This is worth discussing with the interviewer.</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C10</span><span class="qt">Write an UPSERT and explain INSERT ... ON DUPLICATE KEY UPDATE</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Very Common in Backend Interviews</div>
+    <pre><span class="cm">-- UPSERT: insert if not exists, update if exists</span>
+
+<span class="cm">-- Method 1: ON DUPLICATE KEY UPDATE</span>
+<span class="kw">INSERT INTO</span> <span class="tb">user_stats</span> (user_id, login_count, last_seen)
+<span class="kw">VALUES</span> (<span class="num">42</span>, <span class="num">1</span>, <span class="fn">NOW</span>())
+<span class="kw">ON DUPLICATE KEY UPDATE</span>
+  login_count = login_count + <span class="num">1</span>,
+  last_seen = <span class="fn">NOW</span>();
+
+<span class="cm">-- Method 2: REPLACE INTO (deletes + reinserts — different ID!)</span>
+<span class="kw">REPLACE INTO</span> <span class="tb">user_stats</span> (user_id, login_count, last_seen)
+<span class="kw">VALUES</span> (<span class="num">42</span>, <span class="num">1</span>, <span class="fn">NOW</span>());
+<span class="cm">-- ⚠️ REPLACE deletes the old row first, triggers DELETE triggers!</span>
+<span class="cm">-- ⚠️ FK references to old row will fail with ON DELETE RESTRICT</span>
+
+<span class="cm">-- Method 3: INSERT IGNORE (skip on duplicate, no update)</span>
+<span class="kw">INSERT IGNORE INTO</span> <span class="tb">user_stats</span> (user_id, login_count)
+<span class="kw">VALUES</span> (<span class="num">42</span>, <span class="num">1</span>);
+<span class="cm">-- Silently ignores duplicate key errors (and other errors too!)</span>
+
+<span class="cm">-- Best practice: ON DUPLICATE KEY UPDATE</span>
+<span class="cm">-- Atomic, fires only UPDATE triggers on conflict, preserves ID</span>
+
+<span class="cm">-- Bulk upsert</span>
+<span class="kw">INSERT INTO</span> <span class="tb">product_inventory</span> (product_id, qty, updated_at)
+<span class="kw">VALUES</span>
+  (<span class="num">1</span>, <span class="num">100</span>, <span class="fn">NOW</span>()),
+  (<span class="num">2</span>, <span class="num">50</span>,  <span class="fn">NOW</span>()),
+  (<span class="num">3</span>, <span class="num">75</span>,  <span class="fn">NOW</span>())
+<span class="kw">ON DUPLICATE KEY UPDATE</span>
+  qty = <span class="fn">VALUES</span>(qty),   <span class="cm">-- deprecated in 8.0, use aliases below</span>
+  updated_at = <span class="fn">VALUES</span>(updated_at);
+
+<span class="cm">-- MySQL 8.0.19+ alias syntax (preferred)</span>
+<span class="kw">INSERT INTO</span> <span class="tb">product_inventory</span> (product_id, qty)
+<span class="kw">VALUES</span> (<span class="num">1</span>, <span class="num">100</span>) <span class="kw">AS</span> new_vals
+<span class="kw">ON DUPLICATE KEY UPDATE</span> qty = new_vals.qty;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C11</span><span class="qt">Write a query to transpose rows to columns dynamically</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Reporting — Data Engineering</div>
+    <pre><span class="cm">-- Static pivot (known categories)</span>
+<span class="kw">SELECT</span>
+  student_id,
+  <span class="fn">MAX</span>(<span class="kw">CASE WHEN</span> subject=<span class="str">'Math'</span>    <span class="kw">THEN</span> score <span class="kw">END</span>) Math,
+  <span class="fn">MAX</span>(<span class="kw">CASE WHEN</span> subject=<span class="str">'Science'</span> <span class="kw">THEN</span> score <span class="kw">END</span>) Science,
+  <span class="fn">MAX</span>(<span class="kw">CASE WHEN</span> subject=<span class="str">'English'</span> <span class="kw">THEN</span> score <span class="kw">END</span>) English
+<span class="kw">FROM</span> <span class="tb">scores</span>
+<span class="kw">GROUP BY</span> student_id;
+
+<span class="cm">-- Dynamic pivot (unknown categories) — using prepared statements</span>
+<span class="kw">SET</span> @sql = <span class="kw">NULL</span>;
+
+<span class="kw">SELECT</span> <span class="fn">GROUP_CONCAT</span>(
+  <span class="fn">DISTINCT</span> <span class="fn">CONCAT</span>(
+    <span class="str">"MAX(CASE WHEN subject='"</span>, subject,
+    <span class="str">"' THEN score END) AS `"</span>, subject, <span class="str">"`"</span>
+  )
+) <span class="kw">INTO</span> @sql
+<span class="kw">FROM</span> <span class="tb">scores</span>;
+
+<span class="kw">SET</span> @sql = <span class="fn">CONCAT</span>(<span class="str">'SELECT student_id, '</span>, @sql, <span class="str">' FROM scores GROUP BY student_id'</span>);
+<span class="kw">PREPARE</span> stmt <span class="kw">FROM</span> @sql;
+<span class="kw">EXECUTE</span> stmt;
+<span class="kw">DEALLOCATE PREPARE</span> stmt;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C12</span><span class="qt">Running total with reset condition (per month)</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Financial Reporting Interview</div>
+    <pre><span class="cm">-- Running total of sales that resets every month</span>
+<span class="kw">SELECT</span>
+  sale_date,
+  amount,
+  <span class="fn">DATE_FORMAT</span>(sale_date, <span class="str">'%Y-%m'</span>) <span class="kw">AS</span> month,
+  <span class="fn">SUM</span>(amount) <span class="kw">OVER</span> (
+    <span class="kw">PARTITION BY</span> <span class="fn">DATE_FORMAT</span>(sale_date, <span class="str">'%Y-%m'</span>)  <span class="cm">-- reset per month</span>
+    <span class="kw">ORDER BY</span> sale_date
+    <span class="kw">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>
+  ) <span class="kw">AS</span> monthly_running_total
+<span class="kw">FROM</span> <span class="tb">sales</span>
+<span class="kw">ORDER BY</span> sale_date;</pre>
+    <div class="box bt"><strong>💡 Frame clause:</strong> <code>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code> is the default for ORDER BY in window functions, but being explicit shows mastery. The alternative <code>RANGE BETWEEN</code> handles ties differently (includes all tied rows in the frame).</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C13</span><span class="qt">Find all employees who earn more than their manager</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 LeetCode #181 — Classic</div>
+    <pre><span class="cm">-- Table: employees(id, name, salary, manager_id)</span>
+
+<span class="cm">-- Method 1: Self-join</span>
+<span class="kw">SELECT</span> e.name <span class="kw">AS</span> employee
+<span class="kw">FROM</span> <span class="tb">employees</span> e
+<span class="kw">JOIN</span> <span class="tb">employees</span> m <span class="kw">ON</span> e.manager_id = m.id
+<span class="kw">WHERE</span> e.salary > m.salary;
+
+<span class="cm">-- Method 2: With context (show both salaries)</span>
+<span class="kw">SELECT</span>
+  e.name        <span class="kw">AS</span> employee,
+  e.salary      <span class="kw">AS</span> emp_salary,
+  m.name        <span class="kw">AS</span> manager,
+  m.salary      <span class="kw">AS</span> mgr_salary,
+  e.salary - m.salary <span class="kw">AS</span> difference
+<span class="kw">FROM</span> <span class="tb">employees</span> e
+<span class="kw">JOIN</span> <span class="tb">employees</span> m <span class="kw">ON</span> e.manager_id = m.id
+<span class="kw">WHERE</span> e.salary > m.salary
+<span class="kw">ORDER BY</span> difference <span class="kw">DESC</span>;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C14</span><span class="qt">Calculate a 7-day rolling average of daily revenue</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Analytics Engineering — Very Common</div>
+    <pre><span class="cm">-- Table: daily_revenue(date, revenue)</span>
+
+<span class="kw">SELECT</span>
+  `date`,
+  revenue,
+  <span class="fn">ROUND</span>(
+    <span class="fn">AVG</span>(revenue) <span class="kw">OVER</span> (
+      <span class="kw">ORDER BY</span> `date`
+      <span class="kw">ROWS BETWEEN</span> <span class="num">6</span> <span class="kw">PRECEDING AND CURRENT ROW</span>  <span class="cm">-- 7 days total</span>
+    ), <span class="num">2</span>
+  ) <span class="kw">AS</span> rolling_7d_avg,
+  <span class="fn">COUNT</span>(*) <span class="kw">OVER</span> (
+    <span class="kw">ORDER BY</span> `date`
+    <span class="kw">ROWS BETWEEN</span> <span class="num">6</span> <span class="kw">PRECEDING AND CURRENT ROW</span>
+  ) <span class="kw">AS</span> days_in_window  <span class="cm">-- < 7 at start of dataset</span>
+<span class="kw">FROM</span> <span class="tb">daily_revenue</span>
+<span class="kw">ORDER BY</span> `date`;</pre>
+    <div class="out">date       | revenue | rolling_7d_avg | days_in_window
+2024-01-01 | 1200    | 1200.00        | 1
+2024-01-02 | 1800    | 1500.00        | 2
+2024-01-07 | 2200    | 1628.57        | 7   ← full window
+2024-01-08 | 1900    | 1742.86        | 7   ← slides forward</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">C15</span><span class="qt">Hierarchical query: print org chart with levels and path</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="challenge-badge">🎯 Complex — Shows Recursive CTE Mastery</div>
+    <pre><span class="cm">-- Table: employees(id, name, manager_id)</span>
+
+<span class="kw">WITH RECURSIVE</span> org_chart <span class="kw">AS</span> (
+  <span class="cm">-- Anchor: CEO (no manager)</span>
+  <span class="kw">SELECT</span>
+    id,
+    name,
+    manager_id,
+    <span class="num">0</span>    <span class="kw">AS</span> level,
+    name <span class="kw">AS</span> path,
+    <span class="fn">CAST</span>(id <span class="kw">AS</span> <span class="kw">CHAR</span>(<span class="num">1000</span>)) <span class="kw">AS</span> id_path
+  <span class="kw">FROM</span> <span class="tb">employees</span>
+  <span class="kw">WHERE</span> manager_id <span class="kw">IS NULL</span>
+
+  <span class="kw">UNION ALL</span>
+
+  <span class="cm">-- Recursive: children</span>
+  <span class="kw">SELECT</span>
+    e.id,
+    e.name,
+    e.manager_id,
+    o.level + <span class="num">1</span>,
+    <span class="fn">CONCAT</span>(o.path, <span class="str">' → '</span>, e.name),
+    <span class="fn">CONCAT</span>(o.id_path, <span class="str">','</span>, e.id)
+  <span class="kw">FROM</span> <span class="tb">employees</span> e
+  <span class="kw">JOIN</span> org_chart o <span class="kw">ON</span> e.manager_id = o.id
+)
+<span class="kw">SELECT</span>
+  <span class="fn">REPEAT</span>(<span class="str">'  '</span>, level) || name <span class="kw">AS</span> org_tree,
+  level,
+  path
+<span class="kw">FROM</span> org_chart
+<span class="kw">ORDER BY</span> id_path;  <span class="cm">-- Preserves hierarchy order</span></pre>
+    <div class="out">org_tree          | level | path
+Alice (CEO)       |   0   | Alice
+  Bob (VP Eng)    |   1   | Alice → Bob
+    Charlie (SE)  |   2   | Alice → Bob → Charlie
+    Diana (SE)    |   2   | Alice → Bob → Diana
+  Eve (VP Sales)  |   1   | Alice → Eve</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ EXPLAIN MASTERY ═══ -->
+<div class="sg" data-s="explain">
+<div class="sh"><div class="si o">🔬</div><div class="sl2">EXPLAIN Deep Mastery — Read Like a Senior</div><div class="sl3"></div></div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">E1</span><span class="qt">Read this EXPLAIN output — what's wrong and how to fix it?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Scenario</div>
+    <pre><span class="kw">EXPLAIN</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">orders</span>
+<span class="kw">WHERE</span> <span class="fn">DATE</span>(created_at) = <span class="str">'2024-01-15'</span>\G</pre>
+    <div class="explain-row">
+      <span class="explain-key">id:</span> 1 &nbsp;&nbsp;
+      <span class="explain-key">select_type:</span> SIMPLE &nbsp;&nbsp;
+      <span class="explain-key">table:</span> orders &nbsp;&nbsp;
+      <span class="explain-key">type:</span> <span class="explain-bad">ALL</span> &nbsp;&nbsp;
+      <span class="explain-key">key:</span> <span class="explain-bad">NULL</span> &nbsp;&nbsp;
+      <span class="explain-key">rows:</span> <span class="explain-bad">8,432,000</span> &nbsp;&nbsp;
+      <span class="explain-key">Extra:</span> <span class="explain-bad">Using where</span>
+    </div>
+    <div class="csub r">Diagnosis: 3 critical problems</div>
+    <div class="cols2">
+      <div>
+        <div class="col-label r">❌ What's Wrong</div>
+        <div class="an">1. <code>type: ALL</code> → full table scan on 8.4M rows<br>2. <code>key: NULL</code> → no index used<br>3. <code>DATE(created_at)</code> → function wraps indexed column, destroying index usage</div>
+      </div>
+      <div>
+        <div class="col-label g">✅ The Fix</div>
+        <pre style="margin:0"><span class="cm">-- Remove function, use range</span>
+<span class="kw">WHERE</span> created_at
+  <span class="kw">BETWEEN</span> <span class="str">'2024-01-15 00:00:00'</span>
+  <span class="op">AND</span>     <span class="str">'2024-01-15 23:59:59'</span>;</pre>
+      </div>
+    </div>
+    <div class="csub g">After Fix — EXPLAIN shows:</div>
+    <div class="explain-row">
+      <span class="explain-key">type:</span> <span class="explain-good">range</span> &nbsp;&nbsp;
+      <span class="explain-key">key:</span> <span class="explain-good">idx_created_at</span> &nbsp;&nbsp;
+      <span class="explain-key">rows:</span> <span class="explain-good">1,247</span> &nbsp;&nbsp;
+      <span class="explain-key">Extra:</span> <span class="explain-good">Using index condition</span>
+    </div>
+    <div class="box bg"><strong>✅ Result:</strong> 8.4M row scan → 1,247 rows. Query time: 8 seconds → 12ms. This is a 650x improvement.</div>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">E2</span><span class="qt">What does "Using filesort" mean and how to eliminate it?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">"Using filesort" means MySQL cannot use an index to satisfy ORDER BY. It must sort the result set in memory (or a temp file if too large). This is always a red flag to investigate.</div>
+    <pre><span class="cm">-- ❌ Triggers filesort</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">orders</span>
+<span class="kw">WHERE</span> user_id = <span class="num">42</span>
+<span class="kw">ORDER BY</span> created_at <span class="kw">DESC</span>;
+<span class="cm">-- Index on user_id exists but not on created_at too</span>
+
+<span class="cm">-- ✅ Fix: composite index matching WHERE + ORDER BY</span>
+<span class="kw">CREATE INDEX</span> idx_user_date
+  <span class="kw">ON</span> <span class="tb">orders</span> (user_id, created_at <span class="kw">DESC</span>);  <span class="cm">-- MySQL 8: true DESC index</span>
+
+<span class="cm">-- ✅ Fix 2: Ensure sort buffer is large enough</span>
+sort_buffer_size = <span class="num">4M</span>  <span class="cm">-- if must sort, at least do it in memory</span>
+
+<span class="cm">-- EXPLAIN ANALYZE (MySQL 8): shows actual sort time</span>
+<span class="kw">EXPLAIN ANALYZE</span> <span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">orders</span>
+<span class="kw">WHERE</span> user_id = <span class="num">42</span> <span class="kw">ORDER BY</span> created_at <span class="kw">DESC</span>\G</pre>
+    <div class="box bw"><strong>⚠️ Composite index rule:</strong> The ORDER BY columns must come after the WHERE equality columns in the composite index, and the ORDER BY direction must match the index direction. (user_id, created_at DESC) serves WHERE user_id=? ORDER BY created_at DESC perfectly.</div>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">E3</span><span class="qt">What does "Using temporary" mean and why is it worse than filesort?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">"Using temporary" means MySQL must create an internal temporary table to process the query. This happens with GROUP BY on non-indexed columns, UNION without index, or complex subqueries.</div>
+    <pre><span class="cm">-- Triggers "Using temporary; Using filesort"</span>
+<span class="kw">SELECT</span> status, <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> <span class="tb">orders</span> <span class="kw">GROUP BY</span> status <span class="kw">ORDER BY</span> <span class="fn">COUNT</span>(*);
+
+<span class="cm">-- Check if temp table went to disk</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Created_tmp_disk_tables'</span>;
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Created_tmp_tables'</span>;
+<span class="cm">-- Ratio of disk/total should be < 5%</span>
+
+<span class="cm">-- Tune to keep temp tables in memory:</span>
+tmp_table_size     = <span class="num">256M</span>
+max_heap_table_size = <span class="num">256M</span>  <span class="cm">-- both must be set</span></pre>
+    <div class="tbl-wrap">
+    <table class="tbl"><tr><th>Extra Value</th><th>Severity</th><th>Meaning</th></tr>
+    <tr><td>Using index</td><td class="gd">✅ Best</td><td>Covering index, no table access</td></tr>
+    <tr><td>Using where</td><td class="gd">✅ Good</td><td>Filter applied after index scan</td></tr>
+    <tr><td>Using index condition</td><td class="gd">✅ Good</td><td>ICP: filter pushed into storage engine</td></tr>
+    <tr><td>Using filesort</td><td class="gd" style="color:#F6C766">⚠️ Investigate</td><td>Sort needed, no index for ORDER BY</td></tr>
+    <tr><td>Using temporary</td><td class="bd">❌ Bad</td><td>Temp table created</td></tr>
+    <tr><td>Using join buffer (BNL)</td><td class="bd">❌ Bad</td><td>No index on joined column</td></tr>
+    <tr><td>Full scan on NULL key</td><td class="bd">❌ Very bad</td><td>NULL comparison kills index</td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">E4</span><span class="qt">What is Index Condition Pushdown (ICP) and why does it matter?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">ICP is an optimization where MySQL pushes WHERE conditions into the storage engine (InnoDB) during index scan, instead of fetching rows then filtering at the MySQL layer. EXPLAIN shows "Using index condition".</div>
+    <pre><span class="cm">-- Without ICP (old behavior):</span>
+<span class="cm">-- 1. InnoDB scans idx_lastname for lastname='Smith'</span>
+<span class="cm">-- 2. Fetches full rows for each match</span>
+<span class="cm">-- 3. MySQL layer checks firstname LIKE 'J%'</span>
+<span class="cm">-- Many rows fetched unnecessarily!</span>
+
+<span class="cm">-- With ICP (MySQL 5.6+):</span>
+<span class="cm">-- 1. InnoDB scans idx on (lastname, firstname)</span>
+<span class="cm">-- 2. Checks BOTH conditions IN the storage engine</span>
+<span class="cm">-- 3. Only fetches rows passing BOTH filters</span>
+<span class="cm">-- Fewer rows fetched = less I/O</span>
+
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">employees</span>
+<span class="kw">WHERE</span> lastname = <span class="str">'Smith'</span>
+  <span class="op">AND</span> firstname <span class="kw">LIKE</span> <span class="str">'J%'</span>;
+<span class="cm">-- Extra: Using index condition  ← ICP active</span>
+
+<span class="cm">-- Check/toggle ICP:</span>
+<span class="kw">SET</span> optimizer_switch = <span class="str">'index_condition_pushdown=on'</span>; <span class="cm">-- default ON</span></pre>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">E5</span><span class="qt">How does EXPLAIN ANALYZE differ from EXPLAIN and when to use it?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <table class="tbl"><tr><th></th><th>EXPLAIN</th><th>EXPLAIN ANALYZE</th></tr>
+    <tr><td class="lc">Execution</td><td>Does NOT run query</td><td>Runs the query!</td></tr>
+    <tr><td class="lc">Rows estimate</td><td>Optimizer estimate</td><td>Actual row count</td></tr>
+    <tr><td class="lc">Timing</td><td>No timing</td><td>Actual time per step</td></tr>
+    <tr><td class="lc">Available</td><td>All versions</td><td>MySQL 8.0.18+</td></tr>
+    <tr><td class="lc">Use for</td><td>Quick index check</td><td>Find actual bottleneck</td></tr>
+    </table>
+    <pre><span class="kw">EXPLAIN ANALYZE</span>
+<span class="kw">SELECT</span> u.name, <span class="fn">COUNT</span>(o.id)
+<span class="kw">FROM</span> <span class="tb">users</span> u
+<span class="kw">JOIN</span> <span class="tb">orders</span> o <span class="kw">ON</span> u.id = o.user_id
+<span class="kw">WHERE</span> u.country = <span class="str">'IN'</span>
+<span class="kw">GROUP BY</span> u.id\G</pre>
+    <div class="out">-> Group aggregate: count(o.id)  (actual time=183.4..184.2 rows=4821 loops=1)
+  -> Nested loop inner join  (actual time=0.08..176.3 rows=89420 loops=1)
+    -> Filter: (u.country = 'IN')  (actual time=0.04..12.1 rows=4821 loops=1)
+      -> Index range scan on u using idx_country  (actual time=0.03..8.7 rows=4821 loops=1)
+    -> Index lookup on o using idx_user_id  (actual time=0.02..0.03 rows=18 loops=4821)</div>
+    <div class="box bt"><strong>💡 Reading ANALYZE output:</strong> <code>actual time=183.4..184.2</code> means first row at 183ms, last at 184ms. <code>loops=4821</code> means this step ran 4821 times (once per user). Total cost = 0.03ms × 4821 = the join cost.</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ INDEX STRATEGY ═══ -->
+<div class="sg" data-s="index-strategy">
+<div class="sh"><div class="si o">⚡</div><div class="sl2">Index Strategy — How Seniors Think</div><div class="sl3"></div></div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I1</span><span class="qt">How do you decide WHICH columns to index on a new table?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Senior DBA Decision Framework</div>
+    <ol class="steps">
+      <li>Always index the PRIMARY KEY (clustered, automatic)</li>
+      <li>Index every FOREIGN KEY column — MySQL doesn't do this automatically. Missing FK indexes = full scan on every JOIN and every parent DELETE</li>
+      <li>Identify your most frequent query patterns from application code or slow query log</li>
+      <li>For each query: columns in WHERE (high-cardinality first), then JOIN ON, then ORDER BY, then GROUP BY</li>
+      <li>Check cardinality: <code>COUNT(DISTINCT col) / COUNT(*)</code> — if &lt; 5%, reconsider</li>
+      <li>Consider composite indexes: group related WHERE + ORDER BY columns together</li>
+      <li>Think about covering indexes for critical hot paths (SELECT only indexed columns)</li>
+      <li>Never index a column that's modified very frequently — index maintenance cost</li>
+    </ol>
+    <pre><span class="cm">-- FK index audit: find FK columns without an index</span>
+<span class="kw">SELECT</span>
+  kcu.table_name,
+  kcu.column_name <span class="kw">AS</span> fk_column,
+  kcu.referenced_table_name
+<span class="kw">FROM</span> information_schema.KEY_COLUMN_USAGE kcu
+<span class="kw">LEFT JOIN</span> information_schema.STATISTICS s
+  <span class="kw">ON</span>  s.table_name   = kcu.table_name
+  <span class="op">AND</span> s.column_name  = kcu.column_name
+  <span class="op">AND</span> s.table_schema = kcu.table_schema
+<span class="kw">WHERE</span> kcu.referenced_table_name <span class="kw">IS NOT NULL</span>
+  <span class="op">AND</span> s.index_name <span class="kw">IS NULL</span>  <span class="cm">-- no index on FK!</span>
+  <span class="op">AND</span> kcu.table_schema = <span class="str">'your_db'</span>;</pre>
+    <div class="box bp"><strong>🔬 25-year rule:</strong> The single most common performance problem I've seen in production is missing indexes on foreign key columns. Every experienced DBA has seen MySQL do a 10-second full scan on a child table because the FK column had no index.</div>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I2</span><span class="qt">What is index merge and when does MySQL use it?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">Index merge allows MySQL to use multiple indexes on the same table in one query and merge the results. Sounds good, often isn't.</div>
+    <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">orders</span>
+<span class="kw">WHERE</span> user_id = <span class="num">42</span> <span class="op">OR</span> status = <span class="str">'urgent'</span>;
+
+<span class="cm">-- MySQL might use: Extra = "Using union(idx_user,idx_status); Using where"</span>
+<span class="cm">-- It scans idx_user for user_id=42, scans idx_status for status='urgent'</span>
+<span class="cm">-- Then does a UNION of row IDs (sort + merge)</span></pre>
+    <div class="box bw"><strong>⚠️ Index merge is often a symptom of bad schema design:</strong> If you see index merge frequently, it usually means you need a better composite index. Index merge has merge overhead. A well-designed composite index is usually faster.</div>
+    <pre><span class="cm">-- Better: composite index</span>
+<span class="kw">CREATE INDEX</span> idx_user_status <span class="kw">ON</span> <span class="tb">orders</span>(user_id, status);
+
+<span class="cm">-- Or rewrite OR as UNION ALL (often faster)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">orders</span> <span class="kw">WHERE</span> user_id = <span class="num">42</span>
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">orders</span> <span class="kw">WHERE</span> status = <span class="str">'urgent'</span> <span class="op">AND</span> user_id != <span class="num">42</span>;</pre>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I3</span><span class="qt">How many indexes is "too many"? What's the hidden cost?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an">Every index you add has ongoing costs that compound over time. There's no magic number, but 5-7 indexes per table is usually a soft ceiling before you investigate overlap.</div>
+    <table class="tbl"><tr><th>Index Cost</th><th>Impact</th></tr>
+    <tr><td class="lc">Write overhead</td><td>Every INSERT, UPDATE, DELETE must update ALL indexes. 10 indexes = 10x write cost</td></tr>
+    <tr><td class="lc">Storage</td><td>Each index is a separate B+Tree. On 100GB table, indexes can be another 50-200GB</td></tr>
+    <tr><td class="lc">Buffer pool pressure</td><td>Index pages compete with data pages in the buffer pool</td></tr>
+    <tr><td class="lc">DDL time</td><td>Adding a new index on 500GB table = hours</td></tr>
+    <tr><td class="lc">Optimizer confusion</td><td>Too many choices = optimizer sometimes picks wrong one</td></tr>
+    </table>
+    <pre><span class="cm">-- Find unused indexes (MySQL 8 performance_schema)</span>
+<span class="kw">SELECT</span>
+  t.object_schema,
+  t.object_name <span class="kw">AS</span> table_name,
+  t.index_name
+<span class="kw">FROM</span> performance_schema.table_io_waits_summary_by_index_usage t
+<span class="kw">WHERE</span> t.index_name <span class="kw">IS NOT NULL</span>
+  <span class="op">AND</span> t.count_star = <span class="num">0</span>  <span class="cm">-- never used since last restart</span>
+  <span class="op">AND</span> t.object_schema = <span class="str">'your_db'</span>
+  <span class="op">AND</span> t.index_name != <span class="str">'PRIMARY'</span>
+<span class="kw">ORDER BY</span> t.object_name, t.index_name;
+
+<span class="cm">-- Make index INVISIBLE first (MySQL 8) — test before dropping</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">orders</span> <span class="kw">ALTER INDEX</span> idx_old <span class="kw">INVISIBLE</span>;
+<span class="cm">-- Monitor for a week. If no problems → DROP INDEX</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ═══ MYSQL 8 FEATURES ═══ -->
+<div class="sg" data-s="mysql8">
+<div class="sh"><div class="si p">🆕</div><div class="sl2">MySQL 8.0 New Features — Must Know</div><div class="sl3"></div></div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M1</span><span class="qt">What are the major MySQL 8.0 improvements over 5.7?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <table class="tbl"><tr><th>Feature</th><th>MySQL 5.7</th><th>MySQL 8.0</th></tr>
+    <tr><td class="lc">Window Functions</td><td class="bd">✗ None</td><td class="gd">✅ Full support</td></tr>
+    <tr><td class="lc">CTEs (WITH)</td><td class="bd">✗ None</td><td class="gd">✅ Including recursive</td></tr>
+    <tr><td class="lc">Roles</td><td class="bd">✗ None</td><td class="gd">✅ User roles</td></tr>
+    <tr><td class="lc">Descending Indexes</td><td class="bd">✗ None</td><td class="gd">✅ True DESC indexes</td></tr>
+    <tr><td class="lc">Invisible Indexes</td><td class="bd">✗ None</td><td class="gd">✅ Safe index testing</td></tr>
+    <tr><td class="lc">Default charset</td><td>latin1</td><td class="gd">utf8mb4 (correct!)</td></tr>
+    <tr><td class="lc">JSON</td><td>Basic</td><td class="gd">JSON_TABLE, more functions</td></tr>
+    <tr><td class="lc">Hash Join</td><td class="bd">✗ None</td><td class="gd">✅ 8.0.18+</td></tr>
+    <tr><td class="lc">EXPLAIN ANALYZE</td><td class="bd">✗ None</td><td class="gd">✅ 8.0.18+</td></tr>
+    <tr><td class="lc">Query cache</td><td>Deprecated</td><td class="gd">Removed (use Redis)</td></tr>
+    <tr><td class="lc">Auth plugin</td><td>mysql_native_password</td><td>caching_sha2_password</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M2</span><span class="qt">What are MySQL 8 Roles and how to implement least-privilege?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Create roles</span>
+<span class="kw">CREATE ROLE</span> <span class="str">'app_read'</span>, <span class="str">'app_write'</span>, <span class="str">'app_admin'</span>;
+
+<span class="cm">-- Grant privileges to roles</span>
+<span class="kw">GRANT SELECT</span> <span class="kw">ON</span> mydb.* <span class="kw">TO</span> <span class="str">'app_read'</span>;
+<span class="kw">GRANT SELECT</span>, <span class="kw">INSERT</span>, <span class="kw">UPDATE</span>, <span class="kw">DELETE</span> <span class="kw">ON</span> mydb.* <span class="kw">TO</span> <span class="str">'app_write'</span>;
+<span class="kw">GRANT ALL PRIVILEGES ON</span> mydb.* <span class="kw">TO</span> <span class="str">'app_admin'</span>;
+
+<span class="cm">-- Create users and assign roles</span>
+<span class="kw">CREATE USER</span> <span class="str">'api_service'</span>@<span class="str">'10.0.0.%'</span> <span class="kw">IDENTIFIED BY</span> <span class="str">'SecurePass!'</span>;
+<span class="kw">GRANT</span> <span class="str">'app_write'</span> <span class="kw">TO</span> <span class="str">'api_service'</span>@<span class="str">'10.0.0.%'</span>;
+
+<span class="cm">-- Set default role (auto-active on login)</span>
+<span class="kw">SET DEFAULT ROLE</span> <span class="str">'app_write'</span> <span class="kw">TO</span> <span class="str">'api_service'</span>@<span class="str">'10.0.0.%'</span>;
+
+<span class="cm">-- User activates role manually:</span>
+<span class="kw">SET ROLE</span> <span class="str">'app_admin'</span>;  <span class="cm">-- elevate for this session</span>
+<span class="kw">SET ROLE NONE</span>;          <span class="cm">-- drop back</span>
+
+<span class="cm">-- Show effective privileges</span>
+<span class="kw">SHOW GRANTS FOR</span> <span class="str">'api_service'</span>@<span class="str">'10.0.0.%'</span> <span class="kw">USING</span> <span class="str">'app_write'</span>;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M3</span><span class="qt">What is JSON_TABLE and how to query JSON arrays as rows?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Table: orders with JSON line items</span>
+<span class="cm">-- order_id=1: {"items":[{"sku":"A1","qty":2},{"sku":"B3","qty":1}]}</span>
+
+<span class="cm">-- JSON_TABLE: expand JSON array into rows (MySQL 8.0)</span>
+<span class="kw">SELECT</span>
+  o.id,
+  jt.sku,
+  jt.qty
+<span class="kw">FROM</span> <span class="tb">orders</span> o,
+<span class="fn">JSON_TABLE</span>(
+  o.items_json,
+  <span class="str">'$.items[*]'</span>
+  <span class="kw">COLUMNS</span> (
+    sku <span class="kw">VARCHAR</span>(<span class="num">20</span>) <span class="kw">PATH</span> <span class="str">'$.sku'</span>,
+    qty <span class="kw">INT</span>         <span class="kw">PATH</span> <span class="str">'$.qty'</span>
+  )
+) jt;
+
+<span class="cm">-- Aggregate from JSON</span>
+<span class="kw">SELECT</span>
+  o.id,
+  <span class="fn">SUM</span>(jt.qty * p.price) total
+<span class="kw">FROM</span> <span class="tb">orders</span> o,
+<span class="fn">JSON_TABLE</span>(o.items_json, <span class="str">'$.items[*]'</span>
+  <span class="kw">COLUMNS</span>(sku <span class="kw">VARCHAR</span>(<span class="num">20</span>) <span class="kw">PATH</span> <span class="str">'$.sku'</span>, qty <span class="kw">INT</span> <span class="kw">PATH</span> <span class="str">'$.qty'</span>)
+) jt
+<span class="kw">JOIN</span> <span class="tb">products</span> p <span class="kw">ON</span> jt.sku = p.sku
+<span class="kw">GROUP BY</span> o.id;</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M4</span><span class="qt">What is a Generated/Computed Column and practical uses?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Generated columns: computed from other columns</span>
+<span class="cm">-- VIRTUAL: computed on read (no storage)</span>
+<span class="cm">-- STORED: computed and stored on write</span>
+
+<span class="kw">ALTER TABLE</span> <span class="tb">employees</span>
+  <span class="kw">ADD COLUMN</span> full_name <span class="kw">VARCHAR</span>(<span class="num">200</span>)
+    <span class="kw">GENERATED ALWAYS AS</span> (<span class="fn">CONCAT</span>(first_name, <span class="str">' '</span>, last_name)) <span class="kw">VIRTUAL</span>,
+  <span class="kw">ADD COLUMN</span> age <span class="kw">INT</span>
+    <span class="kw">GENERATED ALWAYS AS</span> (<span class="fn">TIMESTAMPDIFF</span>(<span class="kw">YEAR</span>, dob, <span class="fn">CURDATE</span>())) <span class="kw">VIRTUAL</span>;
+
+<span class="cm">-- Index a JSON field via generated column (solve the JSON index problem!)</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">users</span>
+  <span class="kw">ADD COLUMN</span> city <span class="kw">VARCHAR</span>(<span class="num">100</span>)
+    <span class="kw">GENERATED ALWAYS AS</span> (metadata->><span class="str">'$.address.city'</span>) <span class="kw">VIRTUAL</span>,
+  <span class="kw">ADD INDEX</span> idx_city (city);
+
+<span class="cm">-- Now this query uses the index!</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> city = <span class="str">'Mumbai'</span>;  <span class="ok">-- Uses idx_city</span>
+
+<span class="cm">-- STORED generated column for heavy computation</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">orders</span>
+  <span class="kw">ADD COLUMN</span> total_with_tax <span class="kw">DECIMAL</span>(<span class="num">12</span>,<span class="num">2</span>)
+    <span class="kw">GENERATED ALWAYS AS</span> (subtotal * <span class="num">1.18</span>) <span class="kw">STORED</span>,
+  <span class="kw">ADD INDEX</span> idx_tax_total (total_with_tax);</pre>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M5</span><span class="qt">What is Hash Join in MySQL 8.0.18+ and how does it work?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">Before 8.0.18, MySQL only had Nested Loop Join (NLJ) and Block Nested Loop (BNL). Hash Join builds a hash table from one table in memory, then probes it with the other — much faster for large tables without indexes on join conditions.</div>
+    <pre><span class="cm">-- Hash join kicks in when no index for the join</span>
+<span class="kw">EXPLAIN FORMAT=TREE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">t1</span> <span class="kw">JOIN</span> <span class="tb">t2</span> <span class="kw">ON</span> t1.unindexed_col = t2.unindexed_col\G</pre>
+    <div class="out">-> Inner hash join (t2.col = t1.col)
+    -> Table scan on t2
+    -> Hash
+        -> Table scan on t1</div>
+    <table class="tbl"><tr><th></th><th>Nested Loop</th><th>Hash Join</th></tr>
+    <tr><td class="lc">Best for</td><td>Small outer, indexed inner</td><td>Large tables, no index on join</td></tr>
+    <tr><td class="lc">Memory</td><td>Minimal</td><td>join_buffer_size per join</td></tr>
+    <tr><td class="lc">Complexity</td><td>O(n × log m)</td><td>O(n + m)</td></tr>
+    </table>
+    <pre><span class="cm">-- Tune hash join memory</span>
+join_buffer_size = <span class="num">256M</span>
+<span class="cm">-- Or per-query hint</span>
+<span class="kw">SELECT</span> <span class="cm">/*+ HASH_JOIN(t1,t2) */</span> * <span class="kw">FROM</span> <span class="tb">t1</span> <span class="kw">JOIN</span> <span class="tb">t2</span> <span class="kw">ON</span> ...;</pre>
+  </div>
+</div>
+</div>
+
+<!-- ═══ SCHEMA DESIGN ═══ -->
+<div class="sg" data-s="schema">
+<div class="sh"><div class="si y">🏛️</div><div class="sl2">Schema Design — Patterns & Anti-Patterns</div><div class="sl3"></div></div>
+
+<div class="card yc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S1</span><span class="qt">The EAV (Entity-Attribute-Value) pattern — why it's a trap</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">EAV stores dynamic attributes as rows rather than columns. Seductive for flexibility, catastrophic for performance.</div>
+    <div class="cols2">
+      <div>
+        <div class="col-label r">❌ EAV Schema</div>
+        <pre style="margin:0"><span class="cm">-- Flexible but terrible</span>
+<span class="tb">product_attributes</span>
+(product_id, attr_name, attr_value)
+
+(1, 'color',  'red')
+(1, 'size',   'XL')
+(1, 'weight', '200g')</pre>
+      </div>
+      <div>
+        <div class="col-label g">✅ Proper Schema</div>
+        <pre style="margin:0"><span class="cm">-- Type-safe, indexable, fast</span>
+<span class="tb">products</span>
+(id, color, size, weight_g)
+
+<span class="cm">-- Or: JSON column for truly
+-- dynamic attributes</span>
+(id, attributes JSON)</pre>
+      </div>
+    </div>
+    <div class="box br"><strong>⚠️ EAV problems:</strong> Getting all attributes of one product requires N queries or a horrific pivot. You can't enforce data types. You can't index effectively. Querying "all red XL products" requires multiple self-joins. I've inherited EAV systems that took 45 seconds for basic product searches. The fix was a 3-month migration project.</div>
+  </div>
+</div>
+
+<div class="card yc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S2</span><span class="qt">Storing comma-separated IDs in a column — why it's always wrong</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="cols2">
+      <div>
+        <div class="col-label r">❌ Anti-Pattern</div>
+        <pre style="margin:0"><span class="cm">-- users table</span>
+id | role_ids
+1  | "2,5,8"   <span class="bad">← ❌</span>
+2  | "1,3"
+
+<span class="cm">-- Problems:
+-- Cannot use FK constraints
+-- LIKE '%5%' scans everything
+-- Can't JOIN efficiently
+-- '5' matches '15' or '52'!
+-- Violates 1NF</span></pre>
+      </div>
+      <div>
+        <div class="col-label g">✅ Correct: Junction Table</div>
+        <pre style="margin:0"><span class="cm">-- user_roles</span>
+user_id | role_id
+1       | 2
+1       | 5
+1       | 8
+
+<span class="kw">CREATE INDEX</span> idx_user (user_id);
+<span class="kw">CREATE INDEX</span> idx_role (role_id);
+<span class="cm">-- Fast JOINs, FK constraints,
+-- clean aggregations</span></pre>
+      </div>
+    </div>
+    <div class="box bw"><strong>⚠️ When it seems acceptable:</strong> Rarely, with JSON array and a generated column index. But even then, the junction table is almost always better for anything queried frequently.</div>
+  </div>
+</div>
+
+<div class="card yc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S3</span><span class="qt">Polymorphic associations — design pattern and its trade-offs</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Comments can belong to: Post, Video, Product
+-- Polymorphic approach:</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">comments</span> (
+  id             <span class="kw">BIGINT PRIMARY KEY</span>,
+  body           <span class="kw">TEXT</span>,
+  commentable_id <span class="kw">BIGINT</span>,
+  commentable_type <span class="kw">VARCHAR</span>(<span class="num">50</span>),  <span class="cm">-- 'Post','Video','Product'</span>
+  created_at     <span class="kw">DATETIME</span>
+);
+<span class="cm">-- ❌ Cannot add FK constraint (commentable_id refs multiple tables)
+-- ❌ No referential integrity
+-- ❌ JOIN requires knowing the type first</span>
+
+<span class="cm">-- ✅ Alternative: Exclusive arc pattern (separate FK per type)</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">comments</span> (
+  id         <span class="kw">BIGINT PRIMARY KEY</span>,
+  body       <span class="kw">TEXT</span>,
+  post_id    <span class="kw">BIGINT NULL REFERENCES</span> <span class="tb">posts</span>(id),
+  video_id   <span class="kw">BIGINT NULL REFERENCES</span> <span class="tb">videos</span>(id),
+  product_id <span class="kw">BIGINT NULL REFERENCES</span> <span class="tb">products</span>(id),
+  <span class="cm">-- Constraint: exactly one must be non-null</span>
+  <span class="kw">CHECK</span> (
+    (post_id <span class="kw">IS NOT NULL</span>) + (video_id <span class="kw">IS NOT NULL</span>) + (product_id <span class="kw">IS NOT NULL</span>) = <span class="num">1</span>
+  )
+);</pre>
+    <div class="box bt"><strong>💡 Production pick:</strong> Polymorphic without FK is fast to build but painful to maintain. Exclusive arc adds nullable columns but preserves referential integrity. For high-scale systems (millions of comments), a separate comments table per entity type scales best.</div>
+  </div>
+</div>
+
+<div class="card yc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S4</span><span class="qt">Soft delete design — the right and wrong way</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Common implementation (problematic)</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">users</span> <span class="kw">ADD COLUMN</span> deleted_at <span class="kw">DATETIME NULL</span>;
+
+<span class="cm">-- Problems:</span>
+<span class="cm">-- 1. Every query needs WHERE deleted_at IS NULL</span>
+<span class="cm">-- 2. UNIQUE constraints include soft-deleted rows (email conflict!)</span>
+<span class="cm">-- 3. Indexes bloated with "deleted" rows</span>
+
+<span class="cm">-- ✅ Fix 1: Partial index (MySQL 8 functional index workaround)</span>
+<span class="cm">-- Can't do WHERE in index, but: unique + soft delete solution:</span>
+<span class="kw">CREATE UNIQUE INDEX</span> idx_email_active
+  <span class="kw">ON</span> <span class="tb">users</span> (email, deleted_at);  <span class="cm">-- deleted_at=NULL treated as unique per row in InnoDB</span>
+
+<span class="cm">-- ✅ Fix 2: Archive table pattern (better at scale)</span>
+<span class="kw">CREATE TABLE</span> <span class="tb">users_deleted</span> <span class="kw">LIKE</span> <span class="tb">users</span>;
+<span class="kw">ALTER TABLE</span> <span class="tb">users_deleted</span> <span class="kw">ADD COLUMN</span> deleted_at <span class="kw">DATETIME NOT NULL</span>;
+
+<span class="cm">-- On delete: move to archive table</span>
+<span class="kw">INSERT INTO</span> <span class="tb">users_deleted</span> <span class="kw">SELECT</span> *, <span class="fn">NOW</span>() <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> id = <span class="num">42</span>;
+<span class="kw">DELETE FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> id = <span class="num">42</span>;</pre>
+    <div class="box bp"><strong>🔬 Scale reality:</strong> After 5 years, a soft-delete column means 40% of your table is "deleted" rows that every query must filter. Indexes include them. The archive table approach keeps your active table lean and fast.</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ STORED PROCS DEEP ═══ -->
+<div class="sg" data-s="stored-deep">
+<div class="sh"><div class="si o">📜</div><div class="sl2">Stored Procedures — Advanced Patterns</div><div class="sl3"></div></div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SP1</span><span class="qt">Cursor-based processing with proper error handling</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">DELIMITER</span> //
+<span class="kw">CREATE PROCEDURE</span> <span class="fn">ProcessLargeTable</span>()
+<span class="kw">BEGIN</span>
+  <span class="cm">-- Declare variables</span>
+  <span class="kw">DECLARE</span> v_user_id   <span class="kw">INT</span>;
+  <span class="kw">DECLARE</span> v_email     <span class="kw">VARCHAR</span>(<span class="num">255</span>);
+  <span class="kw">DECLARE</span> v_done      <span class="kw">BOOLEAN DEFAULT FALSE</span>;
+  <span class="kw">DECLARE</span> v_err_code  <span class="kw">CHAR</span>(<span class="num">5</span>) <span class="kw">DEFAULT</span> <span class="str">'00000'</span>;
+  <span class="kw">DECLARE</span> v_err_msg   <span class="kw">TEXT</span>;
+  <span class="kw">DECLARE</span> v_count     <span class="kw">INT DEFAULT</span> <span class="num">0</span>;
+
+  <span class="cm">-- Cursor declaration (must be before handlers)</span>
+  <span class="kw">DECLARE</span> cur <span class="kw">CURSOR FOR</span>
+    <span class="kw">SELECT</span> id, email <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> needs_processing = <span class="num">1</span>;
+
+  <span class="cm">-- Handler: set flag when cursor exhausted</span>
+  <span class="kw">DECLARE CONTINUE HANDLER FOR NOT FOUND</span>
+    <span class="kw">SET</span> v_done = <span class="kw">TRUE</span>;
+
+  <span class="cm">-- Handler: catch SQL exceptions</span>
+  <span class="kw">DECLARE CONTINUE HANDLER FOR SQLEXCEPTION</span>
+  <span class="kw">BEGIN</span>
+    <span class="kw">GET DIAGNOSTICS CONDITION</span> <span class="num">1</span>
+      v_err_code = RETURNED_SQLSTATE,
+      v_err_msg  = MESSAGE_TEXT;
+    <span class="kw">INSERT INTO</span> <span class="tb">error_log</span> (proc_name, error_code, error_msg, created_at)
+    <span class="kw">VALUES</span> (<span class="str">'ProcessLargeTable'</span>, v_err_code, v_err_msg, <span class="fn">NOW</span>());
+  <span class="kw">END</span>;
+
+  <span class="kw">OPEN</span> cur;
+
+  process_loop: <span class="kw">LOOP</span>
+    <span class="kw">FETCH</span> cur <span class="kw">INTO</span> v_user_id, v_email;
+    <span class="kw">IF</span> v_done <span class="kw">THEN LEAVE</span> process_loop; <span class="kw">END IF</span>;
+
+    <span class="cm">-- Process each row</span>
+    <span class="kw">UPDATE</span> <span class="tb">users</span> <span class="kw">SET</span> processed_at = <span class="fn">NOW</span>(), needs_processing = <span class="num">0</span>
+    <span class="kw">WHERE</span> id = v_user_id;
+
+    <span class="kw">SET</span> v_count = v_count + <span class="num">1</span>;
+
+    <span class="cm">-- Commit in batches to avoid long transactions</span>
+    <span class="kw">IF</span> v_count % <span class="num">1000</span> = <span class="num">0</span> <span class="kw">THEN</span>
+      <span class="kw">COMMIT</span>;
+    <span class="kw">END IF</span>;
+
+  <span class="kw">END LOOP</span>;
+
+  <span class="kw">CLOSE</span> cur;
+  <span class="kw">COMMIT</span>;  <span class="cm">-- final commit</span>
+
+  <span class="kw">SELECT</span> <span class="fn">CONCAT</span>(<span class="str">'Processed: '</span>, v_count) <span class="kw">AS</span> result;
+<span class="kw">END</span>//
+<span class="kw">DELIMITER</span> ;</pre>
+    <div class="box bw"><strong>⚠️ Production cursor advice:</strong> Cursors are slow (row-by-row = anti-set-based). Always prefer a single UPDATE...WHERE over a cursor when possible. Use cursors only when you genuinely need per-row logic that can't be expressed in set-based SQL.</div>
+  </div>
+</div>
+
+<div class="card oc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SP2</span><span class="qt">Dynamic SQL with PREPARE/EXECUTE — practical patterns</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Generic: search any table, any column</span>
+<span class="kw">DELIMITER</span> //
+<span class="kw">CREATE PROCEDURE</span> <span class="fn">DynamicSearch</span>(
+  IN p_table   <span class="kw">VARCHAR</span>(<span class="num">64</span>),
+  IN p_column  <span class="kw">VARCHAR</span>(<span class="num">64</span>),
+  IN p_value   <span class="kw">VARCHAR</span>(<span class="num">255</span>)
+)
+<span class="kw">BEGIN</span>
+  <span class="kw">SET</span> @sql = <span class="fn">CONCAT</span>(
+    <span class="str">'SELECT * FROM `'</span>,
+    <span class="fn">REPLACE</span>(p_table, <span class="str">'`'</span>, <span class="str">''</span>),  <span class="cm">-- sanitize!</span>
+    <span class="str">'` WHERE `'</span>,
+    <span class="fn">REPLACE</span>(p_column, <span class="str">'`'</span>, <span class="str">''</span>),
+    <span class="str">'` = ?'</span>
+  );
+  <span class="kw">PREPARE</span> stmt <span class="kw">FROM</span> @sql;
+  <span class="kw">SET</span> @val = p_value;
+  <span class="kw">EXECUTE</span> stmt <span class="kw">USING</span> @val;  <span class="cm">-- parameterized, safe!</span>
+  <span class="kw">DEALLOCATE PREPARE</span> stmt;
+<span class="kw">END</span>//
+<span class="kw">DELIMITER</span> ;</pre>
+    <div class="box br"><strong>⚠️ SQL injection in procs:</strong> Even inside stored procedures, dynamic SQL via CONCAT is vulnerable. Always use PREPARE + USING for user values. Sanitize identifiers (table/column names) by stripping backticks and validating against information_schema.</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ LIVE DEBUGGING ═══ -->
+<div class="sg" data-s="debugging">
+<div class="sh"><div class="si r">🚨</div><div class="sl2">Live Debugging — What to Do at 3am</div><div class="sl3"></div></div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">D1</span><span class="qt">Production is slow right now — what's your step-by-step investigation?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <ol class="steps">
+      <li><strong>See what's running right now:</strong> <code>SHOW PROCESSLIST</code> or <code>SELECT * FROM information_schema.PROCESSLIST WHERE TIME > 5 ORDER BY TIME DESC</code></li>
+      <li><strong>Kill runaway queries:</strong> <code>KILL QUERY &lt;process_id&gt;</code> — kill the query, not the connection</li>
+      <li><strong>Check for lock waits:</strong> <code>SELECT * FROM sys.innodb_lock_waits</code> and <code>SELECT * FROM information_schema.INNODB_TRX</code></li>
+      <li><strong>Check replication lag:</strong> <code>SHOW SLAVE STATUS\G</code> — look at Seconds_Behind_Master</li>
+      <li><strong>Check InnoDB status:</strong> <code>SHOW ENGINE INNODB STATUS\G</code> — deadlocks, lock info, I/O</li>
+      <li><strong>Check thread count:</strong> <code>SHOW STATUS LIKE 'Threads_connected'</code> — connection exhaustion?</li>
+      <li><strong>Check buffer pool hit ratio:</strong> <code>SHOW STATUS LIKE 'Innodb_buffer_pool_read%'</code></li>
+      <li><strong>EXPLAIN the slow query</strong> immediately to understand the plan</li>
+    </ol>
+    <pre><span class="cm">-- One-shot diagnostic query</span>
+<span class="kw">SELECT</span>
+  id, user, host, db, command, time, state,
+  <span class="fn">LEFT</span>(info, <span class="num">100</span>) query
+<span class="kw">FROM</span> information_schema.PROCESSLIST
+<span class="kw">WHERE</span> command != <span class="str">'Sleep'</span>
+  <span class="op">AND</span> time > <span class="num">2</span>
+<span class="kw">ORDER BY</span> time <span class="kw">DESC</span>;</pre>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">D2</span><span class="qt">How to read SHOW ENGINE INNODB STATUS — the key sections</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">SHOW ENGINE</span> InnoDB <span class="kw">STATUS</span>\G</pre>
+    <div class="csub o">Key Sections to Read</div>
+    <table class="tbl">
+      <tr><th>Section</th><th>What to Look For</th></tr>
+      <tr><td class="lc">LATEST DETECTED DEADLOCK</td><td>Transaction 1 waited for, Transaction 2 held. The victim is rolled back. Copy to analyze lock order.</td></tr>
+      <tr><td class="lc">TRANSACTIONS</td><td>Long-running transactions. Check "active X sec" — anything > 30s is suspicious. Also "lock struct(s)" count.</td></tr>
+      <tr><td class="lc">BUFFER POOL AND MEMORY</td><td>Buffer pool hit rate: (reads - disk_reads) / reads × 100. Should be > 99%. Pages dirty % should be < 90%.</td></tr>
+      <tr><td class="lc">ROW OPERATIONS</td><td>Rows read/inserted/updated/deleted per second. Baseline these for your app.</td></tr>
+      <tr><td class="lc">SEMAPHORES</td><td>If "waits" here, you have mutex contention — buffer pool instances or I/O threads issue.</td></tr>
+      <tr><td class="lc">FILE I/O</td><td>Pending reads/writes. If pending_reads > 0 consistently, I/O is the bottleneck.</td></tr>
+    </table>
+    <div class="box bp"><strong>🔬 Deadlock analysis workflow:</strong> Copy LATEST DETECTED DEADLOCK section. Identify: what lock TX1 held, what TX2 waited for. Trace back to application code. Fix: reorder lock acquisition to be consistent across all code paths.</div>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">D3</span><span class="qt">Replication lag is growing — what causes it and how to fix?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="csub r">Common Causes</div>
+    <table class="tbl">
+      <tr><th>Cause</th><th>Diagnosis</th><th>Fix</th></tr>
+      <tr><td class="lc">Heavy DDL on primary</td><td>SHOW SLAVE STATUS: Relay_Log_Pos stalled</td><td>Use pt-osc / gh-ost instead of ALTER TABLE</td></tr>
+      <tr><td class="lc">Large transactions</td><td>Seconds_Behind_Master spikes after heavy writes</td><td>Batch large INSERTs/UPDATEs with LIMIT + loop</td></tr>
+      <tr><td class="lc">Single-threaded replay</td><td>Replica CPU 100% on SQL thread, I/O fine</td><td>Enable parallel replication: <code>slave_parallel_workers=8</code></td></tr>
+      <tr><td class="lc">Missing index on replica</td><td>Replica SQL thread slow, primary fine</td><td>Add same indexes on replica (they're applied per-row without optimizer)</td></tr>
+      <tr><td class="lc">Network bandwidth</td><td>I/O thread lag, large binlog events</td><td>Enable compression: <code>replica_compressed_protocol=ON</code></td></tr>
+    </table>
+    <pre><span class="cm">-- Enable multi-threaded replication (MySQL 5.7+)</span>
+slave_parallel_workers = <span class="num">8</span>
+slave_parallel_type = LOGICAL_CLOCK  <span class="cm">-- better than DATABASE in 5.7+</span>
+
+<span class="cm">-- Monitor replication lag in real time</span>
+<span class="kw">SELECT</span>
+  CHANNEL_NAME,
+  SERVICE_STATE,
+  LAST_ERROR_MESSAGE,
+  LAST_QUEUED_TRANSACTION_ORIGINAL_COMMIT_TIMESTAMP,
+  <span class="fn">TIMESTAMPDIFF</span>(<span class="kw">SECOND</span>,
+    LAST_APPLIED_TRANSACTION_ORIGINAL_COMMIT_TIMESTAMP,
+    <span class="fn">NOW</span>()) lag_seconds
+<span class="kw">FROM</span> performance_schema.replication_applier_status_by_worker;</pre>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">D4</span><span class="qt">Connection pool exhaustion — diagnosis and emergency fix</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Symptoms: "Too many connections" error in app</span>
+<span class="cm">-- Diagnosis:</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Threads_connected'</span>;  <span class="cm">-- current</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Max_used_connections'</span>; <span class="cm">-- historical peak</span>
+<span class="kw">SHOW</span> VARIABLES <span class="kw">LIKE</span> <span class="str">'max_connections'</span>;    <span class="cm">-- limit</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Connection_errors%'</span>;  <span class="cm">-- refused connections</span>
+
+<span class="cm">-- Find sleeping connections (connection leaks)</span>
+<span class="kw">SELECT</span> user, host, db, command, time, state
+<span class="kw">FROM</span> information_schema.PROCESSLIST
+<span class="kw">WHERE</span> command = <span class="str">'Sleep'</span> <span class="op">AND</span> time > <span class="num">300</span>  <span class="cm">-- sleeping > 5 min = leak</span>
+<span class="kw">ORDER BY</span> time <span class="kw">DESC</span>;
+
+<span class="cm">-- Emergency: kill all sleeping connections</span>
+<span class="kw">SELECT</span> <span class="fn">CONCAT</span>(<span class="str">'KILL '</span>, id, <span class="str">';'</span>)
+<span class="kw">FROM</span> information_schema.PROCESSLIST
+<span class="kw">WHERE</span> command = <span class="str">'Sleep'</span> <span class="op">AND</span> time > <span class="num">300</span>; <span class="cm">-- copy output and run</span>
+
+<span class="cm">-- Long-term fix: tune timeouts</span>
+wait_timeout             = <span class="num">300</span>   <span class="cm">-- idle connections killed after 5min</span>
+interactive_timeout      = <span class="num">300</span>
+max_connections          = <span class="num">500</span>
+<span class="cm">-- And use ProxySQL for connection pooling</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ═══ CONNECTIONS ═══ -->
+<div class="sg" data-s="connections">
+<div class="sh"><div class="si b">🔌</div><div class="sl2">Connection Management & Pooling</div><div class="sl3"></div></div>
+
+<div class="card bc" onclick="tog(this)">
+  <div class="ch"><span class="qn">CN1</span><span class="qt">How do MySQL connections work internally?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">Each MySQL connection = one OS thread (or a thread from pool). Each thread uses memory for: connection buffer, sort buffer, join buffer, read buffer, etc. 1000 connections × 4MB per thread = 4GB RAM just for connections.</div>
+    <table class="tbl">
+      <tr><th>Variable</th><th>Per-connection memory</th><th>Default</th><th>Guidance</th></tr>
+      <tr><td class="lc">sort_buffer_size</td><td>Sort operations</td><td>256KB</td><td>1-4MB</td></tr>
+      <tr><td class="lc">join_buffer_size</td><td>Hash/BNL joins</td><td>256KB</td><td>1-4MB</td></tr>
+      <tr><td class="lc">read_buffer_size</td><td>Sequential scans</td><td>128KB</td><td>1MB</td></tr>
+      <tr><td class="lc">read_rnd_buffer_size</td><td>Random reads after sort</td><td>256KB</td><td>1MB</td></tr>
+      <tr><td class="lc">thread_stack</td><td>Thread stack</td><td>1MB</td><td>Keep default</td></tr>
+    </table>
+    <pre><span class="cm">-- Max RAM = innodb_buffer_pool + (max_connections × per_thread_memory)
+-- Example: 32GB server</span>
+innodb_buffer_pool_size = <span class="num">24G</span>
+max_connections         = <span class="num">400</span>
+sort_buffer_size        = <span class="num">1M</span>   <span class="cm">-- 400 × 1M = 400MB</span>
+join_buffer_size        = <span class="num">1M</span>   <span class="cm">-- 400 × 1M = 400MB</span>
+<span class="cm">-- Total: 24G + 1.6G overhead + 400M × 2 = ~26G ✅</span></pre>
+    <div class="box br"><strong>⚠️ The "max_connections = 10000" mistake:</strong> Setting max_connections very high without accounting for per-thread memory causes OOM kills. 400 connections × all buffers often uses 4-8GB. Calculate first.</div>
+  </div>
+</div>
+
+<div class="card bc" onclick="tog(this)">
+  <div class="ch"><span class="qn">CN2</span><span class="qt">ProxySQL configuration for read/write splitting</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- ProxySQL admin (runs on port 6032)</span>
+mysql -h127.0.0.1 -P6032 -uadmin -padmin
+
+<span class="cm">-- Add MySQL servers</span>
+<span class="kw">INSERT INTO</span> mysql_servers (hostgroup_id, hostname, port) <span class="kw">VALUES</span>
+  (<span class="num">10</span>, <span class="str">'db-primary'</span>,  <span class="num">3306</span>),  <span class="cm">-- writer group</span>
+  (<span class="num">20</span>, <span class="str">'db-replica1'</span>, <span class="num">3306</span>),  <span class="cm">-- reader group</span>
+  (<span class="num">20</span>, <span class="str">'db-replica2'</span>, <span class="num">3306</span>);
+
+<span class="cm">-- Query rules: send writes to primary, reads to replicas</span>
+<span class="kw">INSERT INTO</span> mysql_query_rules
+  (rule_id, active, match_pattern, destination_hostgroup, apply)
+<span class="kw">VALUES</span>
+  (<span class="num">1</span>, <span class="num">1</span>, <span class="str">'^SELECT.*FOR UPDATE'</span>,  <span class="num">10</span>, <span class="num">1</span>),  <span class="cm">-- locking reads → primary</span>
+  (<span class="num">2</span>, <span class="num">1</span>, <span class="str">'^SELECT'</span>,               <span class="num">20</span>, <span class="num">1</span>),  <span class="cm">-- all other SELECTs → replica</span>
+  (<span class="num">3</span>, <span class="num">1</span>, <span class="str">'.*'</span>,                    <span class="num">10</span>, <span class="num">1</span>);  <span class="cm">-- everything else → primary</span>
+
+<span class="cm">-- Connection pooling config</span>
+<span class="kw">UPDATE</span> global_variables <span class="kw">SET</span> variable_value=<span class="str">'200'</span>
+  <span class="kw">WHERE</span> variable_name=<span class="str">'mysql-max_connections'</span>;
+
+<span class="cm">-- Apply changes</span>
+<span class="kw">LOAD MYSQL SERVERS</span> TO RUNTIME;
+<span class="kw">LOAD MYSQL QUERY RULES</span> TO RUNTIME;
+<span class="kw">SAVE MYSQL SERVERS</span> TO DISK;  <span class="cm">-- persist on restart</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ═══ MONITORING ═══ -->
+<div class="sg" data-s="monitoring">
+<div class="sh"><div class="si g">📊</div><div class="sl2">Monitoring Playbook — What to Watch Daily</div><div class="sl3"></div></div>
+
+<div class="card gc" onclick="tog(this)">
+  <div class="ch"><span class="qn">MN1</span><span class="qt">The 10 essential MySQL metrics every DBA monitors</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- 1. Buffer pool hit ratio (target: > 99%)</span>
+<span class="kw">SELECT</span>
+  <span class="fn">ROUND</span>(
+    (<span class="num">1</span> - Innodb_buffer_pool_reads / Innodb_buffer_pool_read_requests) * <span class="num">100</span>,
+  <span class="num">3</span>) <span class="kw">AS</span> hit_ratio_pct
+<span class="kw">FROM</span> (
+  <span class="kw">SELECT</span>
+    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> variable_name=<span class="str">'Innodb_buffer_pool_reads'</span>         <span class="kw">THEN</span> variable_value <span class="kw">END</span>) Innodb_buffer_pool_reads,
+    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> variable_name=<span class="str">'Innodb_buffer_pool_read_requests'</span>   <span class="kw">THEN</span> variable_value <span class="kw">END</span>) Innodb_buffer_pool_read_requests
+  <span class="kw">FROM</span> information_schema.GLOBAL_STATUS
+) m;
+
+<span class="cm">-- 2. Replication lag</span>
+<span class="kw">SHOW SLAVE STATUS\G</span>  <span class="cm">-- Seconds_Behind_Master</span>
+
+<span class="cm">-- 3. Current long-running queries</span>
+<span class="kw">SELECT</span> id, user, time, state, <span class="fn">LEFT</span>(info,<span class="num">80</span>) <span class="kw">FROM</span> information_schema.PROCESSLIST
+<span class="kw">WHERE</span> time > <span class="num">10</span> <span class="op">AND</span> command != <span class="str">'Sleep'</span> <span class="kw">ORDER BY</span> time <span class="kw">DESC</span>;
+
+<span class="cm">-- 4. Connections usage %</span>
+<span class="kw">SELECT</span>
+  @@max_connections <span class="kw">AS</span> max_conn,
+  <span class="fn">SUM</span>(variable_value) <span class="kw">AS</span> current,
+  <span class="fn">ROUND</span>(<span class="fn">SUM</span>(variable_value)/@@max_connections*<span class="num">100</span>,<span class="num">1</span>) pct_used
+<span class="kw">FROM</span> information_schema.GLOBAL_STATUS
+<span class="kw">WHERE</span> variable_name = <span class="str">'Threads_connected'</span>;
+
+<span class="cm">-- 5. Deadlock count (since last restart)</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Innodb_deadlocks'</span>;
+
+<span class="cm">-- 6. Temp tables going to disk (should be < 5%)</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Created_tmp_disk_tables'</span>;
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Created_tmp_tables'</span>;
+
+<span class="cm">-- 7. Table lock waits (should be near 0 on InnoDB)</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Table_locks_waited'</span>;
+
+<span class="cm">-- 8. Aborted connections (client bugs / network issues)</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Aborted_connects'</span>;
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Aborted_clients'</span>;
+
+<span class="cm">-- 9. Binlog disk usage</span>
+<span class="kw">SHOW</span> BINARY LOGS;
+
+<span class="cm">-- 10. InnoDB row operations per second (throughput)</span>
+<span class="kw">SHOW</span> <span class="kw">STATUS</span> <span class="kw">LIKE</span> <span class="str">'Innodb_rows_%'</span>;</pre>
+  </div>
+</div>
+
+<div class="card gc" onclick="tog(this)">
+  <div class="ch"><span class="qn">MN2</span><span class="qt">How to find the most I/O-intensive tables and queries?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Tables with most read I/O (sys schema, MySQL 5.7.7+)</span>
+<span class="kw">SELECT</span>
+  table_schema, table_name,
+  rows_fetched, rows_inserted, rows_updated, rows_deleted,
+  io_read_requests, io_read, io_write_requests
+<span class="kw">FROM</span> sys.schema_table_statistics
+<span class="kw">ORDER BY</span> io_read_requests <span class="kw">DESC LIMIT</span> <span class="num">10</span>;
+
+<span class="cm">-- Most expensive queries by total execution time</span>
+<span class="kw">SELECT</span>
+  <span class="fn">ROUND</span>(total_latency/<span class="num">60e12</span>,<span class="num">1</span>) total_minutes,
+  exec_count,
+  <span class="fn">ROUND</span>(avg_latency/<span class="num">1e9</span>,<span class="num">1</span>)   avg_ms,
+  rows_examined_avg,
+  rows_sent_avg,
+  <span class="fn">LEFT</span>(query, <span class="num">100</span>) sample_query
+<span class="kw">FROM</span> sys.statement_analysis
+<span class="kw">WHERE</span> full_scan = <span class="str">'*'</span>   <span class="cm">-- only full table scans!</span>
+<span class="kw">ORDER BY</span> total_latency <span class="kw">DESC LIMIT</span> <span class="num">10</span>;
+
+<span class="cm">-- Indexes never used (candidates for removal)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> sys.schema_unused_indexes
+<span class="kw">WHERE</span> object_schema NOT <span class="kw">IN</span> (<span class="str">'mysql'</span>,<span class="str">'sys'</span>,<span class="str">'performance_schema'</span>);</pre>
+  </div>
+</div>
+</div>
+
+<!-- ═══ INTERVIEW TRAPS ═══ -->
+<div class="sg" data-s="traps">
+<div class="sh"><div class="si r">🎯</div><div class="sl2">Interview Trap Questions — Don't Get Caught</div><div class="sl3"></div></div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T1</span><span class="qt">What's the output of: SELECT NULL = NULL?</span><span class="diff de">Easy</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">SELECT</span> <span class="kw">NULL</span> = <span class="kw">NULL</span>;   <span class="cm">-- NULL (not TRUE, not FALSE!)</span>
+<span class="kw">SELECT</span> <span class="kw">NULL</span> != <span class="kw">NULL</span>;  <span class="cm">-- NULL</span>
+<span class="kw">SELECT</span> <span class="kw">NULL</span> <span class="kw">IS NULL</span>; <span class="cm">-- 1 (TRUE)  ← correct way</span>
+<span class="kw">SELECT</span> <span class="kw">NULL</span> <=> <span class="kw">NULL</span>;  <span class="cm">-- 1 (NULL-safe equal operator)</span>
+
+<span class="cm">-- NULL in WHERE:</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> phone = <span class="kw">NULL</span>;    <span class="cm">-- returns 0 rows! Always.</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tb">users</span> <span class="kw">WHERE</span> phone <span class="kw">IS NULL</span>;   <span class="cm">-- correct</span>
+
+<span class="cm">-- NULL in aggregates:</span>
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> <span class="tb">users</span>;          <span class="cm">-- counts all rows</span>
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(phone) <span class="kw">FROM</span> <span class="tb">users</span>;      <span class="cm">-- excludes NULLs!</span>
+<span class="kw">SELECT</span> <span class="fn">SUM</span>(amount) <span class="kw">FROM</span> <span class="tb">orders</span>;     <span class="cm">-- NULLs ignored in SUM</span>
+<span class="kw">SELECT</span> <span class="num">1</span> + <span class="kw">NULL</span>;                     <span class="cm">-- NULL (NULL is contagious)</span></pre>
+    <div class="box br"><strong>⚠️ NULL propagation:</strong> Any arithmetic with NULL = NULL. In GROUP BY, NULLs are grouped together. In ORDER BY, NULLs sort first (ASC) or last (DESC) — MySQL-specific behavior.</div>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T2</span><span class="qt">What happens when you GROUP BY without aggregating all non-grouped columns? (ONLY_FULL_GROUP_BY)</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- This query: which name does it return?</span>
+<span class="kw">SELECT</span> dept_id, name, <span class="fn">MAX</span>(salary)
+<span class="kw">FROM</span> <span class="tb">employees</span>
+<span class="kw">GROUP BY</span> dept_id;
+<span class="cm">-- name is NOT in GROUP BY and NOT aggregated</span>
+
+<span class="cm">-- MySQL 5.6 and earlier: returned a RANDOM name from the group</span>
+<span class="cm">-- MySQL 5.7+ with ONLY_FULL_GROUP_BY: ERROR 1055</span>
+
+<span class="cm">-- Check sql_mode:</span>
+<span class="kw">SELECT</span> @@sql_mode;  <span class="cm">-- Should contain ONLY_FULL_GROUP_BY</span>
+
+<span class="cm">-- Correct ways:</span>
+<span class="cm">-- Option 1: Include name in GROUP BY</span>
+<span class="kw">SELECT</span> dept_id, name, <span class="fn">MAX</span>(salary) <span class="kw">FROM</span> <span class="tb">employees</span> <span class="kw">GROUP BY</span> dept_id, name;
+
+<span class="cm">-- Option 2: Use ANY_VALUE() to explicitly pick any</span>
+<span class="kw">SELECT</span> dept_id, <span class="fn">ANY_VALUE</span>(name), <span class="fn">MAX</span>(salary) <span class="kw">FROM</span> <span class="tb">employees</span> <span class="kw">GROUP BY</span> dept_id;
+
+<span class="cm">-- Option 3: Get name of the highest earner (window function)</span>
+<span class="kw">WITH</span> ranked <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> dept_id, name, salary,
+    <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span>(<span class="kw">PARTITION BY</span> dept_id <span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) rn
+  <span class="kw">FROM</span> <span class="tb">employees</span>
+)
+<span class="kw">SELECT</span> dept_id, name, salary <span class="kw">FROM</span> ranked <span class="kw">WHERE</span> rn=<span class="num">1</span>;</pre>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T3</span><span class="qt">What is the difference between utf8 and utf8mb4 in MySQL?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">This is a famous MySQL gotcha that has burned countless production systems.</div>
+    <table class="tbl">
+      <tr><th></th><th>utf8 (MySQL)</th><th>utf8mb4</th></tr>
+      <tr><td class="lc">Max bytes per char</td><td class="bd">3 bytes (WRONG!)</td><td class="gd">4 bytes (correct UTF-8)</td></tr>
+      <tr><td class="lc">Emoji support</td><td class="bd">❌ Cannot store 🎉</td><td class="gd">✅ Full emoji support</td></tr>
+      <tr><td class="lc">Real UTF-8?</td><td class="bd">No — it's a MySQL bug</td><td class="gd">Yes, proper RFC 3629</td></tr>
+      <tr><td class="lc">MySQL 8 default</td><td>No</td><td class="gd">Yes (finally!)</td></tr>
+    </table>
+    <pre><span class="cm">-- MySQL's 'utf8' is actually 'utf8mb3' — max 3 bytes per char
+-- Real Unicode (emojis like 🎉) need 4 bytes → silently truncated in utf8!</span>
+
+<span class="cm">-- Check your tables</span>
+<span class="kw">SELECT</span> table_name, table_collation
+<span class="kw">FROM</span> information_schema.TABLES
+<span class="kw">WHERE</span> table_schema=<span class="str">'your_db'</span>
+  <span class="op">AND</span> table_collation <span class="kw">NOT LIKE</span> <span class="str">'utf8mb4%'</span>;
+
+<span class="cm">-- Migrate database to utf8mb4</span>
+<span class="kw">ALTER DATABASE</span> mydb <span class="kw">CHARACTER SET</span> utf8mb4 <span class="kw">COLLATE</span> utf8mb4_unicode_ci;
+
+<span class="kw">ALTER TABLE</span> <span class="tb">users</span>
+  <span class="kw">CONVERT TO CHARACTER SET</span> utf8mb4 <span class="kw">COLLATE</span> utf8mb4_unicode_ci;
+
+<span class="cm">-- my.cnf defaults (always set this)</span>
+[mysqld]
+character-set-server = utf8mb4
+collation-server     = utf8mb4_unicode_ci
+
+[client]
+default-character-set = utf8mb4</pre>
+    <div class="box br"><strong>⚠️ VARCHAR(255) with utf8mb4:</strong> A VARCHAR(255) in utf8mb4 uses up to 1020 bytes (255 × 4). InnoDB index key limit is 767 bytes (or 3072 with large_index_prefix). This means you can't index VARCHAR(255) utf8mb4 with the old row format. Use DYNAMIC row format (MySQL 5.7+ default) or reduce to VARCHAR(191).</div>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T4</span><span class="qt">Can you have a transaction across multiple databases in MySQL?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- MySQL databases are really just namespaces (schemas)
+-- A single InnoDB transaction CAN span multiple databases on same server!</span>
+<span class="kw">START TRANSACTION</span>;
+<span class="kw">UPDATE</span> db1.<span class="tb">accounts</span> <span class="kw">SET</span> balance = balance - <span class="num">500</span> <span class="kw">WHERE</span> id = <span class="num">1</span>;
+<span class="kw">UPDATE</span> db2.<span class="tb">accounts</span> <span class="kw">SET</span> balance = balance + <span class="num">500</span> <span class="kw">WHERE</span> id = <span class="num">2</span>;
+<span class="kw">COMMIT</span>;  <span class="ok">-- ✅ Works! Both same MySQL instance</span>
+
+<span class="cm">-- But across different MySQL SERVERS? No native 2PC support.
+-- Solutions:
+-- 1. XA Transactions (MySQL supports XA protocol)</span>
+<span class="kw">XA START</span> <span class="str">'txn1'</span>;
+<span class="cm">-- ... operations on server 1 ...</span>
+<span class="kw">XA END</span> <span class="str">'txn1'</span>;
+<span class="kw">XA PREPARE</span> <span class="str">'txn1'</span>;
+
+<span class="cm">-- If all participants prepared:</span>
+<span class="kw">XA COMMIT</span> <span class="str">'txn1'</span>;
+
+<span class="cm">-- 2. Application-level saga pattern (recommended for microservices)</span>
+<span class="cm">-- 3. Vitess for distributed MySQL</span></pre>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T5</span><span class="qt">Why does COUNT(*) differ from COUNT(column) and COUNT(DISTINCT col)?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Sample data: users(id, email, phone)
+-- id:    1,    2,    3,    4,    5
+-- email: a,    b,    b,    c,    d   (b duplicate)
+-- phone: X,    Y, NULL,    Y, NULL   (2 NULLs, Y duplicate)</span>
+
+<span class="kw">SELECT</span>
+  <span class="fn">COUNT</span>(*)              <span class="kw">AS</span> c1,  <span class="cm">-- 5  (all rows, NULLs included)</span>
+  <span class="fn">COUNT</span>(<span class="num">1</span>)              <span class="kw">AS</span> c2,  <span class="cm">-- 5  (same as COUNT(*))</span>
+  <span class="fn">COUNT</span>(phone)          <span class="kw">AS</span> c3,  <span class="cm">-- 3  (excludes NULLs!)</span>
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> email) <span class="kw">AS</span> c4,  <span class="cm">-- 4  (excludes NULLs + deduplicates)</span>
+  <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> phone) <span class="kw">AS</span> c5   <span class="cm">-- 2  (X, Y — NULLs excluded)</span>
+<span class="kw">FROM</span> <span class="tb">users</span>;</pre>
+    <div class="box bw"><strong>⚠️ Performance:</strong> COUNT(*) and COUNT(1) are identical — MySQL optimizes both. COUNT(DISTINCT col) on large tables without an index requires a full scan + sort. Add an index on the column if you COUNT(DISTINCT) it frequently.</div>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T6</span><span class="qt">What is the difference between TRUNCATE and DELETE with no WHERE on performance?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Both remove all rows, but very differently internally:
+
+-- DELETE without WHERE:
+-- 1. Reads every row
+-- 2. Writes to undo log (for rollback)
+-- 3. Fires DELETE triggers
+-- 4. Acquires row locks (or table lock for MyISAM)
+-- 5. Generates binlog events for every row → massive binlog → replication lag
+-- Time on 10M row table: minutes to hours
+
+-- TRUNCATE:
+-- 1. Drops and recreates the table (DDL operation)
+-- 2. No undo log writing
+-- 3. No triggers
+-- 4. Resets AUTO_INCREMENT to 1
+-- 5. Single binlog event
+-- Time: milliseconds</span>
+
+<span class="kw">DELETE FROM</span> <span class="tb">large_table</span>;   <span class="cm">-- ❌ slow on large tables</span>
+<span class="kw">TRUNCATE TABLE</span> <span class="tb">large_table</span>; <span class="ok">-- ✅ instant, but no rollback</span></pre>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T7</span><span class="qt">Explain what happens step-by-step when you run: UPDATE users SET balance=balance-100 WHERE id=5</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <ol class="steps">
+      <li>Parser converts SQL to parse tree, checks syntax</li>
+      <li>Optimizer finds best plan: likely index lookup on PRIMARY KEY id=5</li>
+      <li>InnoDB checks if page with id=5 is in buffer pool. If not, reads from disk</li>
+      <li>InnoDB acquires exclusive row lock (X-lock) on the row</li>
+      <li>Reads current balance value from row</li>
+      <li>Writes old row image to undo log (enables rollback + MVCC reads)</li>
+      <li>Modifies the row in the buffer pool page (balance = balance - 100)</li>
+      <li>Marks page as dirty in the flush list</li>
+      <li>Writes to redo log buffer (WAL — before page hits disk)</li>
+      <li>If autocommit=ON: immediately flushes redo log to disk (fsync)</li>
+      <li>Returns "1 row affected" to client</li>
+      <li>Background: page eventually flushed to data file (checkpoint)</li>
+      <li>Background: binlog event written (after commit, for replication)</li>
+    </ol>
+    <div class="box bp"><strong>🔬 This answer demonstrates:</strong> Buffer pool, undo log, redo log, MVCC, WAL, locking — all in one query. This level of detail makes interviewers very impressed. Most candidates only know step 1-2.</div>
+  </div>
+</div>
+
+<div class="card rc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T8</span><span class="qt">What is the "Lost Update" problem and how does MySQL prevent it?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- Two transactions read balance=100, both subtract 50</span>
+<span class="cm">-- TX A reads 100, TX B reads 100</span>
+<span class="cm">-- TX A writes 50, TX B writes 50 → balance should be 0, it's 50!</span>
+<span class="cm">-- This is the lost update problem</span>
+
+<span class="cm">-- ❌ Vulnerable (race condition):</span>
+<span class="cm">-- TX A: SELECT balance FROM accounts WHERE id=1; -- reads 100</span>
+<span class="cm">-- TX B: SELECT balance FROM accounts WHERE id=1; -- reads 100</span>
+<span class="cm">-- TX A: UPDATE accounts SET balance=50 WHERE id=1;</span>
+<span class="cm">-- TX B: UPDATE accounts SET balance=50 WHERE id=1; -- overwrites!</span>
+
+<span class="cm">-- ✅ Fix 1: Atomic UPDATE (no separate read)</span>
+<span class="kw">UPDATE</span> <span class="tb">accounts</span>
+<span class="kw">SET</span> balance = balance - <span class="num">50</span>  <span class="cm">-- DB does the math atomically</span>
+<span class="kw">WHERE</span> id = <span class="num">1</span> <span class="op">AND</span> balance >= <span class="num">50</span>;  <span class="cm">-- check constraint</span>
+
+<span class="cm">-- ✅ Fix 2: Pessimistic locking (FOR UPDATE)</span>
+<span class="kw">START TRANSACTION</span>;
+<span class="kw">SELECT</span> balance <span class="kw">FROM</span> <span class="tb">accounts</span> <span class="kw">WHERE</span> id=<span class="num">1</span> <span class="kw">FOR UPDATE</span>; <span class="cm">-- X-lock now</span>
+<span class="cm">-- TX B's SELECT FOR UPDATE waits here</span>
+<span class="kw">UPDATE</span> <span class="tb">accounts</span> <span class="kw">SET</span> balance=balance-<span class="num">50</span> <span class="kw">WHERE</span> id=<span class="num">1</span>;
+<span class="kw">COMMIT</span>;
+
+<span class="cm">-- ✅ Fix 3: Optimistic locking (version column)</span>
+<span class="kw">SELECT</span> balance, version <span class="kw">FROM</span> <span class="tb">accounts</span> <span class="kw">WHERE</span> id=<span class="num">1</span>; <span class="cm">-- returns version=5</span>
+<span class="kw">UPDATE</span> <span class="tb">accounts</span>
+<span class="kw">SET</span> balance=balance-<span class="num">50</span>, version=version+<span class="num">1</span>
+<span class="kw">WHERE</span> id=<span class="num">1</span> <span class="op">AND</span> version=<span class="num">5</span>;  <span class="cm">-- fails if version changed</span>
+<span class="cm">-- Check affected_rows: if 0 → conflict → retry</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ═══ PRODUCTION SCENARIOS ═══ -->
+<div class="sg" data-s="scenarios">
+<div class="sh"><div class="si g">🏭</div><div class="sl2">Production Scenarios — Real-World War Stories</div><div class="sl3"></div></div>
+
+<div class="card gc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SC1</span><span class="qt">Scenario: A table has 500M rows and you need to add a NOT NULL column with a default</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- ❌ WRONG: locks table for hours</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">orders</span>
+  <span class="kw">ADD COLUMN</span> processed <span class="kw">TINYINT NOT NULL DEFAULT</span> <span class="num">0</span>;
+
+<span class="cm">-- ✅ MySQL 8 Instant Algorithm (for adding columns with defaults)</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">orders</span>
+  <span class="kw">ADD COLUMN</span> processed <span class="kw">TINYINT NOT NULL DEFAULT</span> <span class="num">0</span>,
+  ALGORITHM=INSTANT;  <span class="cm">-- Completes in milliseconds! MySQL 8.0.12+</span>
+
+<span class="cm">-- Check what's INSTANT-eligible:</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> information_schema.INNODB_COLUMNS <span class="kw">LIMIT</span> <span class="num">1</span>;
+
+<span class="cm">-- Not INSTANT? Use gh-ost:</span>
+gh-ost \
+  --host=db-primary \
+  --database=mydb \
+  --table=orders \
+  --alter="ADD COLUMN processed TINYINT NOT NULL DEFAULT 0" \
+  --chunk-size=2000 \
+  --max-load=Threads_running=25 \
+  --critical-load=Threads_running=1000 \
+  --execute</pre>
+    <div class="box bg"><strong>✅ gh-ost advantages over pt-osc:</strong> Uses binlog streaming instead of triggers. Zero impact on replica topology. Can pause/throttle mid-migration. Can cut-over in a single rename (atomic). GitHub uses this to migrate 100TB+ tables.</div>
+  </div>
+</div>
+
+<div class="card gc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SC2</span><span class="qt">Scenario: Design a MySQL schema for a high-throughput notification system (1M inserts/day)</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">CREATE TABLE</span> <span class="tb">notifications</span> (
+  id          <span class="kw">BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY</span>,
+  user_id     <span class="kw">BIGINT UNSIGNED NOT NULL</span>,
+  type        <span class="kw">TINYINT UNSIGNED NOT NULL</span>,  <span class="cm">-- ENUM as int (fast)</span>
+  is_read     <span class="kw">TINYINT</span>(<span class="num">1</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  payload     <span class="kw">JSON</span>,                         <span class="cm">-- flexible, avoid EAV</span>
+  created_at  <span class="kw">DATETIME</span>(<span class="num">3</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="fn">CURRENT_TIMESTAMP</span>(<span class="num">3</span>),
+
+  <span class="cm">-- Critical: queries are always by user_id</span>
+  <span class="kw">INDEX</span> idx_user_read_date (user_id, is_read, created_at <span class="kw">DESC</span>),
+  <span class="cm">-- Covers: "get unread notifications for user, newest first"</span>
+  <span class="cm">-- is_read=0 has high selectivity within a user's notifications</span>
+
+  <span class="kw">INDEX</span> idx_cleanup (created_at)  <span class="cm">-- for TTL cleanup job</span>
+
+) ENGINE=InnoDB
+  <span class="kw">PARTITION BY RANGE</span> (<span class="fn">TO_DAYS</span>(created_at)) (
+    <span class="kw">PARTITION</span> p_2024_q1 <span class="kw">VALUES LESS THAN</span> (<span class="fn">TO_DAYS</span>(<span class="str">'2024-04-01'</span>)),
+    <span class="kw">PARTITION</span> p_2024_q2 <span class="kw">VALUES LESS THAN</span> (<span class="fn">TO_DAYS</span>(<span class="str">'2024-07-01'</span>)),
+    <span class="kw">PARTITION</span> p_current <span class="kw">VALUES LESS THAN MAXVALUE</span>
+  );</pre>
+    <div class="csub g">Key Design Decisions</div>
+    <div class="pills">
+      <span class="pill pg">BIGINT PK for 1M/day scale</span>
+      <span class="pill pg">TINYINT for type (not ENUM)</span>
+      <span class="pill pg">Millisecond precision timestamps</span>
+      <span class="pill pg">Composite index matches query pattern</span>
+      <span class="pill pg">Range partition for quarterly archival</span>
+      <span class="pill pg">JSON payload avoids schema migration</span>
+    </div>
+    <pre><span class="cm">-- Mark batch as read (efficient, set-based)</span>
+<span class="kw">UPDATE</span> <span class="tb">notifications</span>
+<span class="kw">SET</span> is_read = <span class="num">1</span>
+<span class="kw">WHERE</span> user_id = <span class="num">42</span> <span class="op">AND</span> is_read = <span class="num">0</span>
+<span class="kw">LIMIT</span> <span class="num">1000</span>;  <span class="cm">-- LIMIT protects against accidental mass update</span></pre>
+  </div>
+</div>
+
+<div class="card gc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SC3</span><span class="qt">Scenario: Safely delete 100M old rows without downtime</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">-- ❌ NEVER: one shot DELETE on 100M rows
+-- Locks table, creates massive undo log, kills replication</span>
+<span class="kw">DELETE FROM</span> <span class="tb">logs</span> <span class="kw">WHERE</span> created_at < <span class="str">'2023-01-01'</span>; <span class="bad">-- ❌</span>
+
+<span class="cm">-- ✅ Method 1: Chunked delete with throttle (pt-archiver)</span>
+pt-archiver \
+  --source h=localhost,D=mydb,t=logs \
+  --where "created_at < '2023-01-01'" \
+  --purge \
+  --limit 1000 \
+  --sleep 0.1 \  <span class="cm">-- 100ms pause between chunks</span>
+  --progress 5000
+
+<span class="cm">-- ✅ Method 2: Application-level loop</span>
+<span class="kw">DELIMITER</span> //
+<span class="kw">CREATE PROCEDURE</span> <span class="fn">ChunkedDelete</span>()
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> v_rows <span class="kw">INT DEFAULT</span> <span class="num">1</span>;
+  <span class="kw">WHILE</span> v_rows > <span class="num">0</span> <span class="kw">DO</span>
+    <span class="kw">DELETE FROM</span> <span class="tb">logs</span>
+    <span class="kw">WHERE</span> created_at < <span class="str">'2023-01-01'</span>
+    <span class="kw">LIMIT</span> <span class="num">1000</span>;           <span class="cm">-- small chunks</span>
+
+    <span class="kw">SET</span> v_rows = <span class="fn">ROW_COUNT</span>();
+    <span class="kw">DO</span> <span class="fn">SLEEP</span>(<span class="num">0.05</span>);       <span class="cm">-- 50ms breather</span>
+  <span class="kw">END WHILE</span>;
+<span class="kw">END</span>//
+
+<span class="cm">-- ✅ Method 3 (BEST at scale): Partition DROP</span>
+<span class="cm">-- If table is partitioned by date, drop the old partition:</span>
+<span class="kw">ALTER TABLE</span> <span class="tb">logs</span> <span class="kw">DROP PARTITION</span> p_2022;  <span class="cm">-- Instant! Deletes 100M rows in ms</span></pre>
+    <div class="box bp"><strong>🔬 Lesson from experience:</strong> Every large-scale data cleanup should use partitioning + DROP PARTITION if at all possible. Plan your partition strategy at table creation time. Retrofitting partitions onto an existing 500GB table requires a full table rebuild — plan this during off-peak with gh-ost.</div>
+  </div>
+</div>
+
+<div class="card gc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SC4</span><span class="qt">The complete production my.cnf for a 32GB RAM dedicated MySQL server</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre>[mysqld]
+<span class="cm"># === BASIC ===</span>
+server-id              = 1
+port                   = 3306
+datadir                = /var/lib/mysql
+socket                 = /var/run/mysqld/mysqld.sock
+
+<span class="cm"># === CHARACTER SET ===</span>
+character-set-server   = utf8mb4
+collation-server       = utf8mb4_unicode_ci
+
+<span class="cm"># === INNODB — Most important section ===</span>
+innodb_buffer_pool_size        = 24G    <span class="cm">-- 75% of 32GB RAM</span>
+innodb_buffer_pool_instances   = 8      <span class="cm">-- 1 per 1GB, reduces contention</span>
+innodb_buffer_pool_dump_at_shutdown = ON
+innodb_buffer_pool_load_at_startup  = ON  <span class="cm">-- warm pool on restart</span>
+innodb_log_file_size           = 2G    <span class="cm">-- larger = fewer checkpoints</span>
+innodb_log_buffer_size         = 256M
+innodb_flush_log_at_trx_commit = 1     <span class="cm">-- safest (ACID)</span>
+innodb_flush_method            = O_DIRECT  <span class="cm">-- bypass OS cache</span>
+innodb_file_per_table          = ON    <span class="cm">-- each table has own .ibd</span>
+innodb_io_capacity             = 4000  <span class="cm">-- SSD: 2000-10000</span>
+innodb_io_capacity_max         = 8000
+innodb_read_io_threads         = 8
+innodb_write_io_threads        = 8
+innodb_thread_concurrency      = 0     <span class="cm">-- let InnoDB decide</span>
+
+<span class="cm"># === CONNECTIONS ===</span>
+max_connections        = 400
+wait_timeout           = 300
+interactive_timeout    = 300
+thread_cache_size      = 100
+
+<span class="cm"># === QUERY EXECUTION ===</span>
+sort_buffer_size       = 2M
+join_buffer_size       = 2M
+read_buffer_size       = 1M
+read_rnd_buffer_size   = 1M
+tmp_table_size         = 256M
+max_heap_table_size    = 256M
+
+<span class="cm"># === REPLICATION ===</span>
+log_bin                = /var/log/mysql/mysql-bin
+binlog_format          = ROW
+sync_binlog            = 1
+binlog_expire_logs_seconds = 604800  <span class="cm">-- 7 days</span>
+gtid_mode              = ON
+enforce_gtid_consistency = ON
+relay_log              = /var/log/mysql/relay-bin
+relay_log_recovery     = ON
+
+<span class="cm"># === SLOW QUERY LOG ===</span>
+slow_query_log                = ON
+slow_query_log_file           = /var/log/mysql/slow.log
+long_query_time               = 1
+log_queries_not_using_indexes = ON
+log_slow_verbosity            = full   <span class="cm">-- MySQL 8: include query plan</span>
+
+<span class="cm"># === SQL MODE ===</span>
+sql_mode = STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+
+<span class="cm"># === PERFORMANCE ===</span>
+performance_schema     = ON  <span class="cm">-- 1-2% overhead, worth it</span>
+performance_schema_instrument = '%=ON'</pre>
+  </div>
+</div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+function tog(card){card.classList.toggle('open');upd()}
+function upd(){
+  const all=document.querySelectorAll('.card');
+  const open=document.querySelectorAll('.card.open');
+  const pct=Math.round(open.length/all.length*100);
+  document.getElementById('pf2').style.width=pct+'%';
+  document.getElementById('oc2').textContent=open.length+' of '+all.length+' opened';
+  document.getElementById('pc2').textContent=pct+'%';
+}
+function flt(sec,btn){
+  document.querySelectorAll('.nt').forEach(t=>t.className='nt');
+  if(sec==='all'){
+    btn.classList.add('ao');
+    document.querySelectorAll('.sg').forEach(g=>g.classList.remove('hidden'));
+  } else {
+    const blues=['execution','explain','connections','monitoring'];
+    const greens=['scenarios'];
+    const reds=['traps','debugging'];
+    const purples=['challenges','mysql8'];
+    if(blues.includes(sec)) btn.classList.add('ab');
+    else if(greens.includes(sec)) btn.classList.add('ag');
+    else if(reds.includes(sec)) btn.classList.add('ar');
+    else if(purples.includes(sec)) btn.classList.add('ap');
+    else btn.classList.add('ao');
+    document.querySelectorAll('.sg').forEach(g=>g.classList.toggle('hidden',g.dataset.s!==sec));
+  }
+}
+document.querySelectorAll('.card').forEach((c,i)=>c.style.animationDelay=(i*.025)+'s');
+upd();
+</script>
+</body>
+</html>
