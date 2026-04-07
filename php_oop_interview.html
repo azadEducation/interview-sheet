@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP OOP — Deep Interview Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080910;--s1:#0C0D14;--s2:#10111A;
+  --bd:#1C1E2E;--bd2:#272A40;
+  --text:#E2E6F8;--muted:#5A607A;
+  --code:#06060D;
+  --php:#8892BF;    /* php purple-blue */
+  --php2:#4F5B93;   /* php dark */
+  --oop:#A855F7;    /* oop purple */
+  --trap:#EF4444;   /* trap red */
+  --safe:#22C55E;   /* safe green */
+  --warn:#F59E0B;   /* warning amber */
+  --info:#38BDF8;   /* info sky */
+  --pat:#EC4899;    /* pattern pink */
+  --php8:#06B6D4;   /* php8 cyan */
+  --gp:rgba(136,146,191,.13);
+  --go:rgba(168,85,247,.13);
+  --gt:rgba(239,68,68,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* bg texture */
+body::after{content:'';position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(136,146,191,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(136,146,191,.025) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;padding:56px 20px 38px;text-align:center;border-bottom:1px solid var(--bd);overflow:hidden}
+.blob{position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:750px;height:480px;
+  background:radial-gradient(ellipse,rgba(168,85,247,.08) 0%,rgba(136,146,191,.06) 40%,transparent 70%);
+  pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.3);
+  border-radius:100px;padding:5px 16px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--oop);
+  margin-bottom:18px;animation:up .5s ease both}
+h1{font-size:clamp(2.2rem,6vw,4.6rem);font-weight:800;letter-spacing:-2px;line-height:1;animation:up .6s .1s ease both}
+h1 .php{color:var(--php)}h1 .oop{color:var(--oop)}h1 .rest{color:#22273D}
+.sub{margin:14px auto 0;max-width:680px;font-size:.93rem;font-weight:300;color:var(--muted);line-height:1.75;animation:up .6s .2s ease both}
+.tags{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin-top:18px;animation:up .6s .3s ease both}
+.tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:4px 11px;border-radius:4px;border:1px solid var(--bd2);color:var(--muted)}
+.tp{border-color:rgba(136,146,191,.3);color:var(--php);background:rgba(136,146,191,.06)}
+.to{border-color:rgba(168,85,247,.3);color:var(--oop);background:rgba(168,85,247,.06)}
+.tt{border-color:rgba(239,68,68,.3);color:var(--trap);background:rgba(239,68,68,.06)}
+.tg{border-color:rgba(34,197,94,.3);color:var(--safe);background:rgba(34,197,94,.06)}
+.tw{border-color:rgba(245,158,11,.3);color:var(--warn);background:rgba(245,158,11,.06)}
+.tc{border-color:rgba(6,182,212,.3);color:var(--php8);background:rgba(6,182,212,.06)}
+.tk{border-color:rgba(236,72,153,.3);color:var(--pat);background:rgba(236,72,153,.06)}
+
+/* progress */
+.pg-wrap{max-width:520px;margin:20px auto 0;animation:up .6s .4s ease both}
+.pg-meta{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:6px}
+.pg-bar{height:3px;background:var(--bd2);border-radius:2px}
+.pg-fill{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--php),var(--oop),var(--trap));width:0;transition:width .5s ease}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;background:rgba(8,9,16,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd)}
+.nav-in{max-width:1080px;margin:0 auto;padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
+.nav-in::-webkit-scrollbar{display:none}
+.nt{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:6px 12px;border-radius:5px;border:1px solid var(--bd2);
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;white-space:nowrap}
+.nt:hover{color:var(--text);border-color:var(--muted)}
+.a-all{background:rgba(136,146,191,.1);color:var(--php);border-color:rgba(136,146,191,.4)}
+.a-php{background:rgba(136,146,191,.1);color:var(--php);border-color:rgba(136,146,191,.35)}
+.a-oop{background:rgba(168,85,247,.1);color:var(--oop);border-color:rgba(168,85,247,.4)}
+.a-trap{background:rgba(239,68,68,.1);color:var(--trap);border-color:rgba(239,68,68,.4)}
+.a-safe{background:rgba(34,197,94,.1);color:var(--safe);border-color:rgba(34,197,94,.4)}
+.a-warn{background:rgba(245,158,11,.1);color:var(--warn);border-color:rgba(245,158,11,.4)}
+.a-cyan{background:rgba(6,182,212,.1);color:var(--php8);border-color:rgba(6,182,212,.4)}
+.a-pink{background:rgba(236,72,153,.1);color:var(--pat);border-color:rgba(236,72,153,.4)}
+
+/* ── MAIN ── */
+.main{max-width:1080px;margin:0 auto;padding:30px 20px 100px;position:relative;z-index:1}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:32px}
+.stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px 10px;text-align:center}
+.sn{font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:700;line-height:1}
+.sn.ph{color:var(--php)}.sn.op{color:var(--oop)}.sn.tr{color:var(--trap)}
+.sn.sf{color:var(--safe)}.sn.wn{color:var(--warn)}.sn.cy{color:var(--php8)}.sn.pk{color:var(--pat)}
+.sl{font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+/* section head */
+.sh{display:flex;align-items:center;gap:12px;margin:44px 0 15px}
+.sh:first-of-type{margin-top:0}
+.si{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.si.ph{background:rgba(136,146,191,.12)}.si.op{background:rgba(168,85,247,.1)}
+.si.tr{background:rgba(239,68,68,.1)}.si.sf{background:rgba(34,197,94,.1)}
+.si.wn{background:rgba(245,158,11,.1)}.si.cy{background:rgba(6,182,212,.1)}.si.pk{background:rgba(236,72,153,.1)}
+.sl2{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.sl3{flex:1;height:1px;background:var(--bd)}
+
+/* card */
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;animation:up .3s ease both}
+.card:hover{border-color:var(--bd2)}
+.phc:hover{border-color:rgba(136,146,191,.4);box-shadow:0 0 26px var(--gp)}
+.opc:hover{border-color:rgba(168,85,247,.35);box-shadow:0 0 26px var(--go)}
+.trc:hover{border-color:rgba(239,68,68,.35);box-shadow:0 0 22px var(--gt)}
+.sfc:hover{border-color:rgba(34,197,94,.3);box-shadow:0 0 20px rgba(34,197,94,.08)}
+.wnc:hover{border-color:rgba(245,158,11,.3);box-shadow:0 0 20px rgba(245,158,11,.08)}
+.cyc:hover{border-color:rgba(6,182,212,.3);box-shadow:0 0 20px rgba(6,182,212,.08)}
+.pkc:hover{border-color:rgba(236,72,153,.3);box-shadow:0 0 20px rgba(236,72,153,.08)}
+
+.ch{display:flex;align-items:flex-start;gap:12px;padding:14px 17px;cursor:pointer;user-select:none}
+.qn{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;flex-shrink:0;margin-top:2px}
+.phc .qn{background:rgba(136,146,191,.12);color:var(--php)}
+.opc .qn{background:rgba(168,85,247,.12);color:var(--oop)}
+.trc .qn{background:rgba(239,68,68,.1);color:#F87171}
+.sfc .qn{background:rgba(34,197,94,.1);color:#4ADE80}
+.wnc .qn{background:rgba(245,158,11,.1);color:#FCD34D}
+.cyc .qn{background:rgba(6,182,212,.1);color:var(--php8)}
+.pkc .qn{background:rgba(236,72,153,.1);color:#F472B6}
+.qt{font-size:.88rem;font-weight:600;flex:1;line-height:1.45}
+.diff{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex-shrink:0;margin-top:3px}
+.de{background:rgba(34,197,94,.12);color:#4ADE80}
+.dm{background:rgba(245,158,11,.12);color:#FCD34D}
+.dh{background:rgba(239,68,68,.12);color:#F87171}
+.dp{background:rgba(168,85,247,.12);color:#C084FC}
+.qtog{font-size:16px;color:var(--muted);transition:transform .22s;flex-shrink:0;margin-top:3px}
+.card.open .qtog{transform:rotate(180deg)}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--bd);padding-top:14px}
+.card.open .cb{display:block}
+.al{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.an{font-size:.85rem;line-height:1.75;color:#9EA8C8}
+
+/* sub-heading */
+.csub{font-size:.75rem;font-weight:700;font-family:'JetBrains Mono',monospace;margin:14px 0 7px;letter-spacing:.5px}
+.csub.ph{color:var(--php)}.csub.op{color:var(--oop)}.csub.tr{color:#F87171}
+.csub.sf{color:#4ADE80}.csub.wn{color:#FCD34D}.csub.cy{color:var(--php8)}.csub.pk{color:#F472B6}
+
+/* code */
+pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:14px 16px;margin:12px 0;
+  overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.65;color:#7B8DB5}
+.kw{color:#C084FC;font-weight:600}.fn{color:#82AAFF}.str{color:#86EFAC}
+.cm{color:#2B3350;font-style:italic}.num{color:#FDA4AF}.tb{color:#FDE68A}
+.op2{color:#67E8F9}.ok{color:#4ADE80}.bad{color:#F87171}.vr{color:#FCA5A5}
+
+/* output block */
+.out{background:#030307;border:1px solid var(--bd);border-left:3px solid var(--oop);border-radius:6px;
+  padding:11px 14px;margin:8px 0;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#7B6EBD}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
+.tbl th{background:rgba(255,255,255,.04);padding:8px 12px;text-align:left;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);
+  border-bottom:1px solid var(--bd)}
+.tbl td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.03);color:#9EA8C8;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .lc{font-weight:600;color:var(--text);width:28%}
+.tbl .gd{color:#4ADE80}.tbl .bd2{color:#F87171}
+
+/* pills */
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pill{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 9px;border-radius:3px}
+.pp{background:rgba(136,146,191,.1);color:var(--php);border:1px solid rgba(136,146,191,.2)}
+.po{background:rgba(168,85,247,.1);color:#C084FC;border:1px solid rgba(168,85,247,.2)}
+.pt{background:rgba(239,68,68,.1);color:#F87171;border:1px solid rgba(239,68,68,.2)}
+.ps{background:rgba(34,197,94,.1);color:#4ADE80;border:1px solid rgba(34,197,94,.2)}
+.pw{background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.2)}
+.pc2{background:rgba(6,182,212,.1);color:var(--php8);border:1px solid rgba(6,182,212,.2)}
+.pk2{background:rgba(236,72,153,.1);color:#F472B6;border:1px solid rgba(236,72,153,.2)}
+
+/* callout */
+.box{border-radius:7px;padding:11px 14px;margin:12px 0;font-size:13px;line-height:1.65;color:#9EA8C8}
+.bph{background:rgba(136,146,191,.05);border:1px solid rgba(136,146,191,.2);border-left:3px solid var(--php)}
+.bop{background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.2);border-left:3px solid var(--oop)}
+.btr{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-left:3px solid var(--trap)}
+.bsf{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2);border-left:3px solid var(--safe)}
+.bwn{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-left:3px solid var(--warn)}
+.bcy{background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.2);border-left:3px solid var(--php8)}
+.bpk{background:rgba(236,72,153,.05);border:1px solid rgba(236,72,153,.2);border-left:3px solid var(--pat)}
+.bph strong{color:var(--php)}.bop strong{color:var(--oop)}.btr strong{color:#F87171}
+.bsf strong{color:#4ADE80}.bwn strong{color:#FCD34D}.bcy strong{color:var(--php8)}.bpk strong{color:#F472B6}
+
+/* two-col */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:680px){.cols2{grid-template-columns:1fr}}
+.col-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.col-lbl.r{color:#F87171}.col-lbl.g{color:#4ADE80}.col-lbl.y{color:#FCD34D}.col-lbl.b{color:var(--php8)}
+
+/* output label */
+.out-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin:8px 0 3px;letter-spacing:1px}
+
+/* trap badge */
+.trap-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.3);border-radius:100px;padding:3px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:#F87171;margin-bottom:10px}
+.php8-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(6,182,212,.1);
+  border:1px solid rgba(6,182,212,.3);border-radius:100px;padding:3px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--php8);margin-bottom:10px}
+.pattern-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(236,72,153,.1);
+  border:1px solid rgba(236,72,153,.3);border-radius:100px;padding:3px 10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:#F472B6;margin-bottom:10px}
+
+/* steps */
+.steps{counter-reset:step;list-style:none;margin:10px 0}
+.steps li{counter-increment:step;display:flex;gap:12px;margin-bottom:10px;font-size:.85rem;color:#9EA8C8;line-height:1.65}
+.steps li::before{content:counter(step);min-width:24px;height:24px;background:rgba(168,85,247,.12);
+  border:1px solid rgba(168,85,247,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--oop);flex-shrink:0;margin-top:2px}
+
+/* section groups */
+.sg.hidden{display:none}
+
+/* memory diagram */
+.mem{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:14px;margin:12px 0;
+  font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8;color:#5A607A}
+.mem .addr{color:#4F5B93}.mem .val{color:#86EFAC}.mem .lbl{color:#FDE68A}.mem .arr{color:#C084FC}
+
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){h1{font-size:2.1rem;letter-spacing:-1px}.stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="blob"></div>
+  <div class="eyebrow">🐘 PHP OOP · Deep Interview · Trap Questions</div>
+  <h1>
+    <span class="php">PHP</span>
+    <span class="oop"> OOP</span><br>
+    <span class="rest">Crack Any Interview</span>
+  </h1>
+  <p class="sub">Complete OOP structure, memory model, magic methods, late static binding, traits, design patterns, PHP 8 features — plus the trap questions that eliminate 90% of candidates in real interviews.</p>
+  <div class="tags">
+    <span class="tag tp">OOP Structure</span>
+    <span class="tag to">Inheritance Deep Dive</span>
+    <span class="tag tt">Trap Questions</span>
+    <span class="tag tg">Abstract vs Interface</span>
+    <span class="tag tw">Magic Methods</span>
+    <span class="tag tc">PHP 8 OOP Features</span>
+    <span class="tag tk">Design Patterns</span>
+    <span class="tag tp">SOLID Principles</span>
+    <span class="tag to">Late Static Binding</span>
+    <span class="tag tt">Object Cloning</span>
+    <span class="tag tg">Anonymous Classes</span>
+    <span class="tag tw">Type System</span>
+  </div>
+  <div class="pg-wrap">
+    <div class="pg-meta"><span id="oc">0 questions opened</span><span id="pc">0%</span></div>
+    <div class="pg-bar"><div class="pg-fill" id="pf"></div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-in">
+    <button class="nt a-all" onclick="flt('all',this)">All Topics</button>
+    <button class="nt" onclick="flt('structure',this)">OOP Structure</button>
+    <button class="nt" onclick="flt('inheritance',this)">Inheritance</button>
+    <button class="nt" onclick="flt('abstract',this)">Abstract & Interface</button>
+    <button class="nt" onclick="flt('traits',this)">Traits</button>
+    <button class="nt" onclick="flt('magic',this)">Magic Methods</button>
+    <button class="nt" onclick="flt('static',this)">Static & LSB</button>
+    <button class="nt" onclick="flt('visibility',this)">Visibility & Scope</button>
+    <button class="nt" onclick="flt('types',this)">Type System</button>
+    <button class="nt" onclick="flt('php8',this)">PHP 8 OOP</button>
+    <button class="nt" onclick="flt('patterns',this)">Design Patterns</button>
+    <button class="nt" onclick="flt('solid',this)">SOLID</button>
+    <button class="nt" onclick="flt('traps',this)">🎯 Trap Questions</button>
+    <button class="nt" onclick="flt('memory',this)">Object Model</button>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="stats">
+  <div class="stat"><div class="sn ph">12</div><div class="sl">OOP Structure</div></div>
+  <div class="stat"><div class="sn op">10</div><div class="sl">Inheritance</div></div>
+  <div class="stat"><div class="sn sf">10</div><div class="sl">Abst. & Interface</div></div>
+  <div class="stat"><div class="sn wn">10</div><div class="sl">Magic Methods</div></div>
+  <div class="stat"><div class="sn cy">10</div><div class="sl">PHP 8 OOP</div></div>
+  <div class="stat"><div class="sn pk">12</div><div class="sl">Design Patterns</div></div>
+  <div class="stat"><div class="sn tr">20</div><div class="sl">Trap Questions</div></div>
+  <div class="stat"><div class="sn op">84+</div><div class="sl">Total</div></div>
+</div>
+
+<!-- ════ OOP STRUCTURE ════ -->
+<div class="sg" data-s="structure">
+<div class="sh"><div class="si ph">🏗️</div><div class="sl2">OOP Core Structure</div><div class="sl3"></div></div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S1</span><span class="qt">What is the complete anatomy of a PHP class?</span><span class="diff de">Easy</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <pre><span class="kw">class</span> <span class="tb">BankAccount</span>
+{
+    <span class="cm">// 1. Class constants</span>
+    <span class="kw">public const</span> INTEREST_RATE = <span class="num">0.05</span>;
+    <span class="kw">protected const</span> MIN_BALANCE = <span class="num">0</span>;
+
+    <span class="cm">// 2. Static properties (shared across all instances)</span>
+    <span class="kw">private static int</span> <span class="vr">$totalAccounts</span> = <span class="num">0</span>;
+
+    <span class="cm">// 3. Instance properties (each object has its own)</span>
+    <span class="kw">private string</span> <span class="vr">$owner</span>;
+    <span class="kw">private float</span>  <span class="vr">$balance</span>;
+
+    <span class="cm">// 4. Constructor (called when new BankAccount(...))</span>
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">string</span> <span class="vr">$owner</span>, <span class="kw">float</span> <span class="vr">$balance</span> = <span class="num">0</span>)
+    {
+        <span class="vr">$this</span>-><span class="vr">owner</span>   = <span class="vr">$owner</span>;
+        <span class="vr">$this</span>-><span class="vr">balance</span> = <span class="vr">$balance</span>;
+        self::<span class="vr">$totalAccounts</span>++;
+    }
+
+    <span class="cm">// 5. Instance methods</span>
+    <span class="kw">public function</span> <span class="fn">deposit</span>(<span class="kw">float</span> <span class="vr">$amount</span>): <span class="kw">static</span>  <span class="cm">// fluent interface</span>
+    {
+        <span class="vr">$this</span>-><span class="vr">balance</span> += <span class="vr">$amount</span>;
+        <span class="kw">return</span> <span class="vr">$this</span>;
+    }
+
+    <span class="cm">// 6. Static methods</span>
+    <span class="kw">public static function</span> <span class="fn">getTotalAccounts</span>(): <span class="kw">int</span>
+    {
+        <span class="kw">return</span> self::<span class="vr">$totalAccounts</span>;
+    }
+
+    <span class="cm">// 7. Getters / Setters</span>
+    <span class="kw">public function</span> <span class="fn">getBalance</span>(): <span class="kw">float</span> { <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">balance</span>; }
+
+    <span class="cm">// 8. Destructor (called when object is garbage collected)</span>
+    <span class="kw">public function</span> <span class="fn">__destruct</span>()
+    {
+        self::<span class="vr">$totalAccounts</span>--;
+    }
+}</pre>
+    <div class="box bph"><strong>💡 Fluent interface:</strong> Returning <code>$this</code> (or <code>static</code> in PHP 8) from methods allows chaining: <code>$acc->deposit(100)->deposit(50)->getBalance()</code></div>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S2</span><span class="qt">What is $this and when is it NOT available?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer</div>
+    <div class="an"><code>$this</code> refers to the current object instance. It is available inside all non-static methods. It is NOT available in static methods, closures (without binding), or global scope.</div>
+    <pre><span class="kw">class</span> <span class="tb">Foo</span> {
+    <span class="kw">public</span> <span class="vr">$name</span> = <span class="str">'Foo'</span>;
+
+    <span class="kw">public function</span> <span class="fn">regular</span>() {
+        <span class="kw">echo</span> <span class="vr">$this</span>-><span class="vr">name</span>;   <span class="ok">// ✅ Works — $this is the Foo instance</span>
+    }
+
+    <span class="kw">public static function</span> <span class="fn">stat</span>() {
+        <span class="kw">echo</span> <span class="vr">$this</span>-><span class="vr">name</span>;   <span class="bad">// ❌ Fatal: Using $this in static context</span>
+    }
+
+    <span class="kw">public function</span> <span class="fn">withClosure</span>() {
+        <span class="vr">$fn</span> = <span class="kw">function</span>() {
+            <span class="kw">echo</span> <span class="vr">$this</span>-><span class="vr">name</span>; <span class="ok">// ✅ PHP auto-binds $this into closures inside methods</span>
+        };
+        <span class="vr">$fn</span>();
+
+        <span class="vr">$arrow</span> = <span class="kw">fn</span>() => <span class="vr">$this</span>-><span class="vr">name</span>; <span class="ok">// ✅ Arrow functions capture $this automatically</span>
+        <span class="kw">echo</span> <span class="vr">$arrow</span>();
+    }
+}</pre>
+    <div class="box btr"><strong>⚠️ Trap:</strong> Static closures (<code>static function() {}</code>) do NOT have access to <code>$this</code> even inside a method. This is a common mistake in event systems.</div>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S3</span><span class="qt">What is the difference between self::, parent::, static::, and $this->?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Answer — The most confused topic in PHP OOP</div>
+    <table class="tbl">
+      <tr><th>Keyword</th><th>Resolves To</th><th>Use When</th></tr>
+      <tr><td class="lc">$this-></td><td>Current object instance</td><td>Instance method/property access</td></tr>
+      <tr><td class="lc">self::</td><td>Class where code is WRITTEN (compile-time)</td><td>Static access within same class</td></tr>
+      <tr><td class="lc">parent::</td><td>Direct parent class</td><td>Call parent's overridden method</td></tr>
+      <tr><td class="lc">static::</td><td>Class that was CALLED (runtime — Late Static Binding)</td><td>Factory methods, singleton inheritance</td></tr>
+    </table>
+    <pre><span class="kw">class</span> <span class="tb">Base</span> {
+    <span class="kw">public static function</span> <span class="fn">createSelf</span>(): <span class="kw">static</span>  {
+        <span class="kw">return new</span> self();    <span class="cm">// Always creates Base — even if called on Child!</span>
+    }
+    <span class="kw">public static function</span> <span class="fn">createStatic</span>(): <span class="kw">static</span>  {
+        <span class="kw">return new</span> static();  <span class="cm">// Creates whatever class was called (LSB)</span>
+    }
+}
+
+<span class="kw">class</span> <span class="tb">Child</span> <span class="kw">extends</span> <span class="tb">Base</span> {}
+
+<span class="vr">$a</span> = <span class="tb">Child</span>::<span class="fn">createSelf</span>();   <span class="cm">// instanceof Base   ← might surprise you!</span>
+<span class="vr">$b</span> = <span class="tb">Child</span>::<span class="fn">createStatic</span>(); <span class="cm">// instanceof Child  ← correct behavior</span>
+
+<span class="fn">var_dump</span>(<span class="vr">$a</span> <span class="kw">instanceof</span> <span class="tb">Child</span>); <span class="cm">// bool(false)</span>
+<span class="fn">var_dump</span>(<span class="vr">$b</span> <span class="kw">instanceof</span> <span class="tb">Child</span>); <span class="cm">// bool(true)</span></pre>
+    <div class="box bop"><strong>🔬 Rule:</strong> Use <code>static::</code> in factory methods and singletons that will be extended. Use <code>self::</code> only when you WANT to lock it to the defining class. Most PHP devs get this wrong.</div>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S4</span><span class="qt">What are constructor property promotion? (PHP 8.0)</span><span class="diff de">Easy</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// Before PHP 8.0 — verbose and repetitive</span>
+<span class="kw">class</span> <span class="tb">User</span> {
+    <span class="kw">public</span> <span class="kw">string</span>  <span class="vr">$name</span>;
+    <span class="kw">private</span> <span class="kw">int</span>   <span class="vr">$age</span>;
+    <span class="kw">protected</span> <span class="kw">string</span> <span class="vr">$email</span>;
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">string</span> <span class="vr">$name</span>, <span class="kw">int</span> <span class="vr">$age</span>, <span class="kw">string</span> <span class="vr">$email</span>) {
+        <span class="vr">$this</span>-><span class="vr">name</span>  = <span class="vr">$name</span>;
+        <span class="vr">$this</span>-><span class="vr">age</span>   = <span class="vr">$age</span>;
+        <span class="vr">$this</span>-><span class="vr">email</span> = <span class="vr">$email</span>;
+    }
+}
+
+<span class="cm">// PHP 8.0+ Constructor Property Promotion — same result, 1/3 code</span>
+<span class="kw">class</span> <span class="tb">User</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">public readonly string</span>  <span class="vr">$name</span>,      <span class="cm">// PHP 8.1: readonly</span>
+        <span class="kw">private int</span>            <span class="vr">$age</span>,
+        <span class="kw">protected string</span>       <span class="vr">$email</span>,
+        <span class="kw">public</span> <span class="kw">string</span>          <span class="vr">$role</span> = <span class="str">'user'</span>  <span class="cm">// with default</span>
+    ) {}
+}
+
+<span class="vr">$u</span> = <span class="kw">new</span> <span class="tb">User</span>(<span class="str">'Azad'</span>, <span class="num">25</span>, <span class="str">'a@b.com'</span>);
+<span class="fn">echo</span> <span class="vr">$u</span>-><span class="vr">name</span>; <span class="cm">// Azad</span>
+<span class="vr">$u</span>-><span class="vr">name</span> = <span class="str">'X'</span>; <span class="bad">// ❌ Fatal: readonly property</span></pre>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S5</span><span class="qt">What is object cloning and what is the difference between shallow and deep clone?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">Address</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public string</span> <span class="vr">$city</span>) {}
+}
+
+<span class="kw">class</span> <span class="tb">User</span> {
+    <span class="kw">public</span> <span class="tb">Address</span> <span class="vr">$address</span>;
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public string</span> <span class="vr">$name</span>, <span class="tb">Address</span> <span class="vr">$address</span>) {
+        <span class="vr">$this</span>-><span class="vr">address</span> = <span class="vr">$address</span>;
+    }
+
+    <span class="cm">// Without __clone: shallow copy — address object is SHARED</span>
+    <span class="kw">public function</span> <span class="fn">__clone</span>() {
+        <span class="cm">// Deep clone: clone nested objects too</span>
+        <span class="vr">$this</span>-><span class="vr">address</span> = <span class="kw">clone</span> <span class="vr">$this</span>-><span class="vr">address</span>;
+    }
+}
+
+<span class="vr">$u1</span> = <span class="kw">new</span> <span class="tb">User</span>(<span class="str">'Alice'</span>, <span class="kw">new</span> <span class="tb">Address</span>(<span class="str">'Delhi'</span>));
+<span class="vr">$u2</span> = <span class="kw">clone</span> <span class="vr">$u1</span>;  <span class="cm">// triggers __clone()</span>
+
+<span class="vr">$u2</span>-><span class="vr">name</span> = <span class="str">'Bob'</span>;
+<span class="vr">$u2</span>-><span class="vr">address</span>-><span class="vr">city</span> = <span class="str">'Mumbai'</span>;
+
+<span class="fn">echo</span> <span class="vr">$u1</span>-><span class="vr">name</span>;          <span class="cm">// Alice (scalar — copied by value)</span>
+<span class="fn">echo</span> <span class="vr">$u1</span>-><span class="vr">address</span>-><span class="vr">city</span>; <span class="cm">// Delhi (deep clone — independent!)</span></pre>
+    <div class="box btr"><strong>⚠️ Shallow clone trap:</strong> Without <code>__clone()</code>, nested objects are copied by reference — both <code>$u1</code> and <code>$u2</code> share the same <code>Address</code> object. Modifying one changes the other. This is one of the most common OOP bugs in PHP.</div>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S6</span><span class="qt">How does PHP pass objects — by reference or by value?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">Neither exactly. PHP passes objects by <strong>handle (object identifier)</strong>. The variable holds a pointer to the object. Assignment copies the pointer — not the object. But passing by reference (<code>&</code>) copies the pointer itself.</div>
+    <pre><span class="kw">class</span> <span class="tb">Box</span> { <span class="kw">public int</span> <span class="vr">$value</span> = <span class="num">1</span>; }
+
+<span class="cm">// Handle copy — both point to same object</span>
+<span class="vr">$a</span> = <span class="kw">new</span> <span class="tb">Box</span>();
+<span class="vr">$b</span> = <span class="vr">$a</span>;              <span class="cm">// copies the handle (pointer)</span>
+<span class="vr">$b</span>-><span class="vr">value</span> = <span class="num">99</span>;
+<span class="fn">echo</span> <span class="vr">$a</span>-><span class="vr">value</span>;        <span class="cm">// 99 — same object, mutation visible</span>
+
+<span class="cm">// Reassigning the variable (NOT the object)</span>
+<span class="vr">$b</span> = <span class="kw">new</span> <span class="tb">Box</span>();       <span class="cm">// $b now points to a NEW object</span>
+<span class="fn">echo</span> <span class="vr">$a</span>-><span class="vr">value</span>;        <span class="cm">// 99 — $a unaffected</span>
+
+<span class="cm">// True reference — &$b is an ALIAS of $a (same variable slot)</span>
+<span class="vr">$c</span> = <span class="kw">new</span> <span class="tb">Box</span>();
+<span class="vr">$d</span> = &<span class="vr">$c</span>;
+<span class="vr">$d</span> = <span class="kw">new</span> <span class="tb">Box</span>();       <span class="cm">// Now $c ALSO points to the new object</span>
+<span class="fn">var_dump</span>(<span class="vr">$c</span> === <span class="vr">$d</span>);  <span class="cm">// bool(true)</span></pre>
+    <div class="box bop"><strong>🔬 Memory model:</strong> PHP object variable stores a handle (integer ID). Clone creates a new object with new handle. Reference (<code>&</code>) makes two variables share the same storage slot.</div>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">S7</span><span class="qt">What is the difference between a class constant and a property?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <table class="tbl">
+      <tr><th></th><th>Class Constant</th><th>Property</th></tr>
+      <tr><td class="lc">Value changes</td><td class="bd2">Never (immutable)</td><td class="gd">Yes (mutable)</td></tr>
+      <tr><td class="lc">Memory</td><td>Shared (one copy)</td><td>Per-instance (or per-class if static)</td></tr>
+      <tr><td class="lc">Access</td><td>ClassName::CONST or self::CONST</td><td>$this->prop or self::$prop</td></tr>
+      <tr><td class="lc">Visibility</td><td>public/protected/private</td><td>public/protected/private</td></tr>
+      <tr><td class="lc">Type</td><td>scalar/array only</td><td>Any type including objects</td></tr>
+    </table>
+    <pre><span class="kw">class</span> <span class="tb">Config</span> {
+    <span class="cm">// Constant: shared, immutable, accessed via :: </span>
+    <span class="kw">public const</span> VERSION = <span class="str">'2.0'</span>;
+    <span class="kw">private const</span> MAX_RETRY = <span class="num">3</span>;
+
+    <span class="cm">// PHP 8.3: typed class constants</span>
+    <span class="kw">public const string</span> DRIVER = <span class="str">'mysql'</span>;
+
+    <span class="cm">// Constant in interface — always public</span>
+}
+
+<span class="fn">echo</span> <span class="tb">Config</span>::VERSION;    <span class="cm">// '2.0'</span>
+<span class="fn">echo</span> <span class="tb">Config</span>::MAX_RETRY;  <span class="bad">// ❌ Fatal: private</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ INHERITANCE ════ -->
+<div class="sg" data-s="inheritance">
+<div class="sh"><div class="si op">🧬</div><div class="sl2">Inheritance — Deep Dive</div><div class="sl3"></div></div>
+
+<div class="card opc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I1</span><span class="qt">What is the full method resolution order in PHP inheritance?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">GrandParent</span> {
+    <span class="kw">public function</span> <span class="fn">hello</span>() { <span class="kw">echo</span> <span class="str">'GrandParent'</span>; }
+}
+<span class="kw">class</span> <span class="tb">Parent_</span> <span class="kw">extends</span> <span class="tb">GrandParent</span> {
+    <span class="kw">public function</span> <span class="fn">hello</span>() {
+        parent::<span class="fn">hello</span>();  <span class="cm">// calls GrandParent::hello()</span>
+        <span class="kw">echo</span> <span class="str">' Parent'</span>;
+    }
+}
+<span class="kw">class</span> <span class="tb">Child</span> <span class="kw">extends</span> <span class="tb">Parent_</span> {
+    <span class="kw">public function</span> <span class="fn">hello</span>() {
+        parent::<span class="fn">hello</span>();  <span class="cm">// calls Parent_::hello() — which calls GrandParent</span>
+        <span class="kw">echo</span> <span class="str">' Child'</span>;
+    }
+}
+
+(<span class="kw">new</span> <span class="tb">Child</span>())-><span class="fn">hello</span>();</pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">GrandParent Parent Child</div>
+    <div class="csub op">Constructor chaining — must be explicit</div>
+    <pre><span class="kw">class</span> <span class="tb">Animal</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public string</span> <span class="vr">$name</span>) {}
+}
+<span class="kw">class</span> <span class="tb">Dog</span> <span class="kw">extends</span> <span class="tb">Animal</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">string</span> <span class="vr">$name</span>, <span class="kw">public string</span> <span class="vr">$breed</span>) {
+        parent::<span class="fn">__construct</span>(<span class="vr">$name</span>); <span class="cm">// MUST call manually — NOT automatic!</span>
+    }
+}
+<span class="cm">// If you forget parent::__construct(), $this->name is never set!</span></pre>
+    <div class="box btr"><strong>⚠️ Trap:</strong> PHP does NOT automatically call the parent constructor. You must call <code>parent::__construct()</code> explicitly. 90% of candidates forget this.</div>
+  </div>
+</div>
+
+<div class="card opc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I2</span><span class="qt">What is method overriding and what are the signature rules?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">Base</span> {
+    <span class="kw">public function</span> <span class="fn">process</span>(<span class="kw">int</span> <span class="vr">$x</span>): <span class="kw">int</span> { <span class="kw">return</span> <span class="vr">$x</span> * <span class="num">2</span>; }
+}
+
+<span class="kw">class</span> <span class="tb">Child</span> <span class="kw">extends</span> <span class="tb">Base</span> {
+    <span class="cm">// ✅ Valid: same signature</span>
+    <span class="kw">public function</span> <span class="fn">process</span>(<span class="kw">int</span> <span class="vr">$x</span>): <span class="kw">int</span> { <span class="kw">return</span> <span class="vr">$x</span> * <span class="num">3</span>; }
+
+    <span class="cm">// ✅ Valid: parameter name can differ, type can WIDEN (contravariance)</span>
+    <span class="cm">// ✅ Valid: return type can NARROW (covariance)</span>
+
+    <span class="cm">// ❌ Invalid: cannot reduce visibility (public → protected)</span>
+    <span class="cm">// ❌ Invalid: cannot add required parameters</span>
+    <span class="cm">// ❌ Invalid: cannot change return type to incompatible type</span>
+}</pre>
+    <div class="csub op">Covariance & Contravariance (PHP 7.4+)</div>
+    <pre><span class="kw">class</span> <span class="tb">Animal</span> {}
+<span class="kw">class</span> <span class="tb">Cat</span> <span class="kw">extends</span> <span class="tb">Animal</span> {}
+
+<span class="kw">class</span> <span class="tb">AnimalShelter</span> {
+    <span class="kw">public function</span> <span class="fn">get</span>(): <span class="tb">Animal</span> { <span class="kw">return</span> <span class="kw">new</span> <span class="tb">Animal</span>(); }
+    <span class="kw">public function</span> <span class="fn">adopt</span>(<span class="tb">Cat</span> <span class="vr">$cat</span>): <span class="kw">void</span> {}
+}
+
+<span class="kw">class</span> <span class="tb">CatShelter</span> <span class="kw">extends</span> <span class="tb">AnimalShelter</span> {
+    <span class="cm">// COVARIANT return: narrows Animal → Cat (more specific)</span>
+    <span class="kw">public function</span> <span class="fn">get</span>(): <span class="tb">Cat</span> { <span class="kw">return</span> <span class="kw">new</span> <span class="tb">Cat</span>(); } <span class="ok">// ✅</span>
+
+    <span class="cm">// CONTRAVARIANT param: widens Cat → Animal (more general)</span>
+    <span class="kw">public function</span> <span class="fn">adopt</span>(<span class="tb">Animal</span> <span class="vr">$a</span>): <span class="kw">void</span> {} <span class="ok">// ✅</span>
+}</pre>
+  </div>
+</div>
+
+<div class="card opc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I3</span><span class="qt">What is the final keyword and when should you use it?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// final CLASS: cannot be extended</span>
+<span class="kw">final class</span> <span class="tb">Singleton</span> {
+    <span class="kw">private static</span> ?<span class="tb">self</span> <span class="vr">$instance</span> = <span class="kw">null</span>;
+    <span class="kw">private function</span> <span class="fn">__construct</span>() {}
+    <span class="kw">public static function</span> <span class="fn">getInstance</span>(): <span class="kw">static</span> {
+        <span class="kw">return</span> self::<span class="vr">$instance</span> ??= <span class="kw">new</span> self();
+    }
+}
+
+<span class="kw">class</span> <span class="tb">BadIdea</span> <span class="kw">extends</span> <span class="tb">Singleton</span> {} <span class="bad">// ❌ Fatal: cannot extend final class</span>
+
+<span class="cm">// final METHOD: cannot be overridden by child</span>
+<span class="kw">class</span> <span class="tb">Payment</span> {
+    <span class="kw">final public function</span> <span class="fn">process</span>(): <span class="kw">void</span> {
+        <span class="cm">// Critical flow — no child should change this</span>
+        <span class="vr">$this</span>-><span class="fn">validate</span>();
+        <span class="vr">$this</span>-><span class="fn">charge</span>();
+        <span class="vr">$this</span>-><span class="fn">notify</span>();
+    }
+    <span class="kw">protected function</span> <span class="fn">validate</span>(): <span class="kw">void</span> {} <span class="cm">// children CAN override helpers</span>
+    <span class="kw">protected function</span> <span class="fn">charge</span>(): <span class="kw">void</span> {}
+    <span class="kw">protected function</span> <span class="fn">notify</span>(): <span class="kw">void</span> {}
+}</pre>
+    <div class="box bop"><strong>💡 Template Method Pattern:</strong> Seal the algorithm in a <code>final</code> method, but let children override the steps. This is one of the most common real-world uses of <code>final</code> in PHP frameworks.</div>
+  </div>
+</div>
+
+<div class="card opc" onclick="tog(this)">
+  <div class="ch"><span class="qn">I4</span><span class="qt">What is the Liskov Substitution Principle in PHP?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">LSP: if S is a subtype of T, objects of type S must be substitutable for objects of T without altering the correctness of the program. Violations are subtly dangerous.</div>
+    <pre><span class="kw">class</span> <span class="tb">Rectangle</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">protected int</span> <span class="vr">$w</span>, <span class="kw">protected int</span> <span class="vr">$h</span>
+    ) {}
+    <span class="kw">public function</span> <span class="fn">setWidth</span>(<span class="kw">int</span> <span class="vr">$w</span>)  { <span class="vr">$this</span>-><span class="vr">w</span> = <span class="vr">$w</span>; }
+    <span class="kw">public function</span> <span class="fn">setHeight</span>(<span class="kw">int</span> <span class="vr">$h</span>) { <span class="vr">$this</span>-><span class="vr">h</span> = <span class="vr">$h</span>; }
+    <span class="kw">public function</span> <span class="fn">area</span>(): <span class="kw">int</span> { <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">w</span> * <span class="vr">$this</span>-><span class="vr">h</span>; }
+}
+
+<span class="cm">// ❌ LSP VIOLATION: Square extends Rectangle but breaks assumptions</span>
+<span class="kw">class</span> <span class="tb">Square</span> <span class="kw">extends</span> <span class="tb">Rectangle</span> {
+    <span class="kw">public function</span> <span class="fn">setWidth</span>(<span class="kw">int</span> <span class="vr">$w</span>)  { <span class="vr">$this</span>-><span class="vr">w</span> = <span class="vr">$h</span> = <span class="vr">$w</span>; } <span class="cm">// also sets h!</span>
+    <span class="kw">public function</span> <span class="fn">setHeight</span>(<span class="kw">int</span> <span class="vr">$h</span>) { <span class="vr">$this</span>-><span class="vr">w</span> = <span class="vr">$h</span> = <span class="vr">$h</span>; } <span class="cm">// also sets w!</span>
+}
+
+<span class="kw">function</span> <span class="fn">testArea</span>(<span class="tb">Rectangle</span> <span class="vr">$r</span>): <span class="kw">void</span> {
+    <span class="vr">$r</span>-><span class="fn">setWidth</span>(<span class="num">5</span>);
+    <span class="vr">$r</span>-><span class="fn">setHeight</span>(<span class="num">4</span>);
+    <span class="fn">assert</span>(<span class="vr">$r</span>-><span class="fn">area</span>() === <span class="num">20</span>); <span class="cm">// Passes for Rectangle</span>
+                              <span class="bad">// FAILS for Square! (25, not 20)</span>
+}
+
+<span class="cm">// ✅ Fix: separate classes, share an interface instead</span>
+<span class="kw">interface</span> <span class="tb">Shape</span> { <span class="kw">public function</span> <span class="fn">area</span>(): <span class="kw">int</span>; }</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ ABSTRACT & INTERFACE ════ -->
+<div class="sg" data-s="abstract">
+<div class="sh"><div class="si sf">🔷</div><div class="sl2">Abstract Classes & Interfaces — Complete Guide</div><div class="sl3"></div></div>
+
+<div class="card sfc" onclick="tog(this)">
+  <div class="ch"><span class="qn">A1</span><span class="qt">Abstract class vs Interface — every difference with practical examples</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <table class="tbl">
+      <tr><th>Feature</th><th>Abstract Class</th><th>Interface</th></tr>
+      <tr><td class="lc">Instantiation</td><td class="bd2">Cannot instantiate directly</td><td class="bd2">Cannot instantiate</td></tr>
+      <tr><td class="lc">Concrete methods</td><td class="gd">✅ Yes — shared implementation</td><td class="gd">✅ PHP 8: default methods</td></tr>
+      <tr><td class="lc">Properties</td><td class="gd">✅ Yes (all types)</td><td class="bd2">Constants only (no props)</td></tr>
+      <tr><td class="lc">Constructor</td><td class="gd">✅ Yes</td><td class="bd2">❌ No constructor</td></tr>
+      <tr><td class="lc">Inheritance</td><td>One only (extends)</td><td class="gd">Multiple (implements)</td></tr>
+      <tr><td class="lc">Visibility</td><td>Any (public/protected/private)</td><td>Always public</td></tr>
+      <tr><td class="lc">Use case</td><td>Shared base + partial impl</td><td>Contract / capability</td></tr>
+    </table>
+    <pre><span class="cm">// Abstract class: IS-A relationship + shared behavior</span>
+<span class="kw">abstract class</span> <span class="tb">Logger</span> {
+    <span class="kw">private array</span> <span class="vr">$buffer</span> = [];
+
+    <span class="kw">abstract protected function</span> <span class="fn">write</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span>;
+
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">buffer</span>[] = <span class="vr">$msg</span>;
+        <span class="vr">$this</span>-><span class="fn">write</span>(<span class="str">'[LOG] '</span> . <span class="vr">$msg</span>);  <span class="cm">// calls child implementation</span>
+    }
+}
+
+<span class="cm">// Interface: CAN-DO relationship + contract</span>
+<span class="kw">interface</span> <span class="tb">Loggable</span> { <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span>; }
+<span class="kw">interface</span> <span class="tb">Serializable</span> { <span class="kw">public function</span> <span class="fn">serialize</span>(): <span class="kw">string</span>; }
+
+<span class="cm">// A class can do both (multiple interfaces)</span>
+<span class="kw">class</span> <span class="tb">FileLogger</span> <span class="kw">extends</span> <span class="tb">Logger</span> <span class="kw">implements</span> <span class="tb">Loggable</span>, <span class="tb">Serializable</span> {
+    <span class="kw">protected function</span> <span class="fn">write</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> {
+        <span class="fn">file_put_contents</span>(<span class="str">'app.log'</span>, <span class="vr">$msg</span> . PHP_EOL, FILE_APPEND);
+    }
+    <span class="kw">public function</span> <span class="fn">serialize</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="fn">json_encode</span>([]); }
+}</pre>
+  </div>
+</div>
+
+<div class="card sfc" onclick="tog(this)">
+  <div class="ch"><span class="qn">A2</span><span class="qt">Can an interface extend another interface? Can it extend multiple?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// YES — interfaces can extend multiple other interfaces</span>
+<span class="kw">interface</span> <span class="tb">Readable</span>  { <span class="kw">public function</span> <span class="fn">read</span>(): <span class="kw">string</span>; }
+<span class="kw">interface</span> <span class="tb">Writable</span>  { <span class="kw">public function</span> <span class="fn">write</span>(<span class="kw">string</span> <span class="vr">$d</span>): <span class="kw">void</span>; }
+<span class="kw">interface</span> <span class="tb">Seekable</span>  { <span class="kw">public function</span> <span class="fn">seek</span>(<span class="kw">int</span> <span class="vr">$pos</span>): <span class="kw">void</span>; }
+
+<span class="cm">// Stream combines all three (interface extending multiple interfaces)</span>
+<span class="kw">interface</span> <span class="tb">Stream</span> <span class="kw">extends</span> <span class="tb">Readable</span>, <span class="tb">Writable</span>, <span class="tb">Seekable</span> {
+    <span class="kw">public function</span> <span class="fn">close</span>(): <span class="kw">void</span>;
+}
+
+<span class="cm">// Implementing class MUST implement ALL methods from Stream + parents</span>
+<span class="kw">class</span> <span class="tb">FileStream</span> <span class="kw">implements</span> <span class="tb">Stream</span> {
+    <span class="kw">public function</span> <span class="fn">read</span>(): <span class="kw">string</span>   { <span class="kw">return</span> <span class="str">''</span>; }
+    <span class="kw">public function</span> <span class="fn">write</span>(<span class="kw">string</span> <span class="vr">$d</span>): <span class="kw">void</span> {}
+    <span class="kw">public function</span> <span class="fn">seek</span>(<span class="kw">int</span> <span class="vr">$pos</span>): <span class="kw">void</span> {}
+    <span class="kw">public function</span> <span class="fn">close</span>(): <span class="kw">void</span>     {}
+}</pre>
+    <div class="box bsf"><strong>💡 Design insight:</strong> Interface segregation — keep interfaces small and focused. <code>Stream</code> shows how to compose them when you need a combined contract. Classes can also implement each interface independently for more flexibility.</div>
+  </div>
+</div>
+
+<div class="card sfc" onclick="tog(this)">
+  <div class="ch"><span class="qn">A3</span><span class="qt">What is an anonymous class and when is it useful?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// Anonymous class: one-time use, no name, defined inline</span>
+
+<span class="cm">// Use case 1: quick test doubles / mocks</span>
+<span class="kw">function</span> <span class="fn">testLogger</span>(<span class="tb">Loggable</span> <span class="vr">$logger</span>): <span class="kw">void</span> {
+    <span class="vr">$logger</span>-><span class="fn">log</span>(<span class="str">'test'</span>);
+}
+
+<span class="fn">testLogger</span>(<span class="kw">new class implements</span> <span class="tb">Loggable</span> {
+    <span class="kw">public</span> <span class="kw">array</span> <span class="vr">$logs</span> = [];
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> { <span class="vr">$this</span>-><span class="vr">logs</span>[] = <span class="vr">$msg</span>; }
+});
+
+<span class="cm">// Use case 2: return from factory, hide implementation</span>
+<span class="kw">function</span> <span class="fn">createHtmlFormatter</span>(): <span class="tb">Formatter</span> {
+    <span class="kw">return new class implements</span> <span class="tb">Formatter</span> {
+        <span class="kw">public function</span> <span class="fn">format</span>(<span class="kw">string</span> <span class="vr">$text</span>): <span class="kw">string</span> {
+            <span class="kw">return</span> <span class="str">"&lt;p&gt;{$text}&lt;/p&gt;"</span>;
+        }
+    };
+}
+
+<span class="cm">// Anonymous class with constructor args and extending</span>
+<span class="vr">$prefix</span> = <span class="str">'[ERROR]'</span>;
+<span class="vr">$logger</span> = <span class="kw">new class</span>(<span class="vr">$prefix</span>) <span class="kw">extends</span> <span class="tb">Logger</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private string</span> <span class="vr">$prefix</span>) {
+        parent::<span class="fn">__construct</span>();
+    }
+    <span class="kw">protected function</span> <span class="fn">write</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> {
+        <span class="kw">echo</span> <span class="vr">$this</span>-><span class="vr">prefix</span> . <span class="vr">$msg</span>;
+    }
+};</pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ TRAITS ════ -->
+<div class="sg" data-s="traits">
+<div class="sh"><div class="si wn">🧩</div><div class="sl2">Traits — Advanced Usage & Conflicts</div><div class="sl3"></div></div>
+
+<div class="card wnc" onclick="tog(this)">
+  <div class="ch"><span class="qn">TR1</span><span class="qt">What are Traits and how do they differ from inheritance and interfaces?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// Trait: horizontal code reuse — copy-paste at compile time</span>
+<span class="kw">trait</span> <span class="tb">Timestampable</span> {
+    <span class="kw">private</span> ?\<span class="tb">DateTime</span> <span class="vr">$createdAt</span> = <span class="kw">null</span>;
+    <span class="kw">private</span> ?\<span class="tb">DateTime</span> <span class="vr">$updatedAt</span> = <span class="kw">null</span>;
+
+    <span class="kw">public function</span> <span class="fn">setCreatedAt</span>(): <span class="kw">void</span> { <span class="vr">$this</span>-><span class="vr">createdAt</span> = <span class="kw">new</span> \<span class="tb">DateTime</span>(); }
+    <span class="kw">public function</span> <span class="fn">setUpdatedAt</span>(): <span class="kw">void</span> { <span class="vr">$this</span>-><span class="vr">updatedAt</span> = <span class="kw">new</span> \<span class="tb">DateTime</span>(); }
+    <span class="kw">public function</span> <span class="fn">getCreatedAt</span>(): ?\<span class="tb">DateTime</span> { <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">createdAt</span>; }
+}
+
+<span class="kw">trait</span> <span class="tb">SoftDeletable</span> {
+    <span class="kw">private</span> ?<span class="kw">string</span> <span class="vr">$deletedAt</span> = <span class="kw">null</span>;
+    <span class="kw">public function</span> <span class="fn">softDelete</span>(): <span class="kw">void</span> { <span class="vr">$this</span>-><span class="vr">deletedAt</span> = <span class="fn">date</span>(<span class="str">'c'</span>); }
+    <span class="kw">public function</span> <span class="fn">isDeleted</span>(): <span class="kw">bool</span>  { <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">deletedAt</span> !== <span class="kw">null</span>; }
+}
+
+<span class="cm">// A class can use multiple traits (unlike extends)</span>
+<span class="kw">class</span> <span class="tb">Post</span> {
+    <span class="kw">use</span> <span class="tb">Timestampable</span>, <span class="tb">SoftDeletable</span>;
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public string</span> <span class="vr">$title</span>) {
+        <span class="vr">$this</span>-><span class="fn">setCreatedAt</span>();
+    }
+}</pre>
+    <table class="tbl">
+      <tr><th></th><th>Trait</th><th>Inheritance</th><th>Interface</th></tr>
+      <tr><td class="lc">Provides code</td><td class="gd">✅ Yes</td><td class="gd">✅ Yes</td><td class="bd2">❌ No (only contract)</td></tr>
+      <tr><td class="lc">Multiple use</td><td class="gd">✅ Many traits</td><td class="bd2">❌ One parent</td><td class="gd">✅ Many interfaces</td></tr>
+      <tr><td class="lc">IS-A relation</td><td class="bd2">No</td><td class="gd">Yes</td><td class="gd">Yes</td></tr>
+      <tr><td class="lc">Type checking</td><td class="bd2">No (no instanceof)</td><td class="gd">Yes</td><td class="gd">Yes</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card wnc" onclick="tog(this)">
+  <div class="ch"><span class="qn">TR2</span><span class="qt">How do you resolve trait conflicts when two traits have same method name?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">⚠️ Conflict Resolution — Must Know</div>
+    <pre><span class="kw">trait</span> <span class="tb">A</span> { <span class="kw">public function</span> <span class="fn">hello</span>() { <span class="kw">echo</span> <span class="str">'A'</span>; } }
+<span class="kw">trait</span> <span class="tb">B</span> { <span class="kw">public function</span> <span class="fn">hello</span>() { <span class="kw">echo</span> <span class="str">'B'</span>; } }
+
+<span class="kw">class</span> <span class="tb">MyClass</span> {
+    <span class="kw">use</span> <span class="tb">A</span>, <span class="tb">B</span> {
+        <span class="cm">// insteadof: choose which trait's method wins</span>
+        <span class="tb">A</span>::<span class="fn">hello</span> <span class="kw">insteadof</span> <span class="tb">B</span>;   <span class="cm">// Use A's hello, ignore B's</span>
+
+        <span class="cm">// as: create an alias for the excluded method</span>
+        <span class="tb">B</span>::<span class="fn">hello</span> <span class="kw">as</span> <span class="fn">helloFromB</span>;  <span class="cm">// Still accessible via alias</span>
+
+        <span class="cm">// as: change visibility of a method</span>
+        <span class="tb">A</span>::<span class="fn">hello</span> <span class="kw">as protected</span>;   <span class="cm">// make it protected</span>
+    }
+}
+
+<span class="vr">$obj</span> = <span class="kw">new</span> <span class="tb">MyClass</span>();
+<span class="vr">$obj</span>-><span class="fn">hello</span>();       <span class="cm">// A</span>
+<span class="vr">$obj</span>-><span class="fn">helloFromB</span>(); <span class="cm">// B</span>
+
+<span class="cm">// Trait can also require method to exist in class (abstract in trait)</span>
+<span class="kw">trait</span> <span class="tb">Validatable</span> {
+    <span class="kw">abstract protected function</span> <span class="fn">getRules</span>(): <span class="kw">array</span>;
+    <span class="kw">public function</span> <span class="fn">validate</span>(): <span class="kw">bool</span> {
+        <span class="kw">foreach</span> (<span class="vr">$this</span>-><span class="fn">getRules</span>() <span class="kw">as</span> <span class="vr">$rule</span>) { <span class="cm">/* ... */</span> }
+        <span class="kw">return</span> <span class="kw">true</span>;
+    }
+}</pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ MAGIC METHODS ════ -->
+<div class="sg" data-s="magic">
+<div class="sh"><div class="si wn">✨</div><div class="sl2">Magic Methods — Complete Reference</div><div class="sl3"></div></div>
+
+<div class="card wnc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M1</span><span class="qt">List ALL PHP magic methods with practical examples</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">MagicDemo</span> {
+    <span class="kw">private array</span> <span class="vr">$data</span> = [];
+
+    <span class="cm">// __get: called when reading inaccessible/undefined property</span>
+    <span class="kw">public function</span> <span class="fn">__get</span>(<span class="kw">string</span> <span class="vr">$name</span>): <span class="kw">mixed</span> {
+        <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">data</span>[<span class="vr">$name</span>] ?? <span class="kw">null</span>;
+    }
+
+    <span class="cm">// __set: called when writing to inaccessible/undefined property</span>
+    <span class="kw">public function</span> <span class="fn">__set</span>(<span class="kw">string</span> <span class="vr">$name</span>, <span class="kw">mixed</span> <span class="vr">$value</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">data</span>[<span class="vr">$name</span>] = <span class="vr">$value</span>;
+    }
+
+    <span class="cm">// __isset: called when isset()/empty() on inaccessible property</span>
+    <span class="kw">public function</span> <span class="fn">__isset</span>(<span class="kw">string</span> <span class="vr">$name</span>): <span class="kw">bool</span> {
+        <span class="kw">return</span> <span class="fn">isset</span>(<span class="vr">$this</span>-><span class="vr">data</span>[<span class="vr">$name</span>]);
+    }
+
+    <span class="cm">// __unset: called when unset() on inaccessible property</span>
+    <span class="kw">public function</span> <span class="fn">__unset</span>(<span class="kw">string</span> <span class="vr">$name</span>): <span class="kw">void</span> {
+        <span class="fn">unset</span>(<span class="vr">$this</span>-><span class="vr">data</span>[<span class="vr">$name</span>]);
+    }
+
+    <span class="cm">// __call: called when invoking inaccessible instance method</span>
+    <span class="kw">public function</span> <span class="fn">__call</span>(<span class="kw">string</span> <span class="vr">$name</span>, <span class="kw">array</span> <span class="vr">$args</span>): <span class="kw">mixed</span> {
+        <span class="kw">if</span> (<span class="fn">str_starts_with</span>(<span class="vr">$name</span>, <span class="str">'get'</span>)) {
+            <span class="vr">$prop</span> = <span class="fn">lcfirst</span>(<span class="fn">substr</span>(<span class="vr">$name</span>, <span class="num">3</span>));
+            <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">data</span>[<span class="vr">$prop</span>] ?? <span class="kw">null</span>;
+        }
+        <span class="kw">throw new</span> \<span class="tb">BadMethodCallException</span>(<span class="str">"Method {$name} not found"</span>);
+    }
+
+    <span class="cm">// __callStatic: called when invoking inaccessible static method</span>
+    <span class="kw">public static function</span> <span class="fn">__callStatic</span>(<span class="kw">string</span> <span class="vr">$name</span>, <span class="kw">array</span> <span class="vr">$args</span>): <span class="kw">mixed</span> {
+        <span class="kw">return</span> <span class="kw">new</span> static(...<span class="vr">$args</span>);  <span class="cm">// factory pattern</span>
+    }
+
+    <span class="cm">// __toString: called when object used as string</span>
+    <span class="kw">public function</span> <span class="fn">__toString</span>(): <span class="kw">string</span> {
+        <span class="kw">return</span> <span class="fn">json_encode</span>(<span class="vr">$this</span>-><span class="vr">data</span>);
+    }
+
+    <span class="cm">// __invoke: called when object used as function</span>
+    <span class="kw">public function</span> <span class="fn">__invoke</span>(<span class="kw">string</span> <span class="vr">$key</span>): <span class="kw">mixed</span> {
+        <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">data</span>[<span class="vr">$key</span>] ?? <span class="kw">null</span>;
+    }
+
+    <span class="cm">// __debugInfo: controls var_dump() output</span>
+    <span class="kw">public function</span> <span class="fn">__debugInfo</span>(): <span class="kw">array</span> {
+        <span class="kw">return</span> [<span class="str">'keys'</span> => <span class="fn">array_keys</span>(<span class="vr">$this</span>-><span class="vr">data</span>)]; <span class="cm">// hide values</span>
+    }
+}
+
+<span class="vr">$obj</span> = <span class="kw">new</span> <span class="tb">MagicDemo</span>();
+<span class="vr">$obj</span>-><span class="vr">name</span> = <span class="str">'Azad'</span>;        <span class="cm">// __set</span>
+<span class="kw">echo</span> <span class="vr">$obj</span>-><span class="vr">name</span>;           <span class="cm">// __get → 'Azad'</span>
+<span class="kw">echo</span> <span class="vr">$obj</span>-><span class="fn">getName</span>();      <span class="cm">// __call → 'Azad'</span>
+<span class="kw">echo</span> <span class="vr">$obj</span>;                 <span class="cm">// __toString → {"name":"Azad"}</span>
+<span class="kw">echo</span> <span class="vr">$obj</span>(<span class="str">'name'</span>);        <span class="cm">// __invoke → 'Azad'</span>
+<span class="kw">echo</span> <span class="fn">isset</span>(<span class="vr">$obj</span>-><span class="vr">name</span>);  <span class="cm">// __isset → true</span></pre>
+  </div>
+</div>
+
+<div class="card wnc" onclick="tog(this)">
+  <div class="ch"><span class="qn">M2</span><span class="qt">__sleep(), __wakeup(), __serialize(), __unserialize() — serialization lifecycle</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">DbConnection</span> {
+    <span class="kw">private</span> ?\<span class="tb">PDO</span> <span class="vr">$pdo</span> = <span class="kw">null</span>;
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private string</span> <span class="vr">$dsn</span>) {
+        <span class="vr">$this</span>-><span class="vr">pdo</span> = <span class="kw">new</span> \<span class="tb">PDO</span>(<span class="vr">$dsn</span>);
+    }
+
+    <span class="cm">// PHP 7 style: return property NAMES to serialize</span>
+    <span class="kw">public function</span> <span class="fn">__sleep</span>(): <span class="kw">array</span> {
+        <span class="kw">return</span> [<span class="str">'dsn'</span>]; <span class="cm">// Don't serialize $pdo (resource/object)</span>
+    }
+
+    <span class="cm">// Called after unserialize() — rebuild state</span>
+    <span class="kw">public function</span> <span class="fn">__wakeup</span>(): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">pdo</span> = <span class="kw">new</span> \<span class="tb">PDO</span>(<span class="vr">$this</span>-><span class="vr">dsn</span>); <span class="cm">// Reconnect</span>
+    }
+
+    <span class="cm">// PHP 8.1 style: return data to serialize (replaces __sleep)</span>
+    <span class="kw">public function</span> <span class="fn">__serialize</span>(): <span class="kw">array</span> {
+        <span class="kw">return</span> [<span class="str">'dsn'</span> => <span class="vr">$this</span>-><span class="vr">dsn</span>]; <span class="cm">// key-value data</span>
+    }
+
+    <span class="cm">// PHP 8.1 style: restore state from serialized data</span>
+    <span class="kw">public function</span> <span class="fn">__unserialize</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">dsn</span> = <span class="vr">$data</span>[<span class="str">'dsn'</span>];
+        <span class="vr">$this</span>-><span class="vr">pdo</span> = <span class="kw">new</span> \<span class="tb">PDO</span>(<span class="vr">$this</span>-><span class="vr">dsn</span>);
+    }
+}</pre>
+    <div class="box bwn"><strong>⚠️ Security warning:</strong> Never deserialize user-supplied data using PHP's <code>unserialize()</code>. It can trigger magic methods and lead to Remote Code Execution (RCE). Use JSON instead, or use <code>unserialize($data, ['allowed_classes' => [SomeClass::class]])</code> to whitelist.</div>
+  </div>
+</div>
+</div>
+
+<!-- ════ STATIC & LSB ════ -->
+<div class="sg" data-s="static">
+<div class="sh"><div class="si ph">⚡</div><div class="sl2">Static Methods, Properties & Late Static Binding</div><div class="sl3"></div></div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">LSB1</span><span class="qt">Build a correct Singleton using Late Static Binding</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// ❌ Broken singleton with self:: — all subclasses share ONE instance</span>
+<span class="kw">class</span> <span class="tb">BadSingleton</span> {
+    <span class="kw">private static</span> ?self <span class="vr">$instance</span> = <span class="kw">null</span>;
+    <span class="kw">public static function</span> <span class="fn">getInstance</span>(): <span class="kw">static</span> {
+        <span class="kw">return</span> self::<span class="vr">$instance</span> ??= <span class="kw">new</span> self(); <span class="cm">// Always BadSingleton!</span>
+    }
+}
+
+<span class="cm">// ✅ Correct singleton with static:: — each class has its OWN instance</span>
+<span class="kw">class</span> <span class="tb">Singleton</span> {
+    <span class="kw">private static array</span> <span class="vr">$instances</span> = []; <span class="cm">// keyed by class name</span>
+    <span class="kw">protected function</span> <span class="fn">__construct</span>() {}   <span class="cm">// protected: subclassable</span>
+    <span class="kw">private function</span> <span class="fn">__clone</span>() {}         <span class="cm">// prevent cloning</span>
+
+    <span class="kw">public static function</span> <span class="fn">getInstance</span>(): <span class="kw">static</span> {
+        <span class="vr">$class</span> = static::<span class="kw">class</span>;             <span class="cm">// late-bound class name</span>
+        <span class="kw">return</span> self::<span class="vr">$instances</span>[<span class="vr">$class</span>] ??= <span class="kw">new</span> static();
+    }
+}
+
+<span class="kw">class</span> <span class="tb">DbSingleton</span>    <span class="kw">extends</span> <span class="tb">Singleton</span> {}
+<span class="kw">class</span> <span class="tb">CacheSingleton</span> <span class="kw">extends</span> <span class="tb">Singleton</span> {}
+
+<span class="vr">$db1</span> = <span class="tb">DbSingleton</span>::<span class="fn">getInstance</span>();
+<span class="vr">$db2</span> = <span class="tb">DbSingleton</span>::<span class="fn">getInstance</span>();
+<span class="vr">$ca</span>  = <span class="tb">CacheSingleton</span>::<span class="fn">getInstance</span>();
+
+<span class="fn">var_dump</span>(<span class="vr">$db1</span> === <span class="vr">$db2</span>); <span class="cm">// true  — same instance</span>
+<span class="fn">var_dump</span>(<span class="vr">$db1</span> === <span class="vr">$ca</span>);  <span class="cm">// false — different classes</span></pre>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">LSB2</span><span class="qt">Build a fluent Builder pattern using static return type</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">abstract class</span> <span class="tb">QueryBuilder</span> {
+    <span class="kw">protected array</span> <span class="vr">$conditions</span> = [];
+    <span class="kw">protected</span> ?<span class="kw">int</span> <span class="vr">$limitVal</span>  = <span class="kw">null</span>;
+
+    <span class="kw">public function</span> <span class="fn">where</span>(<span class="kw">string</span> <span class="vr">$cond</span>): <span class="kw">static</span> {  <span class="cm">// 'static' not 'self'!</span>
+        <span class="vr">$this</span>-><span class="vr">conditions</span>[] = <span class="vr">$cond</span>;
+        <span class="kw">return</span> <span class="vr">$this</span>;
+    }
+    <span class="kw">public function</span> <span class="fn">limit</span>(<span class="kw">int</span> <span class="vr">$n</span>): <span class="kw">static</span> {
+        <span class="vr">$this</span>-><span class="vr">limitVal</span> = <span class="vr">$n</span>;
+        <span class="kw">return</span> <span class="vr">$this</span>;
+    }
+    <span class="kw">abstract public function</span> <span class="fn">build</span>(): <span class="kw">string</span>;
+}
+
+<span class="kw">class</span> <span class="tb">MySQLBuilder</span> <span class="kw">extends</span> <span class="tb">QueryBuilder</span> {
+    <span class="kw">public function</span> <span class="fn">build</span>(): <span class="kw">string</span> {
+        <span class="vr">$sql</span> = <span class="str">'SELECT * FROM users'</span>;
+        <span class="kw">if</span> (<span class="vr">$this</span>-><span class="vr">conditions</span>)
+            <span class="vr">$sql</span> .= <span class="str">' WHERE '</span> . <span class="fn">implode</span>(<span class="str">' AND '</span>, <span class="vr">$this</span>-><span class="vr">conditions</span>);
+        <span class="kw">if</span> (<span class="vr">$this</span>-><span class="vr">limitVal</span>)
+            <span class="vr">$sql</span> .= <span class="str">" LIMIT {$this->limitVal}"</span>;
+        <span class="kw">return</span> <span class="vr">$sql</span>;
+    }
+}
+
+<span class="cm">// Because where()/limit() return 'static', chaining works AND returns MySQLBuilder</span>
+<span class="vr">$query</span> = (<span class="kw">new</span> <span class="tb">MySQLBuilder</span>())
+    -><span class="fn">where</span>(<span class="str">'active=1'</span>)
+    -><span class="fn">where</span>(<span class="str">'role="admin"'</span>)
+    -><span class="fn">limit</span>(<span class="num">10</span>)
+    -><span class="fn">build</span>();
+
+<span class="cm">// SELECT * FROM users WHERE active=1 AND role="admin" LIMIT 10</span></pre>
+    <div class="box bph"><strong>💡 Why <code>static</code> return type:</strong> If <code>where()</code> returns <code>self</code> (QueryBuilder), calling <code>->build()</code> after would fail because <code>self</code> is abstract. Returning <code>static</code> preserves the actual subclass type.</div>
+  </div>
+</div>
+</div>
+
+<!-- ════ VISIBILITY ════ -->
+<div class="sg" data-s="visibility">
+<div class="sh"><div class="si ph">🔐</div><div class="sl2">Visibility, Scope & Access Control</div><div class="sl3"></div></div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">V1</span><span class="qt">Can a child class access parent's private properties directly?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Trap — Most candidates get this wrong</div>
+    <pre><span class="kw">class</span> <span class="tb">Parent_</span> {
+    <span class="kw">private int</span> <span class="vr">$secret</span> = <span class="num">42</span>;
+
+    <span class="kw">public function</span> <span class="fn">getSecret</span>(): <span class="kw">int</span> { <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">secret</span>; }
+}
+
+<span class="kw">class</span> <span class="tb">Child</span> <span class="kw">extends</span> <span class="tb">Parent_</span> {
+    <span class="kw">public function</span> <span class="fn">tryAccess</span>(): <span class="kw">void</span> {
+        <span class="kw">echo</span> <span class="vr">$this</span>-><span class="vr">secret</span>;    <span class="bad">// ❌ Fatal: Cannot access private property</span>
+        <span class="kw">echo</span> <span class="vr">$this</span>-><span class="fn">getSecret</span>(); <span class="ok">// ✅ Via public getter — works fine</span>
+    }
+}
+
+<span class="cm">// But: same-class instances CAN access each other's privates!</span>
+<span class="kw">class</span> <span class="tb">Wallet</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private float</span> <span class="vr">$amount</span>) {}
+
+    <span class="kw">public function</span> <span class="fn">isRicher</span>(<span class="tb">Wallet</span> <span class="vr">$other</span>): <span class="kw">bool</span> {
+        <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">amount</span> > <span class="vr">$other</span>-><span class="vr">amount</span>; <span class="ok">// ✅ Same class — allowed!</span>
+    }
+}</pre>
+    <div class="box btr"><strong>⚠️ Key insight:</strong> Visibility in PHP is class-based, not object-based. Two instances of the SAME class can access each other's private properties. This is intentional and used in equality comparisons, copying, etc.</div>
+  </div>
+</div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">V2</span><span class="qt">What is the PHP 8.1 readonly property and its limitations?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">Money</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">public readonly int</span>    <span class="vr">$amount</span>,   <span class="cm">// PHP 8.1</span>
+        <span class="kw">public readonly string</span> <span class="vr">$currency</span>
+    ) {}
+}
+
+<span class="vr">$m</span> = <span class="kw">new</span> <span class="tb">Money</span>(<span class="num">100</span>, <span class="str">'INR'</span>);
+<span class="kw">echo</span> <span class="vr">$m</span>-><span class="vr">amount</span>;       <span class="cm">// 100</span>
+<span class="vr">$m</span>-><span class="vr">amount</span> = <span class="num">200</span>;    <span class="bad">// ❌ Fatal: Cannot modify readonly property</span>
+<span class="fn">unset</span>(<span class="vr">$m</span>-><span class="vr">amount</span>);  <span class="bad">// ❌ Fatal: Cannot unset readonly property</span>
+
+<span class="cm">// Readonly class (PHP 8.2) — ALL properties readonly</span>
+<span class="kw">readonly class</span> <span class="tb">Point</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">public float</span> <span class="vr">$x</span>,
+        <span class="kw">public float</span> <span class="vr">$y</span>
+    ) {}
+}
+
+<span class="cm">// Limitations of readonly:</span>
+<span class="cm">// 1. Must have a declared type</span>
+<span class="cm">// 2. Can only be initialized ONCE (in constructor or declaration)</span>
+<span class="cm">// 3. Cannot have a default value (except with constructor promotion)</span>
+<span class="cm">// 4. Static properties cannot be readonly</span>
+<span class="cm">// 5. Clone can't change readonly (in PHP 8.1/8.2)</span>
+<span class="cm">// 6. PHP 8.3: readonly can be re-initialized during clone</span>
+<span class="vr">$p</span> = <span class="kw">new</span> <span class="tb">Point</span>(<span class="num">1.0</span>, <span class="num">2.0</span>);
+<span class="vr">$p2</span> = <span class="kw">clone</span> <span class="vr">$p</span>; <span class="cm">// shallow clone works</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ TYPES ════ -->
+<div class="sg" data-s="types">
+<div class="sh"><div class="si ph">🏷️</div><div class="sl2">PHP Type System — Complete</div><div class="sl3"></div></div>
+
+<div class="card phc" onclick="tog(this)">
+  <div class="ch"><span class="qn">TY1</span><span class="qt">What are all return type declarations? Explain void, never, mixed, union, intersection</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">TypeExamples</span> {
+    <span class="cm">// void: returns nothing (must not return a value)</span>
+    <span class="kw">public function</span> <span class="fn">logSomething</span>(): <span class="kw">void</span> { <span class="kw">echo</span> <span class="str">'logged'</span>; }
+
+    <span class="cm">// never (PHP 8.1): function NEVER returns (throws or exits)</span>
+    <span class="kw">public function</span> <span class="fn">fail</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">never</span> {
+        <span class="kw">throw new</span> \<span class="tb">RuntimeException</span>(<span class="vr">$msg</span>);
+    }
+
+    <span class="cm">// mixed: any type (same as no type hint but explicit)</span>
+    <span class="kw">public function</span> <span class="fn">anything</span>(): <span class="kw">mixed</span> { <span class="kw">return</span> <span class="kw">null</span>; }
+
+    <span class="cm">// Union types (PHP 8.0): int OR string</span>
+    <span class="kw">public function</span> <span class="fn">getIdOrName</span>(): <span class="kw">int</span>|<span class="kw">string</span> { <span class="kw">return</span> <span class="num">1</span>; }
+
+    <span class="cm">// Nullable (shorthand for Type|null)</span>
+    <span class="kw">public function</span> <span class="fn">findUser</span>(<span class="kw">int</span> <span class="vr">$id</span>): ?<span class="tb">User</span> { <span class="kw">return</span> <span class="kw">null</span>; }
+
+    <span class="cm">// Intersection types (PHP 8.1): must satisfy BOTH</span>
+    <span class="kw">public function</span> <span class="fn">process</span>(<span class="tb">Countable</span>&amp;<span class="tb">Iterator</span> <span class="vr">$it</span>): <span class="kw">void</span> {}
+
+    <span class="cm">// static: return type means "the class that was called on"</span>
+    <span class="kw">public function</span> <span class="fn">withName</span>(<span class="kw">string</span> <span class="vr">$name</span>): <span class="kw">static</span> {
+        <span class="vr">$clone</span> = <span class="kw">clone</span> <span class="vr">$this</span>;
+        <span class="vr">$clone</span>-><span class="vr">name</span> = <span class="vr">$name</span>;
+        <span class="kw">return</span> <span class="vr">$clone</span>;  <span class="cm">// immutable update pattern</span>
+    }
+
+    <span class="cm">// Disjunctive Normal Form (PHP 8.2): combine union + intersection</span>
+    <span class="kw">public function</span> <span class="fn">complex</span>(): (<span class="tb">Countable</span>&amp;<span class="tb">Iterator</span>)|<span class="kw">false</span> { <span class="kw">return false</span>; }
+}</pre>
+    <div class="csub sf">Type coercion — strict_types</div>
+    <pre><span class="cm">// Without declare(strict_types=1): PHP coerces types</span>
+<span class="kw">function</span> <span class="fn">add</span>(<span class="kw">int</span> <span class="vr">$a</span>, <span class="kw">int</span> <span class="vr">$b</span>): <span class="kw">int</span> { <span class="kw">return</span> <span class="vr">$a</span> + <span class="vr">$b</span>; }
+<span class="fn">add</span>(<span class="str">'5'</span>, <span class="str">'3'</span>); <span class="cm">// 8 — coerced (no error in weak mode)</span>
+
+<span class="cm">// With declare(strict_types=1) at top of FILE:</span>
+<span class="fn">add</span>(<span class="str">'5'</span>, <span class="str">'3'</span>); <span class="bad">// ❌ TypeError: must be int, string given</span></pre>
+    <div class="box bwn"><strong>⚠️ strict_types only affects the FILE where it's declared</strong>, not the functions being called. Even if a function is defined in a strict file, calling it from a non-strict file uses weak typing.</div>
+  </div>
+</div>
+</div>
+
+<!-- ════ PHP 8 OOP ════ -->
+<div class="sg" data-s="php8">
+<div class="sh"><div class="si cy">🆕</div><div class="sl2">PHP 8.x OOP Features — Must Know for 2024 Interviews</div><div class="sl3"></div></div>
+
+<div class="card cyc" onclick="tog(this)">
+  <div class="ch"><span class="qn">P81</span><span class="qt">PHP 8.1 Enums — types, methods, and interfaces</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="php8-badge">✨ PHP 8.1 Feature</div>
+    <pre><span class="cm">// Pure enum (no value)</span>
+<span class="kw">enum</span> <span class="tb">Status</span> {
+    <span class="kw">case</span> Active;
+    <span class="kw">case</span> Inactive;
+    <span class="kw">case</span> Banned;
+
+    <span class="kw">public function</span> <span class="fn">label</span>(): <span class="kw">string</span> {
+        <span class="kw">return match</span>(<span class="vr">$this</span>) {
+            <span class="tb">Status</span>::Active   => <span class="str">'Active User'</span>,
+            <span class="tb">Status</span>::Inactive => <span class="str">'Inactive'</span>,
+            <span class="tb">Status</span>::Banned   => <span class="str">'Banned'</span>,
+        };
+    }
+
+    <span class="kw">public function</span> <span class="fn">canLogin</span>(): <span class="kw">bool</span> {
+        <span class="kw">return</span> <span class="vr">$this</span> === self::Active;
+    }
+}
+
+<span class="cm">// Backed enum (with scalar values)</span>
+<span class="kw">enum</span> <span class="tb">Color</span>: <span class="kw">string</span> {
+    <span class="kw">case</span> Red   = <span class="str">'red'</span>;
+    <span class="kw">case</span> Green = <span class="str">'green'</span>;
+    <span class="kw">case</span> Blue  = <span class="str">'blue'</span>;
+}
+
+<span class="vr">$c</span> = <span class="tb">Color</span>::Red;
+<span class="kw">echo</span> <span class="vr">$c</span>-><span class="vr">value</span>; <span class="cm">// 'red'</span>
+<span class="vr">$c2</span> = <span class="tb">Color</span>::<span class="fn">from</span>(<span class="str">'green'</span>);    <span class="cm">// Color::Green or ValueError</span>
+<span class="vr">$c3</span> = <span class="tb">Color</span>::<span class="fn">tryFrom</span>(<span class="str">'pink'</span>); <span class="cm">// null (no exception)</span>
+
+<span class="cm">// Enum implementing interface</span>
+<span class="kw">interface</span> <span class="tb">HasColor</span> { <span class="kw">public function</span> <span class="fn">hex</span>(): <span class="kw">string</span>; }
+<span class="kw">enum</span> <span class="tb">Fruit</span>: <span class="kw">string</span> <span class="kw">implements</span> <span class="tb">HasColor</span> {
+    <span class="kw">case</span> Apple = <span class="str">'apple'</span>;
+    <span class="kw">case</span> Banana = <span class="str">'banana'</span>;
+    <span class="kw">public function</span> <span class="fn">hex</span>(): <span class="kw">string</span> {
+        <span class="kw">return match</span>(<span class="vr">$this</span>) { self::Apple => <span class="str">'#FF0000'</span>, self::Banana => <span class="str">'#FFFF00'</span> };
+    }
+}
+
+<span class="cm">// Enum used as type hint</span>
+<span class="kw">function</span> <span class="fn">setStatus</span>(<span class="tb">Status</span> <span class="vr">$status</span>): <span class="kw">void</span> { <span class="cm">/* only accepts Status cases */</span> }
+<span class="fn">setStatus</span>(<span class="tb">Status</span>::Active); <span class="ok">// ✅</span>
+<span class="fn">setStatus</span>(<span class="str">'active'</span>);       <span class="bad">// ❌ TypeError</span></pre>
+    <div class="box bcy"><strong>💡 Enum advantages over constants:</strong> Type-safe (can't pass 'active' as a string), comparable with ===, can implement interfaces, can have methods, work with match expressions perfectly.</div>
+  </div>
+</div>
+
+<div class="card cyc" onclick="tog(this)">
+  <div class="ch"><span class="qn">P82</span><span class="qt">Fibers (PHP 8.1) — what are they and how do they enable async-like code?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="php8-badge">✨ PHP 8.1 Feature</div>
+    <div class="an">Fibers are lightweight coroutines — functions that can pause and resume execution. They enable cooperative multitasking without true multithreading.</div>
+    <pre><span class="cm">// Fiber: creates a pausable function</span>
+<span class="vr">$fiber</span> = <span class="kw">new</span> \<span class="tb">Fiber</span>(<span class="kw">function</span>(): <span class="kw">void</span> {
+    <span class="kw">echo</span> <span class="str">"Fiber started\n"</span>;
+    <span class="vr">$valueFromMain</span> = \<span class="tb">Fiber</span>::<span class="fn">suspend</span>(<span class="str">'first yield'</span>);  <span class="cm">// pause, send value out</span>
+    <span class="kw">echo</span> <span class="str">"Got from main: {$valueFromMain}\n"</span>;
+    \<span class="tb">Fiber</span>::<span class="fn">suspend</span>(<span class="str">'second yield'</span>);
+    <span class="kw">echo</span> <span class="str">"Fiber done\n"</span>;
+});
+
+<span class="vr">$v1</span> = <span class="vr">$fiber</span>-><span class="fn">start</span>();    <span class="cm">// "Fiber started" → pauses → returns 'first yield'</span>
+<span class="kw">echo</span> <span class="str">"Main got: {$v1}\n"</span>; <span class="cm">// "Main got: first yield"</span>
+
+<span class="vr">$v2</span> = <span class="vr">$fiber</span>-><span class="fn">resume</span>(<span class="str">'hello'</span>); <span class="cm">// resumes with 'hello', pauses again</span>
+<span class="cm">// "Got from main: hello"</span>
+<span class="cm">// returns 'second yield'</span>
+
+<span class="vr">$fiber</span>-><span class="fn">resume</span>(); <span class="cm">// "Fiber done"</span>
+
+<span class="cm">// Real use: event loop (ReactPHP / Amp use Fibers internally)</span>
+<span class="kw">function</span> <span class="fn">asyncSleep</span>(<span class="kw">int</span> <span class="vr">$ms</span>): <span class="kw">void</span> {
+    \<span class="tb">Fiber</span>::<span class="fn">suspend</span>([<span class="str">'sleep'</span>, <span class="vr">$ms</span>]); <span class="cm">// tell event loop to wake us after $ms</span>
+}</pre>
+  </div>
+</div>
+
+<div class="card cyc" onclick="tog(this)">
+  <div class="ch"><span class="qn">P83</span><span class="qt">PHP 8.0 match expression vs switch — why match is better</span><span class="diff de">Easy</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// switch: loose comparison, fall-through, no return value</span>
+<span class="vr">$status</span> = <span class="num">0</span>;
+<span class="kw">switch</span> (<span class="vr">$status</span>) {
+    <span class="kw">case</span> <span class="str">'0'</span>:   <span class="cm">// TRUE with ==  (loose! 0 == '0')</span>
+    <span class="kw">case</span> <span class="num">0</span>:
+        <span class="kw">echo</span> <span class="str">'inactive'</span>; <span class="kw">break</span>;  <span class="cm">// MUST have break</span>
+}
+
+<span class="cm">// match: strict comparison (===), no fall-through, IS an expression</span>
+<span class="vr">$label</span> = <span class="kw">match</span>(<span class="vr">$status</span>) {
+    <span class="num">0</span>           => <span class="str">'inactive'</span>,    <span class="cm">// 0 === '0' is false — safe</span>
+    <span class="num">1</span>           => <span class="str">'active'</span>,
+    <span class="num">2</span>, <span class="num">3</span>        => <span class="str">'pending'</span>,     <span class="cm">// multiple conditions</span>
+    <span class="kw">default</span>     => <span class="str">'unknown'</span>,
+};
+
+<span class="cm">// match throws UnhandledMatchError if no arm matches (no default)</span>
+<span class="kw">match</span>(<span class="num">99</span>) { <span class="num">1</span> => <span class="str">'a'</span> }; <span class="bad">// ❌ UnhandledMatchError</span>
+
+<span class="cm">// match with no subject — like if/elseif chain</span>
+<span class="vr">$result</span> = <span class="kw">match</span>(<span class="kw">true</span>) {
+    <span class="vr">$age</span> < <span class="num">18</span>  => <span class="str">'minor'</span>,
+    <span class="vr">$age</span> < <span class="num">65</span>  => <span class="str">'adult'</span>,
+    <span class="kw">default</span>    => <span class="str">'senior'</span>,
+};</pre>
+  </div>
+</div>
+
+<div class="card cyc" onclick="tog(this)">
+  <div class="ch"><span class="qn">P84</span><span class="qt">PHP 8.0 Named Arguments and their OOP implications</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">Email</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">public string</span> <span class="vr">$to</span>,
+        <span class="kw">public string</span> <span class="vr">$subject</span>,
+        <span class="kw">public string</span> <span class="vr">$body</span>    = <span class="str">''</span>,
+        <span class="kw">public bool</span>   <span class="vr">$isHtml</span> = <span class="kw">false</span>,
+        <span class="kw">public</span> ?<span class="kw">string</span> <span class="vr">$cc</span>    = <span class="kw">null</span>
+    ) {}
+}
+
+<span class="cm">// Before named args: had to pass all positional args</span>
+<span class="kw">new</span> <span class="tb">Email</span>(<span class="str">'a@b.com'</span>, <span class="str">'Hi'</span>, <span class="str">''</span>, <span class="kw">false</span>, <span class="str">'cc@b.com'</span>); <span class="cm">// ugly</span>
+
+<span class="cm">// PHP 8.0 named args: skip defaults, any order</span>
+<span class="kw">new</span> <span class="tb">Email</span>(
+    to: <span class="str">'a@b.com'</span>,
+    subject: <span class="str">'Hi'</span>,
+    cc: <span class="str">'cc@b.com'</span>  <span class="cm">// jump straight to cc, body/isHtml use defaults</span>
+);
+
+<span class="cm">// Named args with built-in functions</span>
+<span class="fn">array_slice</span>(array: [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>], offset: <span class="num">1</span>, length: <span class="num">2</span>, preserve_keys: <span class="kw">true</span>);
+
+<span class="cm">// Named args with spread operator</span>
+<span class="vr">$args</span> = [<span class="str">'to'</span> => <span class="str">'a@b.com'</span>, <span class="str">'subject'</span> => <span class="str">'Test'</span>];
+<span class="kw">new</span> <span class="tb">Email</span>(...<span class="vr">$args</span>); <span class="ok">// ✅</span>
+
+<span class="cm">// ❌ Cannot use named arg for positional param after named</span>
+<span class="kw">new</span> <span class="tb">Email</span>(to: <span class="str">'a@b.com'</span>, <span class="str">'Hi'</span>); <span class="bad">// ❌ positional after named</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ DESIGN PATTERNS ════ -->
+<div class="sg" data-s="patterns">
+<div class="sh"><div class="si pk">🏛️</div><div class="sl2">Design Patterns in PHP — With Real Code</div><div class="sl3"></div></div>
+
+<div class="card pkc" onclick="tog(this)">
+  <div class="ch"><span class="qn">DP1</span><span class="qt">Strategy Pattern — swap algorithms at runtime</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="pattern-badge">🎨 Behavioral Pattern</div>
+    <pre><span class="kw">interface</span> <span class="tb">SortStrategy</span> {
+    <span class="kw">public function</span> <span class="fn">sort</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">array</span>;
+}
+
+<span class="kw">class</span> <span class="tb">BubbleSort</span> <span class="kw">implements</span> <span class="tb">SortStrategy</span> {
+    <span class="kw">public function</span> <span class="fn">sort</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">array</span> {
+        <span class="cm">/* bubble sort implementation */</span>
+        <span class="kw">return</span> <span class="vr">$data</span>;
+    }
+}
+
+<span class="kw">class</span> <span class="tb">QuickSort</span> <span class="kw">implements</span> <span class="tb">SortStrategy</span> {
+    <span class="kw">public function</span> <span class="fn">sort</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">array</span> {
+        <span class="fn">usort</span>(<span class="vr">$data</span>, <span class="kw">fn</span>(<span class="vr">$a</span>, <span class="vr">$b</span>) => <span class="vr">$a</span> <=> <span class="vr">$b</span>);
+        <span class="kw">return</span> <span class="vr">$data</span>;
+    }
+}
+
+<span class="kw">class</span> <span class="tb">Sorter</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private</span> <span class="tb">SortStrategy</span> <span class="vr">$strategy</span>) {}
+
+    <span class="kw">public function</span> <span class="fn">setStrategy</span>(<span class="tb">SortStrategy</span> <span class="vr">$s</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">strategy</span> = <span class="vr">$s</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">sort</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">array</span> {
+        <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">strategy</span>-><span class="fn">sort</span>(<span class="vr">$data</span>);
+    }
+}
+
+<span class="vr">$sorter</span> = <span class="kw">new</span> <span class="tb">Sorter</span>(<span class="kw">new</span> <span class="tb">QuickSort</span>());
+<span class="vr">$sorted</span> = <span class="vr">$sorter</span>-><span class="fn">sort</span>([<span class="num">3</span>,<span class="num">1</span>,<span class="num">2</span>]);
+
+<span class="vr">$sorter</span>-><span class="fn">setStrategy</span>(<span class="kw">new</span> <span class="tb">BubbleSort</span>()); <span class="cm">// swap at runtime</span></pre>
+  </div>
+</div>
+
+<div class="card pkc" onclick="tog(this)">
+  <div class="ch"><span class="qn">DP2</span><span class="qt">Observer Pattern — event system from scratch</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="pattern-badge">🎨 Behavioral Pattern</div>
+    <pre><span class="kw">interface</span> <span class="tb">Observer</span> {
+    <span class="kw">public function</span> <span class="fn">update</span>(<span class="kw">string</span> <span class="vr">$event</span>, <span class="kw">mixed</span> <span class="vr">$payload</span>): <span class="kw">void</span>;
+}
+
+<span class="kw">trait</span> <span class="tb">Observable</span> {
+    <span class="kw">private array</span> <span class="vr">$listeners</span> = [];
+
+    <span class="kw">public function</span> <span class="fn">subscribe</span>(<span class="kw">string</span> <span class="vr">$event</span>, <span class="tb">Observer</span> <span class="vr">$obs</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">listeners</span>[<span class="vr">$event</span>][] = <span class="vr">$obs</span>;
+    }
+
+    <span class="kw">protected function</span> <span class="fn">fire</span>(<span class="kw">string</span> <span class="vr">$event</span>, <span class="kw">mixed</span> <span class="vr">$payload</span> = <span class="kw">null</span>): <span class="kw">void</span> {
+        <span class="kw">foreach</span> (<span class="vr">$this</span>-><span class="vr">listeners</span>[<span class="vr">$event</span>] ?? [] <span class="kw">as</span> <span class="vr">$obs</span>) {
+            <span class="vr">$obs</span>-><span class="fn">update</span>(<span class="vr">$event</span>, <span class="vr">$payload</span>);
+        }
+    }
+}
+
+<span class="kw">class</span> <span class="tb">UserService</span> {
+    <span class="kw">use</span> <span class="tb">Observable</span>;
+
+    <span class="kw">public function</span> <span class="fn">register</span>(<span class="kw">string</span> <span class="vr">$email</span>): <span class="kw">void</span> {
+        <span class="cm">// ... create user ...</span>
+        <span class="vr">$this</span>-><span class="fn">fire</span>(<span class="str">'user.registered'</span>, [<span class="str">'email'</span> => <span class="vr">$email</span>]);
+    }
+}
+
+<span class="kw">class</span> <span class="tb">EmailNotifier</span> <span class="kw">implements</span> <span class="tb">Observer</span> {
+    <span class="kw">public function</span> <span class="fn">update</span>(<span class="kw">string</span> <span class="vr">$event</span>, <span class="kw">mixed</span> <span class="vr">$payload</span>): <span class="kw">void</span> {
+        <span class="kw">echo</span> <span class="str">"Sending welcome email to {$payload['email']}"</span>;
+    }
+}
+
+<span class="vr">$svc</span> = <span class="kw">new</span> <span class="tb">UserService</span>();
+<span class="vr">$svc</span>-><span class="fn">subscribe</span>(<span class="str">'user.registered'</span>, <span class="kw">new</span> <span class="tb">EmailNotifier</span>());
+<span class="vr">$svc</span>-><span class="fn">register</span>(<span class="str">'azad@example.com'</span>); <span class="cm">// triggers email</span></pre>
+  </div>
+</div>
+
+<div class="card pkc" onclick="tog(this)">
+  <div class="ch"><span class="qn">DP3</span><span class="qt">Decorator Pattern — add behavior without inheritance</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="pattern-badge">🎨 Structural Pattern</div>
+    <pre><span class="kw">interface</span> <span class="tb">Logger</span> {
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span>;
+}
+
+<span class="kw">class</span> <span class="tb">ConsoleLogger</span> <span class="kw">implements</span> <span class="tb">Logger</span> {
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> { <span class="kw">echo</span> <span class="vr">$msg</span> . PHP_EOL; }
+}
+
+<span class="cm">// Decorator: wraps a Logger, adds timestamp</span>
+<span class="kw">class</span> <span class="tb">TimestampLogger</span> <span class="kw">implements</span> <span class="tb">Logger</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private</span> <span class="tb">Logger</span> <span class="vr">$inner</span>) {}
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">inner</span>-><span class="fn">log</span>(<span class="fn">date</span>(<span class="str">'Y-m-d H:i:s'</span>) . <span class="str">' '</span> . <span class="vr">$msg</span>);
+    }
+}
+
+<span class="cm">// Decorator: adds log level prefix</span>
+<span class="kw">class</span> <span class="tb">LevelLogger</span> <span class="kw">implements</span> <span class="tb">Logger</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">private</span> <span class="tb">Logger</span> <span class="vr">$inner</span>,
+        <span class="kw">private string</span> <span class="vr">$level</span> = <span class="str">'INFO'</span>
+    ) {}
+    <span class="kw">public function</span> <span class="fn">log</span>(<span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span> {
+        <span class="vr">$this</span>-><span class="vr">inner</span>-><span class="fn">log</span>(<span class="str">"[{$this->level}] {$msg}"</span>);
+    }
+}
+
+<span class="cm">// Compose decorators like Russian dolls</span>
+<span class="vr">$logger</span> = <span class="kw">new</span> <span class="tb">TimestampLogger</span>(
+    <span class="kw">new</span> <span class="tb">LevelLogger</span>(
+        <span class="kw">new</span> <span class="tb">ConsoleLogger</span>(),
+        <span class="str">'ERROR'</span>
+    )
+);
+<span class="vr">$logger</span>-><span class="fn">log</span>(<span class="str">'Something failed'</span>);
+<span class="cm">// 2024-01-15 09:30:00 [ERROR] Something failed</span></pre>
+  </div>
+</div>
+
+<div class="card pkc" onclick="tog(this)">
+  <div class="ch"><span class="qn">DP4</span><span class="qt">Factory Method vs Abstract Factory vs Simple Factory</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="cm">// Simple Factory (NOT a design pattern — just a helper)</span>
+<span class="kw">class</span> <span class="tb">ConnectionFactory</span> {
+    <span class="kw">public static function</span> <span class="fn">create</span>(<span class="kw">string</span> <span class="vr">$type</span>): <span class="tb">Database</span> {
+        <span class="kw">return match</span>(<span class="vr">$type</span>) {
+            <span class="str">'mysql'</span>  => <span class="kw">new</span> <span class="tb">MySQLConnection</span>(),
+            <span class="str">'pgsql'</span>  => <span class="kw">new</span> <span class="tb">PostgresConnection</span>(),
+            <span class="kw">default</span>  => <span class="kw">throw new</span> \<span class="tb">InvalidArgumentException</span>(<span class="vr">$type</span>),
+        };
+    }
+}
+
+<span class="cm">// Factory Method: subclass decides which object to create</span>
+<span class="kw">abstract class</span> <span class="tb">Report</span> {
+    <span class="kw">abstract protected function</span> <span class="fn">createFormatter</span>(): <span class="tb">Formatter</span>; <span class="cm">// factory method</span>
+
+    <span class="kw">public function</span> <span class="fn">generate</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">string</span> {
+        <span class="vr">$formatter</span> = <span class="vr">$this</span>-><span class="fn">createFormatter</span>(); <span class="cm">// let subclass decide</span>
+        <span class="kw">return</span> <span class="vr">$formatter</span>-><span class="fn">format</span>(<span class="vr">$data</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="tb">HtmlReport</span> <span class="kw">extends</span> <span class="tb">Report</span> {
+    <span class="kw">protected function</span> <span class="fn">createFormatter</span>(): <span class="tb">Formatter</span> {
+        <span class="kw">return new</span> <span class="tb">HtmlFormatter</span>(); <span class="cm">// HtmlReport creates HTML formatter</span>
+    }
+}
+
+<span class="cm">// Abstract Factory: family of related objects</span>
+<span class="kw">interface</span> <span class="tb">UIFactory</span> {
+    <span class="kw">public function</span> <span class="fn">createButton</span>(): <span class="tb">Button</span>;
+    <span class="kw">public function</span> <span class="fn">createModal</span>():  <span class="tb">Modal</span>;
+}
+<span class="kw">class</span> <span class="tb">DarkThemeFactory</span> <span class="kw">implements</span> <span class="tb">UIFactory</span> {
+    <span class="kw">public function</span> <span class="fn">createButton</span>(): <span class="tb">Button</span> { <span class="kw">return new</span> <span class="tb">DarkButton</span>(); }
+    <span class="kw">public function</span> <span class="fn">createModal</span>():  <span class="tb">Modal</span>  { <span class="kw">return new</span> <span class="tb">DarkModal</span>(); }
+}</pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ SOLID ════ -->
+<div class="sg" data-s="solid">
+<div class="sh"><div class="si cy">💎</div><div class="sl2">SOLID Principles — PHP Code, Not Just Theory</div><div class="sl3"></div></div>
+
+<div class="card cyc" onclick="tog(this)">
+  <div class="ch"><span class="qn">SL1</span><span class="qt">All 5 SOLID principles with PHP violations and fixes</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="csub cy">S — Single Responsibility Principle</div>
+    <div class="cols2">
+      <div>
+        <div class="col-lbl r">❌ Violation</div>
+        <pre style="margin:0"><span class="kw">class</span> <span class="tb">UserManager</span> {
+    <span class="kw">public function</span> <span class="fn">createUser</span>() {}
+    <span class="kw">public function</span> <span class="fn">sendEmail</span>() {}
+    <span class="kw">public function</span> <span class="fn">logActivity</span>() {}
+    <span class="cm">// 3 reasons to change!</span>
+}</pre>
+      </div>
+      <div>
+        <div class="col-lbl g">✅ Fix: Separate classes</div>
+        <pre style="margin:0"><span class="kw">class</span> <span class="tb">UserRepository</span> {}
+<span class="kw">class</span> <span class="tb">EmailService</span>    {}
+<span class="kw">class</span> <span class="tb">ActivityLogger</span>  {}
+<span class="cm">// Each has 1 reason to change</span></pre>
+      </div>
+    </div>
+    <div class="csub cy">O — Open/Closed Principle</div>
+    <pre><span class="cm">// ❌ Violation: modify class to add new format</span>
+<span class="kw">class</span> <span class="tb">Exporter</span> {
+    <span class="kw">public function</span> <span class="fn">export</span>(<span class="kw">string</span> <span class="vr">$format</span>): <span class="kw">string</span> {
+        <span class="kw">if</span> (<span class="vr">$format</span> === <span class="str">'csv'</span>)  <span class="kw">return</span> <span class="str">'csv...'</span>;
+        <span class="kw">if</span> (<span class="vr">$format</span> === <span class="str">'json'</span>) <span class="kw">return</span> <span class="str">'json...'</span>;
+        <span class="cm">// Add PDF? Must modify this class!</span>
+    }
+}
+
+<span class="cm">// ✅ Fix: Open for extension, closed for modification</span>
+<span class="kw">interface</span> <span class="tb">ExportFormat</span> { <span class="kw">public function</span> <span class="fn">export</span>(<span class="kw">array</span> <span class="vr">$data</span>): <span class="kw">string</span>; }
+<span class="kw">class</span> <span class="tb">CsvFormat</span>  <span class="kw">implements</span> <span class="tb">ExportFormat</span> { <span class="kw">public function</span> <span class="fn">export</span>(<span class="kw">array</span> <span class="vr">$d</span>): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'csv'</span>; } }
+<span class="kw">class</span> <span class="tb">JsonFormat</span> <span class="kw">implements</span> <span class="tb">ExportFormat</span> { <span class="kw">public function</span> <span class="fn">export</span>(<span class="kw">array</span> <span class="vr">$d</span>): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'json'</span>; } }
+<span class="kw">class</span> <span class="tb">PdfFormat</span>  <span class="kw">implements</span> <span class="tb">ExportFormat</span> { <span class="kw">public function</span> <span class="fn">export</span>(<span class="kw">array</span> <span class="vr">$d</span>): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'pdf'</span>;  } }
+<span class="cm">// New format = new class. Never modify Exporter.</span></pre>
+    <div class="csub cy">I — Interface Segregation Principle</div>
+    <pre><span class="cm">// ❌ Fat interface forces unnecessary implementation</span>
+<span class="kw">interface</span> <span class="tb">Worker</span> {
+    <span class="kw">public function</span> <span class="fn">work</span>(): <span class="kw">void</span>;
+    <span class="kw">public function</span> <span class="fn">eat</span>(): <span class="kw">void</span>;  <span class="cm">// robots don't eat!</span>
+    <span class="kw">public function</span> <span class="fn">sleep</span>(): <span class="kw">void</span>; <span class="cm">// robots don't sleep!</span>
+}
+
+<span class="cm">// ✅ Segregate: clients only depend on what they use</span>
+<span class="kw">interface</span> <span class="tb">Workable</span>  { <span class="kw">public function</span> <span class="fn">work</span>(): <span class="kw">void</span>; }
+<span class="kw">interface</span> <span class="tb">Feedable</span>  { <span class="kw">public function</span> <span class="fn">eat</span>(): <span class="kw">void</span>; }
+<span class="kw">interface</span> <span class="tb">Sleepable</span> { <span class="kw">public function</span> <span class="fn">sleep</span>(): <span class="kw">void</span>; }
+<span class="kw">class</span> <span class="tb">Human</span> <span class="kw">implements</span> <span class="tb">Workable</span>, <span class="tb">Feedable</span>, <span class="tb">Sleepable</span> { ... }
+<span class="kw">class</span> <span class="tb">Robot</span> <span class="kw">implements</span> <span class="tb">Workable</span> { ... } <span class="cm">// only what it needs</span></pre>
+    <div class="csub cy">D — Dependency Inversion Principle</div>
+    <pre><span class="cm">// ❌ High-level depends on low-level concrete class</span>
+<span class="kw">class</span> <span class="tb">OrderService</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>() {
+        <span class="vr">$this</span>-><span class="vr">mailer</span> = <span class="kw">new</span> <span class="tb">SmtpMailer</span>(); <span class="bad">// ❌ tightly coupled</span>
+    }
+}
+
+<span class="cm">// ✅ Depend on abstraction (interface), inject concrete from outside</span>
+<span class="kw">interface</span> <span class="tb">Mailer</span> { <span class="kw">public function</span> <span class="fn">send</span>(<span class="kw">string</span> <span class="vr">$to</span>, <span class="kw">string</span> <span class="vr">$msg</span>): <span class="kw">void</span>; }
+
+<span class="kw">class</span> <span class="tb">OrderService</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private</span> <span class="tb">Mailer</span> <span class="vr">$mailer</span>) {} <span class="ok">// ✅ DI</span>
+}
+<span class="cm">// Can inject SmtpMailer, SendGridMailer, or MockMailer in tests</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ TRAP QUESTIONS ════ -->
+<div class="sg" data-s="traps">
+<div class="sh"><div class="si tr">🎯</div><div class="sl2">Trap Questions — What Interviewers Actually Ask</div><div class="sl3"></div></div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T1</span><span class="qt">What is the output? — Constructor, parent, and static order</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Classic Trap — Tests execution order</div>
+    <pre><span class="kw">class</span> <span class="tb">A</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>() { <span class="kw">echo</span> <span class="str">'A'</span>; }
+    <span class="kw">public function</span> <span class="fn">__destruct</span>()  { <span class="kw">echo</span> <span class="str">'~A'</span>; }
+}
+<span class="kw">class</span> <span class="tb">B</span> <span class="kw">extends</span> <span class="tb">A</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>() {
+        <span class="kw">echo</span> <span class="str">'B1'</span>;
+        parent::<span class="fn">__construct</span>();
+        <span class="kw">echo</span> <span class="str">'B2'</span>;
+    }
+    <span class="kw">public function</span> <span class="fn">__destruct</span>() {
+        <span class="kw">echo</span> <span class="str">'~B'</span>;
+        parent::<span class="fn">__destruct</span>();
+    }
+}
+
+<span class="vr">$b</span> = <span class="kw">new</span> <span class="tb">B</span>();
+<span class="kw">echo</span> <span class="str">'X'</span>;
+<span class="fn">unset</span>(<span class="vr">$b</span>);</pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">B1AB2X~B~A</div>
+    <div class="an" style="margin-top:10px">Constructor: B1 → parent::__construct() → A → back to B → B2 → X is echoed → unset triggers destructor: child first (~B), then parent (~A)</div>
+    <div class="box btr"><strong>⚠️ Key insight:</strong> Destructors fire in REVERSE order of construction — child destructor first, then parent. Parent constructor fires in the MIDDLE of child constructor (wherever parent::__construct() is called).</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T2</span><span class="qt">What is the output? — Interface constant, class constant, inheritance</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Constant Resolution Trap</div>
+    <pre><span class="kw">interface</span> <span class="tb">Colorable</span> { <span class="kw">const</span> COLOR = <span class="str">'red'</span>; }
+
+<span class="kw">class</span> <span class="tb">Base</span> <span class="kw">implements</span> <span class="tb">Colorable</span> {
+    <span class="kw">const</span> COLOR = <span class="str">'blue'</span>;  <span class="cm">// overrides interface constant</span>
+}
+
+<span class="kw">class</span> <span class="tb">Child</span> <span class="kw">extends</span> <span class="tb">Base</span> {}
+
+<span class="kw">echo</span> <span class="tb">Colorable</span>::COLOR; <span class="cm">// ?</span>
+<span class="kw">echo</span> <span class="tb">Base</span>::COLOR;      <span class="cm">// ?</span>
+<span class="kw">echo</span> <span class="tb">Child</span>::COLOR;     <span class="cm">// ?</span>
+
+<span class="vr">$obj</span> = <span class="kw">new</span> <span class="tb">Child</span>();
+<span class="kw">echo</span> <span class="vr">$obj</span>::COLOR;      <span class="cm">// ?  ($obj::CONST accesses class constant via object)</span></pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">red  blue  blue  blue</div>
+    <div class="an" style="margin-top:10px">Colorable::COLOR = 'red' (interface's own). Base::COLOR = 'blue' (overrides). Child inherits from Base, not interface, so 'blue'. $obj::COLOR is same as Child::COLOR = 'blue'.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T3</span><span class="qt">What is the output? — Late Static Binding with static property</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 LSB + Static Property Trap</div>
+    <pre><span class="kw">class</span> <span class="tb">Counter</span> {
+    <span class="kw">protected static int</span> <span class="vr">$count</span> = <span class="num">0</span>;
+
+    <span class="kw">public static function</span> <span class="fn">increment</span>(): <span class="kw">void</span> {
+        static::<span class="vr">$count</span>++;  <span class="cm">// static:: vs self::</span>
+    }
+    <span class="kw">public static function</span> <span class="fn">get</span>(): <span class="kw">int</span> { <span class="kw">return</span> static::<span class="vr">$count</span>; }
+}
+
+<span class="kw">class</span> <span class="tb">SpecialCounter</span> <span class="kw">extends</span> <span class="tb">Counter</span> {}
+
+<span class="tb">Counter</span>::<span class="fn">increment</span>();
+<span class="tb">Counter</span>::<span class="fn">increment</span>();
+<span class="tb">SpecialCounter</span>::<span class="fn">increment</span>();
+
+<span class="kw">echo</span> <span class="tb">Counter</span>::<span class="fn">get</span>();        <span class="cm">// ?</span>
+<span class="kw">echo</span> <span class="tb">SpecialCounter</span>::<span class="fn">get</span>(); <span class="cm">// ?</span></pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">2  1</div>
+    <div class="an" style="margin-top:10px">Because <code>static::</code> resolves to the CALLED class, each class has its OWN static property storage. Counter's $count = 2, SpecialCounter's $count = 1. If you used <code>self::</code> instead, both would share Counter's $count → output: 3  3.</div>
+    <div class="box btr"><strong>⚠️ This is the most common LSB interview question.</strong> The key: <code>static::</code> gives each class its own property storage. <code>self::</code> always uses the defining class's storage.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T4</span><span class="qt">What is the output? — __get with property_exists trap</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Magic Method Interaction Trap</div>
+    <pre><span class="kw">class</span> <span class="tb">Magic</span> {
+    <span class="kw">private array</span> <span class="vr">$store</span> = [<span class="str">'x'</span> => <span class="num">10</span>];
+
+    <span class="kw">public function</span> <span class="fn">__get</span>(<span class="kw">string</span> <span class="vr">$name</span>): <span class="kw">mixed</span> {
+        <span class="kw">echo</span> <span class="str">"__get({$name}) "</span>;
+        <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">store</span>[<span class="vr">$name</span>] ?? <span class="kw">null</span>;
+    }
+
+    <span class="kw">public function</span> <span class="fn">__isset</span>(<span class="kw">string</span> <span class="vr">$name</span>): <span class="kw">bool</span> {
+        <span class="kw">echo</span> <span class="str">"__isset({$name}) "</span>;
+        <span class="kw">return</span> <span class="fn">isset</span>(<span class="vr">$this</span>-><span class="vr">store</span>[<span class="vr">$name</span>]);
+    }
+}
+
+<span class="vr">$m</span> = <span class="kw">new</span> <span class="tb">Magic</span>();
+<span class="kw">echo</span> <span class="vr">$m</span>-><span class="vr">x</span>; <span class="cm">// 1: What triggers?</span>
+<span class="kw">echo</span> PHP_EOL;
+<span class="kw">var_dump</span>(<span class="fn">isset</span>(<span class="vr">$m</span>-><span class="vr">x</span>)); <span class="cm">// 2: What triggers?</span>
+<span class="kw">echo</span> PHP_EOL;
+<span class="kw">var_dump</span>(<span class="fn">property_exists</span>(<span class="vr">$m</span>, <span class="str">'x'</span>)); <span class="cm">// 3: Magic triggered?</span></pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">__get(x) 10
+__isset(x) bool(true)
+bool(false)</div>
+    <div class="an" style="margin-top:10px">1: <code>$m->x</code> triggers <code>__get</code> (x is not a real property). 2: <code>isset($m->x)</code> triggers <code>__isset</code>. 3: <code>property_exists()</code> checks declared properties ONLY — does NOT trigger <code>__get</code> or <code>__isset</code>. x is not declared, so false.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T5</span><span class="qt">What is the output? — Trait method vs class method priority</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Trait Resolution Order Trap</div>
+    <pre><span class="kw">trait</span> <span class="tb">Hello</span> {
+    <span class="kw">public function</span> <span class="fn">greet</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'Trait'</span>; }
+}
+
+<span class="kw">class</span> <span class="tb">Base</span> {
+    <span class="kw">public function</span> <span class="fn">greet</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'Base'</span>; }
+}
+
+<span class="kw">class</span> <span class="tb">Child</span> <span class="kw">extends</span> <span class="tb">Base</span> {
+    <span class="kw">use</span> <span class="tb">Hello</span>;
+    <span class="cm">// No own greet() method</span>
+}
+
+<span class="kw">class</span> <span class="tb">GrandChild</span> <span class="kw">extends</span> <span class="tb">Child</span> {
+    <span class="kw">public function</span> <span class="fn">greet</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'GrandChild'</span>; }
+}
+
+<span class="kw">echo</span> (<span class="kw">new</span> <span class="tb">Child</span>())-><span class="fn">greet</span>();       <span class="cm">// ?</span>
+<span class="kw">echo</span> (<span class="kw">new</span> <span class="tb">GrandChild</span>())-><span class="fn">greet</span>(); <span class="cm">// ?</span></pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">Trait  GrandChild</div>
+    <div class="an" style="margin-top:10px">PHP priority (highest → lowest): 1) Class's own method 2) Trait method 3) Inherited method. Child uses Trait Hello's greet (overrides inherited Base::greet). GrandChild defines its own method — always wins.</div>
+    <div class="box btr"><strong>⚠️ The rule:</strong> Trait methods beat inherited methods, but the class's own method beats trait methods. Memorize: <code>Class > Trait > Inheritance</code></div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T6</span><span class="qt">Can you call a non-static method statically? What happens?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Static Call Trap</div>
+    <pre><span class="kw">class</span> <span class="tb">Foo</span> {
+    <span class="kw">public function</span> <span class="fn">hello</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'Hello'</span>; }
+}
+
+<span class="cm">// PHP 5.x: worked with E_DEPRECATED warning</span>
+<span class="cm">// PHP 7.x: E_DEPRECATED → Fatal Error in some cases</span>
+<span class="cm">// PHP 8.x:</span>
+<span class="tb">Foo</span>::<span class="fn">hello</span>(); <span class="bad">// ❌ Fatal Error: Non-static method cannot be called statically</span>
+
+<span class="cm">// EXCEPT: if the method doesn't use $this, PHP 7 allowed it</span>
+<span class="cm">// PHP 8 removed this — always a Fatal Error now</span>
+
+<span class="cm">// What about calling parent:: non-static method statically from child?</span>
+<span class="kw">class</span> <span class="tb">Bar</span> <span class="kw">extends</span> <span class="tb">Foo</span> {
+    <span class="kw">public function</span> <span class="fn">test</span>(): <span class="kw">void</span> {
+        parent::<span class="fn">hello</span>(); <span class="ok">// ✅ OK — calling parent via parent:: in instance context</span>
+    }
+}</pre>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T7</span><span class="qt">What is the output? — Object comparison == vs ===</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Object Equality Trap</div>
+    <pre><span class="kw">class</span> <span class="tb">Point</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public int</span> <span class="vr">$x</span>, <span class="kw">public int</span> <span class="vr">$y</span>) {}
+}
+
+<span class="vr">$p1</span> = <span class="kw">new</span> <span class="tb">Point</span>(<span class="num">1</span>, <span class="num">2</span>);
+<span class="vr">$p2</span> = <span class="kw">new</span> <span class="tb">Point</span>(<span class="num">1</span>, <span class="num">2</span>);
+<span class="vr">$p3</span> = <span class="vr">$p1</span>;
+
+<span class="fn">var_dump</span>(<span class="vr">$p1</span> == <span class="vr">$p2</span>);  <span class="cm">// ?</span>
+<span class="fn">var_dump</span>(<span class="vr">$p1</span> === <span class="vr">$p2</span>); <span class="cm">// ?</span>
+<span class="fn">var_dump</span>(<span class="vr">$p1</span> == <span class="vr">$p3</span>);  <span class="cm">// ?</span>
+<span class="fn">var_dump</span>(<span class="vr">$p1</span> === <span class="vr">$p3</span>); <span class="cm">// ?</span></pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">bool(true)   ← == compares properties recursively
+bool(false)  ← === requires SAME instance (identity)
+bool(true)
+bool(true)   ← $p3 is same handle as $p1</div>
+    <div class="box bwn"><strong>⚠️ Rules for objects:</strong> <code>==</code> checks same class + same property values. <code>===</code> checks same object identity (same handle/reference). Two <code>new</code> calls always produce <code>===</code> false even with identical data.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T8</span><span class="qt">What is the output? — Interface type checking with instanceof</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">interface</span> <span class="tb">A</span> {}
+<span class="kw">interface</span> <span class="tb">B</span> <span class="kw">extends</span> <span class="tb">A</span> {}
+<span class="kw">class</span>     <span class="tb">C</span> <span class="kw">implements</span> <span class="tb">B</span> {}
+<span class="kw">class</span>     <span class="tb">D</span> <span class="kw">extends</span> <span class="tb">C</span> {}
+
+<span class="vr">$d</span> = <span class="kw">new</span> <span class="tb">D</span>();
+<span class="fn">var_dump</span>(<span class="vr">$d</span> <span class="kw">instanceof</span> <span class="tb">D</span>); <span class="cm">// ?</span>
+<span class="fn">var_dump</span>(<span class="vr">$d</span> <span class="kw">instanceof</span> <span class="tb">C</span>); <span class="cm">// ?</span>
+<span class="fn">var_dump</span>(<span class="vr">$d</span> <span class="kw">instanceof</span> <span class="tb">B</span>); <span class="cm">// ?</span>
+<span class="fn">var_dump</span>(<span class="vr">$d</span> <span class="kw">instanceof</span> <span class="tb">A</span>); <span class="cm">// ?</span></pre>
+    <div class="out-lbl">Output:</div>
+    <div class="out">bool(true) bool(true) bool(true) bool(true)</div>
+    <div class="an" style="margin-top:10px">All true! D extends C (which implements B which extends A). instanceof traverses the entire hierarchy upward — classes, parent classes, and all implemented interfaces including those implemented by parents and transitively inherited.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T9</span><span class="qt">Can an abstract class implement an interface without implementing its methods?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Surprises most candidates</div>
+    <pre><span class="kw">interface</span> <span class="tb">Printable</span> {
+    <span class="kw">public function</span> <span class="fn">print</span>(): <span class="kw">void</span>;
+    <span class="kw">public function</span> <span class="fn">preview</span>(): <span class="kw">string</span>;
+}
+
+<span class="cm">// YES: abstract class can defer implementation to concrete subclass</span>
+<span class="kw">abstract class</span> <span class="tb">Document</span> <span class="kw">implements</span> <span class="tb">Printable</span> {
+    <span class="cm">// Does NOT implement print() or preview() — still valid!</span>
+    <span class="cm">// The abstract class says "some concrete child must handle these"</span>
+    <span class="kw">public function</span> <span class="fn">save</span>(): <span class="kw">void</span> { <span class="kw">echo</span> <span class="str">'saving'</span>; }
+}
+
+<span class="cm">// Concrete child MUST implement all unimplemented interface methods</span>
+<span class="kw">class</span> <span class="tb">PdfDocument</span> <span class="kw">extends</span> <span class="tb">Document</span> {
+    <span class="kw">public function</span> <span class="fn">print</span>(): <span class="kw">void</span>    { <span class="kw">echo</span> <span class="str">'Printing PDF'</span>; }
+    <span class="kw">public function</span> <span class="fn">preview</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'Preview'</span>; }
+}
+
+<span class="cm">// Abstract can also partially implement the interface</span>
+<span class="kw">abstract class</span> <span class="tb">Report</span> <span class="kw">implements</span> <span class="tb">Printable</span> {
+    <span class="kw">public function</span> <span class="fn">preview</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'Generic preview'</span>; } <span class="cm">// implements one</span>
+    <span class="kw">abstract public function</span> <span class="fn">print</span>(): <span class="kw">void</span>;  <span class="cm">// leaves this to subclass</span>
+}</pre>
+    <div class="box bsf"><strong>✅ Key rule:</strong> Abstract classes can implement interfaces without providing all method bodies. They push the obligation to their concrete subclasses. This is the basis of the Template Method Pattern.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T10</span><span class="qt">What is the output? — Type coercion in typed properties</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">TypedClass</span> {
+    <span class="kw">public int</span>    <span class="vr">$count</span>;
+    <span class="kw">public</span> ?<span class="kw">string</span> <span class="vr">$name</span>;
+    <span class="kw">public float</span>  <span class="vr">$price</span>;
+}
+
+<span class="vr">$obj</span> = <span class="kw">new</span> <span class="tb">TypedClass</span>();
+
+<span class="cm">// Without strict_types — coercion happens</span>
+<span class="vr">$obj</span>-><span class="vr">count</span> = <span class="str">'5'</span>;  <span class="cm">// '5' coerced to int 5 (weak mode)</span>
+<span class="vr">$obj</span>-><span class="vr">price</span> = <span class="str">'9.99'</span>; <span class="cm">// '9.99' coerced to float 9.99</span>
+
+<span class="fn">echo</span> <span class="vr">$obj</span>-><span class="vr">count</span>; <span class="cm">// 5 (int)</span>
+<span class="fn">echo</span> <span class="vr">$obj</span>-><span class="vr">price</span>; <span class="cm">// 9.99</span>
+
+<span class="cm">// Accessing uninitialized typed property</span>
+<span class="kw">echo</span> <span class="vr">$obj</span>-><span class="vr">name</span>;  <span class="bad">// ❌ Fatal: Typed property must not be accessed before initialization</span>
+<span class="cm">// Note: nullable ?string still needs initialization!</span>
+
+<span class="cm">// Fix: check or initialize</span>
+<span class="kw">echo</span> <span class="fn">isset</span>(<span class="vr">$obj</span>-><span class="vr">name</span>) ? <span class="vr">$obj</span>-><span class="vr">name</span> : <span class="str">'not set'</span>;</pre>
+    <div class="box btr"><strong>⚠️ Typed property trap:</strong> In PHP 7.4+, declaring a typed property without assigning a value leaves it "uninitialized" — not null, not the type default, literally uninitialized. Accessing it is a Fatal Error, even for nullable types. This breaks a LOT of legacy code.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T11</span><span class="qt">What is the output? — Closure binding and scope</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="trap-badge">🎯 Closure Scope Trap</div>
+    <pre><span class="kw">class</span> <span class="tb">Counter</span> {
+    <span class="kw">private int</span> <span class="vr">$count</span> = <span class="num">0</span>;
+
+    <span class="kw">public function</span> <span class="fn">getIncrementer</span>(): \<span class="tb">Closure</span> {
+        <span class="kw">return</span> <span class="kw">function</span>() {
+            <span class="vr">$this</span>-><span class="vr">count</span>++;
+            <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">count</span>;
+        };
+    }
+}
+
+<span class="vr">$c</span>   = <span class="kw">new</span> <span class="tb">Counter</span>();
+<span class="vr">$inc</span> = <span class="vr">$c</span>-><span class="fn">getIncrementer</span>();
+
+<span class="kw">echo</span> <span class="vr">$inc</span>(); <span class="cm">// 1 — $this is bound to $c</span>
+<span class="kw">echo</span> <span class="vr">$inc</span>(); <span class="cm">// 2</span>
+
+<span class="cm">// Bind closure to a DIFFERENT object (or class for private access)</span>
+<span class="vr">$c2</span>   = <span class="kw">new</span> <span class="tb">Counter</span>();
+<span class="vr">$inc2</span> = \<span class="tb">Closure</span>::<span class="fn">bind</span>(<span class="vr">$inc</span>, <span class="vr">$c2</span>, <span class="tb">Counter</span>::<span class="kw">class</span>);  <span class="cm">// bind to $c2</span>
+<span class="kw">echo</span> <span class="vr">$inc2</span>(); <span class="cm">// 1 (c2's own count)</span>
+<span class="kw">echo</span> <span class="vr">$inc</span>(); <span class="cm">// 3 (c's count continues)</span>
+
+<span class="cm">// Access private property from outside using Closure::bind</span>
+<span class="vr">$reader</span> = \<span class="tb">Closure</span>::<span class="fn">bind</span>(
+    <span class="kw">function</span>() { <span class="kw">return</span> <span class="vr">$this</span>-><span class="vr">count</span>; },
+    <span class="vr">$c</span>,
+    <span class="tb">Counter</span>::<span class="kw">class</span>  <span class="cm">// scope = access private members</span>
+);
+<span class="kw">echo</span> <span class="vr">$reader</span>(); <span class="cm">// 3 — reads PRIVATE property from outside!</span></pre>
+    <div class="box bop"><strong>🔬 Advanced:</strong> <code>Closure::bind()</code> is how testing frameworks like Mockery access private properties without Reflection. It's also how serialization libraries hydrate private properties. Understanding this deeply separates senior PHP devs from the rest.</div>
+  </div>
+</div>
+
+<div class="card trc" onclick="tog(this)">
+  <div class="ch"><span class="qn">T12</span><span class="qt">What happens when you have the same abstract method in both abstract class and interface?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">interface</span> <span class="tb">Drawable</span> {
+    <span class="kw">public function</span> <span class="fn">draw</span>(): <span class="kw">void</span>;
+}
+
+<span class="kw">abstract class</span> <span class="tb">Shape</span> <span class="kw">implements</span> <span class="tb">Drawable</span> {
+    <span class="cm">// Redeclare as abstract (optional but clear)</span>
+    <span class="kw">abstract public function</span> <span class="fn">draw</span>(): <span class="kw">void</span>;
+    <span class="kw">abstract public function</span> <span class="fn">area</span>(): <span class="kw">float</span>;
+}
+
+<span class="kw">class</span> <span class="tb">Circle</span> <span class="kw">extends</span> <span class="tb">Shape</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private float</span> <span class="vr">$radius</span>) {}
+
+    <span class="cm">// Must implement draw() — satisfies BOTH interface and abstract class</span>
+    <span class="kw">public function</span> <span class="fn">draw</span>(): <span class="kw">void</span> { <span class="kw">echo</span> <span class="str">"Drawing circle r={$this->radius}"</span>; }
+    <span class="kw">public function</span> <span class="fn">area</span>(): <span class="kw">float</span> { <span class="kw">return</span> M_PI * <span class="vr">$this</span>-><span class="vr">radius</span> ** <span class="num">2</span>; }
+}
+
+<span class="cm">// One implementation satisfies both the abstract class AND the interface</span>
+<span class="vr">$c</span> = <span class="kw">new</span> <span class="tb">Circle</span>(<span class="num">5</span>);
+<span class="fn">var_dump</span>(<span class="vr">$c</span> <span class="kw">instanceof</span> <span class="tb">Shape</span>);    <span class="cm">// true</span>
+<span class="fn">var_dump</span>(<span class="vr">$c</span> <span class="kw">instanceof</span> <span class="tb">Drawable</span>); <span class="cm">// true</span></pre>
+  </div>
+</div>
+</div>
+
+<!-- ════ OBJECT MODEL ════ -->
+<div class="sg" data-s="memory">
+<div class="sh"><div class="si op">🧠</div><div class="sl2">PHP Object Memory Model — How It Really Works</div><div class="sl3"></div></div>
+
+<div class="card opc" onclick="tog(this)">
+  <div class="ch"><span class="qn">OM1</span><span class="qt">How does PHP manage object memory internally? (zval, refcount, copy-on-write)</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="an">PHP 7+ stores variables in <strong>zval</strong> structures. Objects are managed through an object store, separate from regular variable storage.</div>
+    <div class="mem">
+<span class="lbl">$a = "hello"</span>  →  zval { type: IS_STRING, value: "hello", <span class="val">refcount: 1</span> }
+<span class="lbl">$b = $a</span>       →  <span class="arr">COW: $b points to SAME zval (refcount: 2)</span>
+<span class="lbl">$b .= "!"</span>     →  <span class="arr">Write: zval is COPIED for $b (refcount back to 1 each)</span>
+
+<span class="lbl">$obj = new Foo()</span>  →  zval { type: IS_OBJECT, handle: <span class="addr">0x1A4</span> }
+                         object_store[<span class="addr">0x1A4</span>] → { properties, class: Foo }
+<span class="lbl">$obj2 = $obj</span>     →  zval { type: IS_OBJECT, handle: <span class="addr">0x1A4</span> } <span class="arr">← same handle!</span>
+                         Both point to SAME object — no copy, no COW
+<span class="lbl">$obj2->x = 5</span>    →  <span class="arr">Mutates the shared object — $obj also sees x=5</span>
+
+<span class="lbl">$ref = &$obj</span>     →  $ref and $obj share the SAME zval slot (alias)
+<span class="lbl">$ref = new Foo()</span> →  Both $ref AND $obj now point to the new object!</div>
+    <div class="csub op">Garbage Collection</div>
+    <pre><span class="cm">// PHP uses reference counting + cycle collector</span>
+<span class="kw">class</span> <span class="tb">Node</span> { <span class="kw">public</span> ?<span class="tb">Node</span> <span class="vr">$next</span> = <span class="kw">null</span>; }
+
+<span class="vr">$a</span> = <span class="kw">new</span> <span class="tb">Node</span>();
+<span class="vr">$b</span> = <span class="kw">new</span> <span class="tb">Node</span>();
+<span class="vr">$a</span>-><span class="vr">next</span> = <span class="vr">$b</span>;
+<span class="vr">$b</span>-><span class="vr">next</span> = <span class="vr">$a</span>;  <span class="cm">// circular reference!</span>
+<span class="fn">unset</span>(<span class="vr">$a</span>, <span class="vr">$b</span>);   <span class="cm">// refcounts don't reach 0 — memory leak!</span>
+<span class="cm">// PHP's cycle collector detects this and frees them periodically</span>
+<span class="cm">// gc_collect_cycles() triggers it manually</span></pre>
+  </div>
+</div>
+
+<div class="card opc" onclick="tog(this)">
+  <div class="ch"><span class="qn">OM2</span><span class="qt">What is Reflection API and how to use it for meta-programming?</span><span class="diff dh">Hard</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <pre><span class="kw">class</span> <span class="tb">UserService</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private</span> <span class="tb">UserRepository</span> <span class="vr">$repo</span>) {}
+    <span class="kw">private function</span> <span class="fn">secretMethod</span>(): <span class="kw">string</span> { <span class="kw">return</span> <span class="str">'secret'</span>; }
+}
+
+<span class="vr">$rc</span> = <span class="kw">new</span> \<span class="tb">ReflectionClass</span>(<span class="tb">UserService</span>::<span class="kw">class</span>);
+
+<span class="cm">// Introspect class</span>
+<span class="vr">$rc</span>-><span class="fn">getMethods</span>();              <span class="cm">// all methods</span>
+<span class="vr">$rc</span>-><span class="fn">getProperties</span>();           <span class="cm">// all properties</span>
+<span class="vr">$rc</span>-><span class="fn">implementsInterface</span>(<span class="str">'...'</span>); <span class="cm">// interface check</span>
+<span class="vr">$rc</span>-><span class="fn">getAttributes</span>();           <span class="cm">// PHP 8 attributes</span>
+
+<span class="cm">// Read constructor parameters (used by DI containers)</span>
+<span class="vr">$constructor</span> = <span class="vr">$rc</span>-><span class="fn">getConstructor</span>();
+<span class="kw">foreach</span> (<span class="vr">$constructor</span>-><span class="fn">getParameters</span>() <span class="kw">as</span> <span class="vr">$param</span>) {
+    <span class="fn">echo</span> <span class="vr">$param</span>-><span class="fn">getType</span>()->getName();  <span class="cm">// 'UserRepository'</span>
+}
+
+<span class="cm">// Call private method (dangerous but sometimes needed in tests)</span>
+<span class="vr">$obj</span>    = <span class="kw">new</span> <span class="tb">UserService</span>(<span class="cm">/* ... */</span>);
+<span class="vr">$method</span> = <span class="vr">$rc</span>-><span class="fn">getMethod</span>(<span class="str">'secretMethod'</span>);
+<span class="vr">$method</span>-><span class="fn">setAccessible</span>(<span class="kw">true</span>);
+<span class="kw">echo</span> <span class="vr">$method</span>-><span class="fn">invoke</span>(<span class="vr">$obj</span>);  <span class="cm">// 'secret' — bypasses private!</span>
+
+<span class="cm">// PHP 8 Attributes + Reflection (most modern pattern)</span>
+<span class="kw">#[Attribute]</span>
+<span class="kw">class</span> <span class="tb">Route</span> {
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">public string</span> <span class="vr">$path</span>) {}
+}
+
+<span class="kw">class</span> <span class="tb">UserController</span> {
+    <span class="kw">#[Route</span>(<span class="str">'/users'</span>)]
+    <span class="kw">public function</span> <span class="fn">index</span>(): <span class="kw">void</span> {}
+}
+
+<span class="cm">// Read route from attribute</span>
+<span class="vr">$method</span> = (<span class="kw">new</span> \<span class="tb">ReflectionClass</span>(<span class="tb">UserController</span>::<span class="kw">class</span>))-><span class="fn">getMethod</span>(<span class="str">'index'</span>);
+<span class="vr">$attrs</span>  = <span class="vr">$method</span>-><span class="fn">getAttributes</span>(<span class="tb">Route</span>::<span class="kw">class</span>);
+<span class="kw">echo</span> <span class="vr">$attrs</span>[<span class="num">0</span>]-><span class="fn">newInstance</span>()-><span class="vr">path</span>; <span class="cm">// '/users'</span></pre>
+    <div class="box bop"><strong>🔬 How DI containers work:</strong> Laravel's container, Symfony's DI, PHP-DI — all use ReflectionClass to read constructor parameters, auto-resolve types, and inject dependencies. Understanding Reflection IS understanding modern PHP frameworks.</div>
+  </div>
+</div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+function tog(c){c.classList.toggle('open');upd()}
+function upd(){
+  const all=document.querySelectorAll('.card');
+  const op=document.querySelectorAll('.card.open');
+  const pct=Math.round(op.length/all.length*100);
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('oc').textContent=op.length+' of '+all.length+' opened';
+  document.getElementById('pc').textContent=pct+'%';
+}
+function flt(s,btn){
+  document.querySelectorAll('.nt').forEach(t=>t.className='nt');
+  const phSecs=['structure','inheritance','static','visibility','types','memory'];
+  const oopSecs=['abstract','traits'];
+  const trapSecs=['traps'];
+  const safeSecs=['solid'];
+  const warnSecs=['magic'];
+  const cyanSecs=['php8'];
+  const pinkSecs=['patterns'];
+  if(s==='all'){
+    btn.classList.add('a-all');
+    document.querySelectorAll('.sg').forEach(g=>g.classList.remove('hidden'));
+  } else {
+    if(phSecs.includes(s))   btn.classList.add('a-php');
+    else if(oopSecs.includes(s))  btn.classList.add('a-oop');
+    else if(trapSecs.includes(s)) btn.classList.add('a-trap');
+    else if(safeSecs.includes(s)) btn.classList.add('a-safe');
+    else if(warnSecs.includes(s)) btn.classList.add('a-warn');
+    else if(cyanSecs.includes(s)) btn.classList.add('a-cyan');
+    else if(pinkSecs.includes(s)) btn.classList.add('a-pink');
+    else btn.classList.add('a-php');
+    document.querySelectorAll('.sg').forEach(g=>g.classList.toggle('hidden',g.dataset.s!==s));
+  }
+}
+document.querySelectorAll('.card').forEach((c,i)=>c.style.animationDelay=(i*.025)+'s');
+upd();
+</script>
+</body>
+</html>
