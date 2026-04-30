@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAMP Stack Interview Hub — Full-Stack Developer Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;
+  --bg2:#F8F9FA;
+  --s1:#F1F3F5;
+  --s2:#E9ECEF;
+  --bd:#DEE2E6;
+  --bd2:#CED4DA;
+  --text:#212529;
+  --text2:#343A40;
+  --muted:#6C757D;
+  --card-bg:#FFFFFF;
+  --card-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.03);
+  --card-hover-shadow:0 8px 30px rgba(0,0,0,.08);
+  --nav-bg:rgba(255,255,255,.92);
+
+  /* topic colors */
+  --mysql-1:#F29111;--mysql-2:#00758F;
+  --php-1:#8892BF;--php-2:#4F5B93;
+  --laravel-1:#FF2D20;--laravel-2:#C0392B;
+  --oop-1:#805AD5;--oop-2:#6B46C1;
+  --linux-1:#38A169;--linux-2:#276749;
+  --js-1:#F0DB4F;--js-2:#C9A900;
+  --deploy-1:#3B82F6;--deploy-2:#1D4ED8;
+  --arch-1:#EC4899;--arch-2:#BE185D;
+}
+
+[data-theme="dark"]{
+  --bg:#0F1117;
+  --bg2:#161822;
+  --s1:#1C1F2E;
+  --s2:#252838;
+  --bd:#2D3148;
+  --bd2:#3A3F5C;
+  --text:#E2E8F0;
+  --text2:#CBD5E1;
+  --muted:#8892A8;
+  --card-bg:#181B28;
+  --card-shadow:0 1px 3px rgba(0,0,0,.2),0 4px 12px rgba(0,0,0,.15);
+  --card-hover-shadow:0 8px 30px rgba(0,0,0,.3);
+  --nav-bg:rgba(15,17,23,.92);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh;transition:background .3s,color .3s}
+
+body::after{content:'';position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(0,0,0,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.02) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none;z-index:0}
+[data-theme="dark"] body::after{
+  background:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:60px 60px}
+
+a{text-decoration:none;color:inherit}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{position:fixed;top:20px;right:20px;z-index:999;
+  width:44px;height:44px;border-radius:12px;border:1px solid var(--bd);
+  background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:20px;transition:all .25s;box-shadow:var(--card-shadow)}
+.theme-toggle:hover{transform:scale(1.08);box-shadow:var(--card-hover-shadow)}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;padding:80px 24px 50px;text-align:center;overflow:hidden;border-bottom:1px solid var(--bd)}
+.hero-blob{position:absolute;top:-150px;left:50%;transform:translateX(-50%);
+  width:1000px;height:600px;
+  background:radial-gradient(ellipse,rgba(242,145,17,.04) 0%,rgba(0,117,143,.03) 30%,rgba(128,90,213,.02) 55%,transparent 70%);
+  pointer-events:none}
+[data-theme="dark"] .hero-blob{
+  background:radial-gradient(ellipse,rgba(242,145,17,.06) 0%,rgba(0,117,143,.04) 30%,rgba(128,90,213,.03) 55%,transparent 70%)}
+
+.hero-badge{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(242,145,17,.08);border:1px solid rgba(242,145,17,.25);
+  border-radius:100px;padding:6px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--mysql-1);
+  margin-bottom:24px}
+
+h1{font-size:clamp(2.4rem,6vw,4.8rem);font-weight:800;letter-spacing:-2.5px;line-height:1.05}
+h1 .c1{color:var(--mysql-1)}
+h1 .c2{color:var(--mysql-2)}
+h1 .c3{color:var(--oop-1)}
+
+.hero-sub{margin:20px auto 0;max-width:620px;font-size:1.05rem;font-weight:300;color:var(--muted);line-height:1.7}
+.hero-sub strong{font-weight:600;color:var(--text2)}
+
+.hero-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:24px}
+.htag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.2px;
+  text-transform:uppercase;padding:5px 13px;border-radius:6px;border:1px solid var(--bd2);color:var(--muted);
+  transition:all .2s}
+.htag:hover{border-color:var(--muted);color:var(--text)}
+
+/* ── STATS BAR ── */
+.stats{position:relative;z-index:1;background:var(--bg2);border-bottom:1px solid var(--bd);padding:28px 24px}
+.stats-inner{max-width:900px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;
+  background:linear-gradient(135deg,var(--mysql-1),var(--mysql-2),var(--oop-1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.75rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+
+/* ── CARDS GRID ── */
+.cards-section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:50px 24px 60px}
+.section-title{font-size:1.1rem;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.section-sub{font-size:.85rem;color:var(--muted);margin-bottom:32px}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+
+.card{position:relative;background:var(--card-bg);border:1px solid var(--bd);border-radius:16px;
+  padding:28px 24px 24px;transition:all .3s ease;cursor:pointer;overflow:hidden;
+  box-shadow:var(--card-shadow)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:16px 16px 0 0;transition:height .3s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--card-hover-shadow)}
+.card:hover::before{height:4px}
+
+.card-icon{font-size:2rem;margin-bottom:14px;display:block}
+.card-title{font-size:1.05rem;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.card-desc{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:16px;min-height:52px}
+.card-meta{display:flex;align-items:center;justify-content:space-between}
+.card-count{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;
+  padding:4px 10px;border-radius:6px;letter-spacing:.5px}
+.card-arrow{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;border:1px solid var(--bd);color:var(--muted);transition:all .25s}
+.card:hover .card-arrow{border-color:transparent;color:#fff}
+
+/* card color variants */
+.card--mysql::before{background:linear-gradient(90deg,var(--mysql-1),var(--mysql-2))}
+.card--mysql:hover{box-shadow:0 8px 30px rgba(242,145,17,.12)}
+.card--mysql .card-count{background:rgba(242,145,17,.08);color:var(--mysql-1)}
+.card--mysql:hover .card-arrow{background:linear-gradient(135deg,var(--mysql-1),var(--mysql-2))}
+
+.card--php::before{background:linear-gradient(90deg,var(--php-1),var(--php-2))}
+.card--php:hover{box-shadow:0 8px 30px rgba(136,146,191,.15)}
+.card--php .card-count{background:rgba(136,146,191,.1);color:var(--php-2)}
+.card--php:hover .card-arrow{background:linear-gradient(135deg,var(--php-1),var(--php-2))}
+
+.card--laravel::before{background:linear-gradient(90deg,var(--laravel-1),var(--laravel-2))}
+.card--laravel:hover{box-shadow:0 8px 30px rgba(255,45,32,.1)}
+.card--laravel .card-count{background:rgba(255,45,32,.07);color:var(--laravel-1)}
+.card--laravel:hover .card-arrow{background:linear-gradient(135deg,var(--laravel-1),var(--laravel-2))}
+
+.card--oop::before{background:linear-gradient(90deg,var(--oop-1),var(--oop-2))}
+.card--oop:hover{box-shadow:0 8px 30px rgba(128,90,213,.12)}
+.card--oop .card-count{background:rgba(128,90,213,.08);color:var(--oop-1)}
+.card--oop:hover .card-arrow{background:linear-gradient(135deg,var(--oop-1),var(--oop-2))}
+
+.card--linux::before{background:linear-gradient(90deg,var(--linux-1),var(--linux-2))}
+.card--linux:hover{box-shadow:0 8px 30px rgba(56,161,105,.12)}
+.card--linux .card-count{background:rgba(56,161,105,.08);color:var(--linux-1)}
+.card--linux:hover .card-arrow{background:linear-gradient(135deg,var(--linux-1),var(--linux-2))}
+
+.card--js::before{background:linear-gradient(90deg,var(--js-1),var(--js-2))}
+.card--js:hover{box-shadow:0 8px 30px rgba(240,219,79,.15)}
+.card--js .card-count{background:rgba(240,219,79,.1);color:var(--js-2)}
+.card--js:hover .card-arrow{background:linear-gradient(135deg,var(--js-2),#A08600)}
+
+.card--deploy::before{background:linear-gradient(90deg,var(--deploy-1),var(--deploy-2))}
+.card--deploy:hover{box-shadow:0 8px 30px rgba(59,130,246,.12)}
+.card--deploy .card-count{background:rgba(59,130,246,.08);color:var(--deploy-1)}
+.card--deploy:hover .card-arrow{background:linear-gradient(135deg,var(--deploy-1),var(--deploy-2))}
+
+.card--arch::before{background:linear-gradient(90deg,var(--arch-1),var(--arch-2))}
+.card--arch:hover{box-shadow:0 8px 30px rgba(236,72,153,.12)}
+.card--arch .card-count{background:rgba(236,72,153,.08);color:var(--arch-1)}
+.card--arch:hover .card-arrow{background:linear-gradient(135deg,var(--arch-1),var(--arch-2))}
+
+/* ── SKILL MAP ── */
+.skill-map{position:relative;z-index:1;background:var(--bg2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:50px 24px 56px}
+.skill-map-inner{max-width:900px;margin:0 auto}
+.skill-map-title{font-size:1.1rem;font-weight:700;text-align:center;margin-bottom:6px}
+.skill-map-sub{font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:36px}
+
+.skill-lanes{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.skill-lane{background:var(--card-bg);border:1px solid var(--bd);border-radius:14px;padding:22px 18px;text-align:center;
+  transition:all .3s}
+.skill-lane:hover{transform:translateY(-2px);box-shadow:var(--card-hover-shadow)}
+.lane-icon{font-size:1.5rem;margin-bottom:10px}
+.lane-title{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.lane-items{display:flex;flex-direction:column;gap:6px}
+.lane-item{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:.5px;
+  padding:5px 10px;border-radius:6px;background:var(--s1);color:var(--muted);border:1px solid var(--bd);
+  transition:all .2s}
+.lane-item:hover{background:var(--s2);color:var(--text)}
+
+.lane--backend .lane-title{color:var(--oop-1)}
+.lane--backend .lane-item:hover{border-color:rgba(128,90,213,.3);color:var(--oop-1)}
+.lane--frontend .lane-title{color:var(--js-2)}
+.lane--frontend .lane-item:hover{border-color:rgba(201,169,0,.3);color:var(--js-2)}
+.lane--devops .lane-title{color:var(--linux-1)}
+.lane--devops .lane-item:hover{border-color:rgba(56,161,105,.3);color:var(--linux-1)}
+.lane--architecture .lane-title{color:var(--arch-1)}
+.lane--architecture .lane-item:hover{border-color:rgba(236,72,153,.3);color:var(--arch-1)}
+
+/* ── FOOTER ── */
+.footer{position:relative;z-index:1;text-align:center;padding:36px 24px 44px;color:var(--muted)}
+.footer-main{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.footer-sub{font-size:.78rem;color:var(--bd2)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;animation:fadeUp .6s ease forwards}
+.anim-d1{animation-delay:.1s}
+.anim-d2{animation-delay:.2s}
+.anim-d3{animation-delay:.3s}
+.anim-d4{animation-delay:.35s}
+.anim-d5{animation-delay:.4s}
+.anim-d6{animation-delay:.45s}
+.anim-d7{animation-delay:.5s}
+.anim-d8{animation-delay:.55s}
+
+.card{opacity:0}
+.card.visible{animation:fadeUp .5s ease forwards}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hero{padding:60px 20px 40px}
+  h1{letter-spacing:-1.5px}
+  .stats-inner{gap:24px}
+  .skill-lanes{grid-template-columns:repeat(2,1fr)}
+  .cards-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .skill-lanes{grid-template-columns:1fr}
+  .stats-inner{flex-direction:column;gap:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <span id="theme-icon">&#9789;</span>
+</button>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-blob"></div>
+  <div class="hero-badge anim">&#9881; FULL-STACK INTERVIEW PREP</div>
+  <h1 class="anim anim-d1"><span class="c1">LAMP</span> <span class="c2">Stack</span><br>Interview <span class="c3">Hub</span></h1>
+  <p class="hero-sub anim anim-d2">
+    Your comprehensive preparation platform for <strong>senior LAMP stack developer</strong> interviews.
+    Covering everything from MySQL internals to system architecture, across <strong>8 focused revision sheets</strong>.
+  </p>
+  <div class="hero-tags anim anim-d3">
+    <span class="htag">MySQL</span>
+    <span class="htag">PHP</span>
+    <span class="htag">Laravel</span>
+    <span class="htag">OOP</span>
+    <span class="htag">Linux</span>
+    <span class="htag">JavaScript</span>
+    <span class="htag">Docker</span>
+    <span class="htag">System Design</span>
+  </div>
+</header>
+
+<!-- Stats Bar -->
+<section class="stats">
+  <div class="stats-inner anim anim-d3">
+    <div class="stat">
+      <div class="stat-num">550+</div>
+      <div class="stat-label">Total Questions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Topic Sheets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Skill Domains</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Self-Contained</div>
+    </div>
+  </div>
+</section>
+
+<!-- Cards Grid -->
+<section class="cards-section">
+  <h2 class="section-title anim anim-d3">Interview Sheets</h2>
+  <p class="section-sub anim anim-d4">Click any card to open the full revision sheet. Each is self-contained with questions, answers, and code examples.</p>
+
+  <div class="cards-grid">
+    <!-- MySQL -->
+    <a href="index.html" class="card card--mysql">
+      <span class="card-icon">&#128024;</span>
+      <div class="card-title">MySQL Deep Practical</div>
+      <div class="card-desc">Indexes, joins, query optimization, transactions, replication, and production-grade SQL patterns.</div>
+      <div class="card-meta">
+        <span class="card-count">77+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- PHP & Laravel -->
+    <a href="php_laravel_interview.html" class="card card--laravel">
+      <span class="card-icon">&#9881;</span>
+      <div class="card-title">PHP &amp; Laravel</div>
+      <div class="card-desc">Eloquent, middleware, service container, queues, events, testing, and advanced Laravel patterns.</div>
+      <div class="card-meta">
+        <span class="card-count">130+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- PHP OOP -->
+    <a href="php_oop_interview.html" class="card card--oop">
+      <span class="card-icon">&#128142;</span>
+      <div class="card-title">PHP OOP Deep Dive</div>
+      <div class="card-desc">SOLID principles, design patterns, interfaces, traits, abstract classes, and advanced OOP concepts.</div>
+      <div class="card-meta">
+        <span class="card-count">89+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- Linux & DevOps -->
+    <a href="linux_devops_interview.html" class="card card--linux">
+      <span class="card-icon">&#128039;</span>
+      <div class="card-title">Linux, Shell &amp; DevOps</div>
+      <div class="card-desc">Linux administration, shell scripting, Git workflows, CI/CD pipelines, and server management.</div>
+      <div class="card-meta">
+        <span class="card-count">70+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- JavaScript & Frontend -->
+    <a href="javascript_frontend_interview.html" class="card card--js">
+      <span class="card-icon">&#9889;</span>
+      <div class="card-title">JavaScript &amp; Frontend</div>
+      <div class="card-desc">DOM manipulation, async/await, closures, event loop, ES6+, and frontend integration patterns.</div>
+      <div class="card-meta">
+        <span class="card-count">80+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- Production Deployment -->
+    <a href="production_deployment_interview.html" class="card card--deploy">
+      <span class="card-icon">&#128640;</span>
+      <div class="card-title">Deployment &amp; Docker</div>
+      <div class="card-desc">Docker, Nginx, scaling strategies, zero-downtime deploys, monitoring, and production readiness.</div>
+      <div class="card-meta">
+        <span class="card-count">65+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- System Architecture -->
+    <a href="system_architecture_interview.html" class="card card--arch">
+      <span class="card-icon">&#127959;</span>
+      <div class="card-title">System Architecture</div>
+      <div class="card-desc">System design, caching strategies, message queues, microservices, and architectural decision-making.</div>
+      <div class="card-meta">
+        <span class="card-count">60+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+
+    <!-- MySQL Practical (duplicate) -->
+    <a href="mysql_practical_interview.html" class="card card--mysql">
+      <span class="card-icon">&#128202;</span>
+      <div class="card-title">MySQL Practical Extended</div>
+      <div class="card-desc">Extended practical MySQL scenarios, performance tuning, stored procedures, and real-world queries.</div>
+      <div class="card-meta">
+        <span class="card-count">77+ Questions</span>
+        <span class="card-arrow">&#8594;</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Skill Map -->
+<section class="skill-map">
+  <div class="skill-map-inner">
+    <h2 class="skill-map-title">Skill Map</h2>
+    <p class="skill-map-sub">How the topics connect across four core domains of full-stack LAMP development</p>
+
+    <div class="skill-lanes">
+      <!-- Backend -->
+      <div class="skill-lane lane--backend">
+        <div class="lane-icon">&#128421;</div>
+        <div class="lane-title">Backend</div>
+        <div class="lane-items">
+          <div class="lane-item">PHP &amp; Laravel</div>
+          <div class="lane-item">OOP &amp; Patterns</div>
+          <div class="lane-item">MySQL &amp; Data</div>
+          <div class="lane-item">REST APIs</div>
+        </div>
+      </div>
+
+      <!-- Frontend -->
+      <div class="skill-lane lane--frontend">
+        <div class="lane-icon">&#127912;</div>
+        <div class="lane-title">Frontend</div>
+        <div class="lane-items">
+          <div class="lane-item">JavaScript &amp; DOM</div>
+          <div class="lane-item">Async Patterns</div>
+          <div class="lane-item">AJAX &amp; Fetch</div>
+          <div class="lane-item">UI Integration</div>
+        </div>
+      </div>
+
+      <!-- DevOps -->
+      <div class="skill-lane lane--devops">
+        <div class="lane-icon">&#9881;</div>
+        <div class="lane-title">DevOps</div>
+        <div class="lane-items">
+          <div class="lane-item">Linux &amp; Shell</div>
+          <div class="lane-item">Docker &amp; CI/CD</div>
+          <div class="lane-item">Git Workflows</div>
+          <div class="lane-item">Monitoring</div>
+        </div>
+      </div>
+
+      <!-- Architecture -->
+      <div class="skill-lane lane--architecture">
+        <div class="lane-icon">&#128736;</div>
+        <div class="lane-title">Architecture</div>
+        <div class="lane-items">
+          <div class="lane-item">System Design</div>
+          <div class="lane-item">Scaling &amp; Caching</div>
+          <div class="lane-item">Microservices</div>
+          <div class="lane-item">Security</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-main">Built for Senior LAMP Stack Developers</div>
+  <div class="footer-sub">All sheets are self-contained HTML files. No frameworks. No build tools. Just knowledge.</div>
+</footer>
+
+<script>
+// Dark mode
+function toggleTheme(){
+  const d=document.documentElement;
+  const next=d.getAttribute('data-theme')==='dark'?'light':'dark';
+  d.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+  document.getElementById('theme-icon').innerHTML=next==='dark'?'&#9788;':'&#9789;';
+}
+(function(){
+  const saved=localStorage.getItem('theme');
+  if(saved==='dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('theme-icon').innerHTML='&#9788;';
+  }
+})();
+
+// Scroll-triggered card animations
+(function(){
+  const cards=document.querySelectorAll('.card');
+  const obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e,i){
+      if(e.isIntersecting){
+        e.target.style.animationDelay=(Array.from(cards).indexOf(e.target)*0.08)+'s';
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.1});
+  cards.forEach(function(c){obs.observe(c)});
+})();
+</script>
+</body>
+</html>

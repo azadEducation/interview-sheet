@@ -11,13 +11,13 @@
     --php-dark: #4F5B93;
     --laravel-red: #FF2D20;
     --laravel-dark: #C0392B;
-    --bg: #0D0F1A;
-    --card-bg: #12152A;
-    --card-border: #1E2240;
-    --text: #E8EAF6;
-    --muted: #7B83B0;
-    --code-bg: #0A0C18;
-    --code-border: #1A1E38;
+    --bg: #FFFFFF;
+    --card-bg: #F8F9FA;
+    --card-border: #DEE2E6;
+    --text: #212529;
+    --muted: #6C757D;
+    --code-bg: #F8F9FA;
+    --code-border: #CED4DA;
     --accent-green: #4CAF50;
     --accent-yellow: #FFD54F;
     --glow-php: rgba(136,146,191,0.15);
@@ -40,8 +40,8 @@
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(136,146,191,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(136,146,191,0.04) 1px, transparent 1px);
+      linear-gradient(rgba(0,0,0,.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,.02) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;
@@ -426,15 +426,81 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── GLOBAL NAV BAR ── */
+  .gnav{background:rgba(0,0,0,.03);border-bottom:1px solid var(--card-border);padding:6px 20px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:201}
+  .gnav::-webkit-scrollbar{display:none}
+  .gnav-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);white-space:nowrap;margin-right:4px}
+  .gnav a{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.5px;text-decoration:none;
+    padding:4px 10px;border-radius:4px;border:1px solid transparent;white-space:nowrap;transition:all .15s}
+  .gnav a:hover{border-color:var(--card-border);background:rgba(0,0,0,.03)}
+  .gnav a.active{background:rgba(136,146,191,.1);color:var(--php-purple);border-color:rgba(136,146,191,.3)}
+  .gnav a.gn-mysql{color:#F29111}.gnav a.gn-php{color:var(--php-purple)}.gnav a.gn-oop{color:#A855F7}
+  .gnav a.gn-linux{color:#22C55E}.gnav a.gn-js{color:#CA8A04}.gnav a.gn-deploy{color:#2563EB}
+  .gnav a.gn-arch{color:#EC4899}.gnav a.gn-hub{color:var(--muted)}
+
+  /* ── DARK MODE ── */
+  body.dark{--bg:#0D1117;--card-bg:#161B22;--card-border:#30363D;--text:#E6EDF3;--muted:#8B949E;--code-bg:#161B22;--code-border:#30363D}
+  body.dark .gnav{background:rgba(255,255,255,.03)}
+  body.dark .tabs-wrapper{background:rgba(13,17,23,.95)}
+  body.dark pre{background:#0D1117;border-color:#30363D}
+  body.dark .compare-table th{background:rgba(255,255,255,.04)}
+  body.dark .ans-text{color:#8B949E}
+  body.dark .hero h1 .amp{color:#8B949E}
+  body.dark .tip-box{color:#8B949E}
+
+  /* ── DARK/LIGHT TOGGLE ── */
+  .theme-toggle{position:fixed;bottom:80px;right:20px;z-index:999;width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--card-border);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:18px;box-shadow:0 2px 10px rgba(0,0,0,.1);transition:all .2s}
+  .theme-toggle:hover{transform:scale(1.1);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+
+  /* ── SEARCH ── */
+  .search-wrap{display:flex;align-items:center;gap:6px;margin-left:auto}
+  .search-input{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 12px;border-radius:5px;
+    border:1px solid var(--card-border);background:transparent;color:var(--text);width:180px;outline:none;transition:all .2s}
+  .search-input:focus{border-color:var(--php-purple);width:240px}
+  .search-input::placeholder{color:var(--muted)}
+  body.dark .search-input{color:var(--text)}
+
+  /* ── BACK TO TOP ── */
+  .btt{position:fixed;bottom:20px;right:20px;z-index:999;width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--card-border);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:16px;box-shadow:0 2px 10px rgba(0,0,0,.1);transition:all .2s;opacity:0;pointer-events:none}
+  .btt.visible{opacity:1;pointer-events:auto}
+  .btt:hover{transform:scale(1.1)}
+
+  /* ── KEYBOARD HINT ── */
+  .kbd-hint{position:fixed;bottom:20px;left:20px;z-index:999;display:flex;gap:6px;align-items:center;opacity:.4;transition:opacity .2s}
+  .kbd-hint:hover{opacity:.8}
+  .kbd{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border:1px solid var(--card-border);border-radius:3px;background:var(--card-bg);color:var(--muted)}
+
+  /* ── PRINT ── */
+  @media print{.gnav,.tabs-wrapper,.theme-toggle,.btt,.kbd-hint,.progress-bar-wrap,.search-wrap{display:none!important}
+    .card .card-body{display:block!important}.section-group.hidden{display:block!important}body{background:#fff!important}}
+
   /* Responsive */
   @media (max-width: 600px) {
     .hero h1 { font-size: 2rem; }
     .stats-row { flex-direction: column; }
     .compare-table { font-size: 12px; }
+    .search-input{width:120px}.search-input:focus{width:160px}.kbd-hint{display:none}
   }
 </style>
 </head>
 <body>
+
+<!-- GLOBAL NAV -->
+<div class="gnav">
+  <span class="gnav-label">📚 Sheets</span>
+  <a href="hub.html" class="gn-hub">Hub</a>
+  <a href="index.html" class="gn-mysql">MySQL</a>
+  <a href="php_laravel_interview.html" class="gn-php active">PHP & Laravel</a>
+  <a href="php_oop_interview.html" class="gn-oop">PHP OOP</a>
+  <a href="linux_devops_interview.html" class="gn-linux">Linux & DevOps</a>
+  <a href="javascript_frontend_interview.html" class="gn-js">JavaScript</a>
+  <a href="production_deployment_interview.html" class="gn-deploy">Deployment</a>
+  <a href="system_architecture_interview.html" class="gn-arch">Architecture</a>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -468,6 +534,8 @@
     <button class="tab" onclick="filterSection('laravel-auth', this)">Auth & Security</button>
     <button class="tab" onclick="filterSection('laravel-advanced', this)">Advanced Laravel</button>
     <button class="tab" onclick="filterSection('system', this)">System Design</button>
+    <button class="tab" onclick="filterSection('fullstack', this)">Full Stack Integration</button>
+    <div class="search-wrap"><input class="search-input" id="searchBox" type="text" placeholder="Search questions… ( / )" oninput="searchCards(this.value)"></div>
   </div>
 </div>
 
@@ -485,7 +553,11 @@
       <div class="stat-label">Laravel Questions</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num total">120+</div>
+      <div class="stat-num total">10</div>
+      <div class="stat-label">Full Stack</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num total">130+</div>
       <div class="stat-label">Total Questions</div>
     </div>
   </div>
@@ -1762,43 +1834,428 @@ php artisan make:observer UserObserver --model=User
 
   </div>
 
-</div>
+  <!-- ===== FULL STACK INTEGRATION ===== -->
+  <div class="section-group" data-section="fullstack">
+    <div class="section-header">
+      <div class="section-icon icon-laravel">🌐</div>
+      <div class="section-title">Full Stack Integration</div>
+      <div class="section-line"></div>
+    </div>
 
-<script>
-function toggleCard(card) {
-  card.classList.toggle('open');
-  updateProgress();
+    <!-- Q51 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q51</span>
+        <span class="q-text">How do you build a REST API with Laravel for a React frontend?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Laravel provides excellent API support with Sanctum for authentication and resource controllers for CRUD operations.</div>
+        <pre><span class="cm">// API Routes</span>
+<span class="cls">Route</span>::<span class="fn">middleware</span>(<span class="str">'auth:sanctum'</span>)-><span class="fn">group</span>(<span class="kw">function</span>() {
+    <span class="cls">Route</span>::<span class="fn">apiResource</span>(<span class="str">'posts'</span>, <span class="cls">PostController</span>::<span class="kw">class</span>);
+});
+
+<span class="cm">// Controller</span>
+<span class="kw">class</span> <span class="cls">PostController</span> <span class="kw">extends</span> <span class="cls">Controller</span>
+{
+    <span class="kw">public function</span> index()
+    {
+        <span class="kw">return</span> <span class="cls">Post</span>::<span class="fn">with</span>(<span class="str">'user'</span>)-><span class="fn">paginate</span>(<span class="num">10</span>);
+    }
+
+    <span class="kw">public function</span> store(Request $request)
+    {
+        $post = <span class="cls">Post</span>::<span class="fn">create</span>($request-><span class="fn">validated</span>());
+        <span class="kw">return</span> response()->json($post, <span class="num">201</span>);
+    }
+}</pre>
+        <div class="tip-box"><strong>💡 CORS:</strong> Add <code>fruitcake/laravel-cors</code> package and configure for your React app domain.</div>
+      </div>
+    </div>
+
+    <!-- Q52 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q52</span>
+        <span class="q-text">How do you handle file uploads in a full stack app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Laravel handles file uploads securely with validation and storage options.</div>
+        <pre><span class="cm">// Controller method</span>
+<span class="kw">public function</span> uploadAvatar(Request $request)
+{
+    $request-><span class="fn">validate</span>([
+        <span class="str">'avatar'</span> => <span class="str">'required|image|mimes:jpeg,png,jpg|max:2048'</span>
+    ]);
+
+    <span class="kw">if</span> ($request-><span class="fn">hasFile</span>(<span class="str">'avatar'</span>)) {
+        $path = $request-><span class="fn">file</span>(<span class="str">'avatar'</span>)-><span class="fn">store</span>(<span class="str">'avatars'</span>, <span class="str">'public'</span>);
+        auth()-><span class="fn">user</span>()-><span class="fn">update</span>([<span class="str">'avatar'</span> => $path]);
+        <span class="kw">return</span> response()->json([<span class="str">'path'</span> => $path]);
+    }
+}</pre>
+        <div class="pill-list">
+          <span class="pill">Validation rules</span>
+          <span class="pill">Storage disks</span>
+          <span class="pill">File visibility</span>
+          <span class="pill">Image optimization</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q53 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q53</span>
+        <span class="q-text">How do you implement real-time features with Laravel and Vue.js?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Use Laravel Broadcasting with Pusher or Socket.io for real-time updates.</div>
+        <pre><span class="cm">// Event</span>
+<span class="kw">class</span> <span class="cls">MessageSent</span> <span class="kw">implements</span> <span class="cls">ShouldBroadcast</span>
+{
+    <span class="kw">public</span> $message;
+
+    <span class="kw">public function</span> __construct($message)
+    {
+        <span class="var">$this</span>->message = $message;
+    }
+
+    <span class="kw">public function</span> broadcastOn()
+    {
+        <span class="kw">return new</span> <span class="cls">Channel</span>(<span class="str">'chat'</span>);
+    }
 }
 
-function updateProgress() {
-  const total = document.querySelectorAll('.card').length;
-  const opened = document.querySelectorAll('.card.open').length;
-  const pct = (opened / total) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-}
+<span class="cm">// Vue.js component</span>
+<span class="kw">export default</span> {
+  mounted() {
+    Echo.<span class="fn">channel</span>(<span class="str">'chat'</span>)
+      .listen(<span class="str">'.message.sent'</span>, (e) => {
+        <span class="var">this</span>.messages.push(e.message);
+      });
+  }
+}</pre>
+        <div class="tip-box"><strong>🔧 Setup:</strong> Install <code>pusher/pusher-php-server</code> and <code>laravel/echo</code> with <code>socket.io-client</code>.</div>
+      </div>
+    </div>
 
-function filterSection(section, btn) {
-  // Update tab styles
-  document.querySelectorAll('.tab').forEach(t => {
-    t.className = 'tab';
+    <!-- Q54 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q54</span>
+        <span class="q-text">How do you handle state management in a full stack app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">For complex apps, use Vuex/Pinia for frontend state and Laravel sessions/cache for backend.</div>
+        <table class="compare-table">
+          <tr><th>Layer</th><th>Tool</th><th>Use Case</th></tr>
+          <tr><td class="label-col">Frontend</td><td>Pinia/Vuex</td><td>Component state, API responses</td></tr>
+          <tr><td class="label-col">Backend</td><td>Cache/Redis</td><td>Expensive computations</td></tr>
+          <tr><td class="label-col">Session</td><td>Database/Redis</td><td>User sessions, cart data</td></tr>
+          <tr><td class="label-col">Global</td><td>Context API</td><td>Theme, auth status</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Q55 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q55</span>
+        <span class="q-text">How do you deploy a full stack Laravel + Vue.js app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Modern deployment uses Docker, CI/CD pipelines, and cloud providers.</div>
+        <div class="pill-list">
+          <span class="pill-green">Docker containers</span>
+          <span class="pill-green">GitHub Actions</span>
+          <span class="pill-green">AWS/Laravel Forge</span>
+          <span class="pill-green">Nginx + PHP-FPM</span>
+          <span class="pill-green">SSL certificates</span>
+          <span class="pill-green">Environment variables</span>
+        </div>
+        <pre><span class="cm"># Docker setup</span>
+<span class="kw">FROM</span> php:8.2-fpm
+<span class="kw">COPY</span> . /var/www/html
+<span class="kw">RUN</span> composer install --optimize-autoloader
+<span class="kw">RUN</span> npm run build</pre>
+        <div class="tip-box"><strong>🚀 Zero-downtime:</strong> Use rolling deployments with health checks and database migrations.</div>
+      </div>
+    </div>
+
+    <!-- Q56 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q56</span>
+        <span class="q-text">How do you handle authentication in a SPA + API setup?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Use Laravel Sanctum for API token authentication with CSRF protection.</div>
+        <pre><span class="cm">// SPA Authentication</span>
+<span class="cm">// Login</span>
+axios.<span class="fn">post</span>(<span class="str">'/api/login'</span>, credentials)
+  .then(response => {
+    localStorage.setItem(<span class="str">'token'</span>, response.data.token);
+    axios.defaults.headers.common[<span class="str">'Authorization'</span>] = <span class="str">`Bearer ${token}`</span>;
   });
 
-  if (section === 'all') {
+<span class="cm">// Laravel API</span>
+<span class="cls">Route</span>::<span class="fn">middleware</span>(<span class="str">'auth:sanctum'</span>)-><span class="fn">get</span>(<span class="str">'/user'</span>, <span class="kw">function</span> (Request $request) {
+    <span class="kw">return</span> $request-><span class="fn">user</span>();
+});</pre>
+        <div class="tip-box"><strong>🔒 Security:</strong> Use HTTPS, secure cookies, and token refresh mechanisms.</div>
+      </div>
+    </div>
+
+    <!-- Q57 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q57</span>
+        <span class="q-text">How do you optimize database queries in a full stack app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Use eager loading, query optimization, and caching to prevent N+1 problems.</div>
+        <pre><span class="cm">// Bad: N+1 queries</span>
+$posts = <span class="cls">Post</span>::<span class="fn">all</span>();
+<span class="kw">foreach</span> ($posts <span class="kw">as</span> $post) {
+    echo $post->user->name; <span class="cm">// Query per post</span>
+}
+
+<span class="cm">// Good: Eager loading</span>
+$posts = <span class="cls">Post</span>::<span class="fn">with</span>(<span class="str">'user'</span>)-><span class="fn">get</span>(); <span class="cm">// One query</span></pre>
+        <div class="pill-list">
+          <span class="pill">Eager loading</span>
+          <span class="pill">Query builder</span>
+          <span class="pill">Database indexes</span>
+          <span class="pill">Caching layers</span>
+          <span class="pill">Pagination</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q58 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q58</span>
+        <span class="q-text">How do you handle form validation in a full stack app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Use Laravel's validation with custom rules and frontend validation libraries.</div>
+        <pre><span class="cm">// Laravel validation</span>
+<span class="kw">public function</span> store(Request $request)
+{
+    $validated = $request-><span class="fn">validate</span>([
+        <span class="str">'email'</span> => <span class="str">'required|email|unique:users'</span>,
+        <span class="str">'password'</span> => <span class="str">'required|min:8|confirmed'</span>,
+        <span class="str">'name'</span> => <span class="str">'required|string|max:255'</span>
+    ]);
+
+    <span class="cls">User</span>::<span class="fn">create</span>($validated);
+    <span class="kw">return</span> response()->json([<span class="str">'message'</span> => <span class="str">'User created'</span>]);
+}
+
+<span class="cm">// Frontend (Vue.js)</span>
+<span class="kw">const</span> rules = {
+  email: { required: true, email: true },
+  password: { required: true, min: 8 }
+};</pre>
+        <div class="tip-box"><strong>📝 Best practices:</strong> Validate on both frontend and backend. Return validation errors as JSON for SPA consumption.</div>
+      </div>
+    </div>
+
+    <!-- Q59 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q59</span>
+        <span class="q-text">How do you implement search functionality in a full stack app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Use Laravel Scout with Elasticsearch or database full-text search for efficient searching.</div>
+        <pre><span class="cm">// Laravel Scout</span>
+<span class="kw">class</span> <span class="cls">Post</span> <span class="kw">extends</span> <span class="cls">Model</span>
+{
+    <span class="kw">use</span> <span class="cls">Searchable</span>;
+
+    <span class="kw">public function</span> toSearchableArray()
+    {
+        <span class="kw">return</span> [
+            <span class="str">'title'</span> => <span class="var">$this</span>->title,
+            <span class="str">'content'</span> => <span class="var">$this</span>->content,
+        ];
+    }
+}
+
+<span class="cm">// Search</span>
+$posts = <span class="cls">Post</span>::<span class="fn">search</span>(<span class="str">'laravel'</span>)-><span class="fn">paginate</span>();</pre>
+        <div class="pill-list">
+          <span class="pill">Full-text indexes</span>
+          <span class="pill">Elasticsearch</span>
+          <span class="pill">Algolia</span>
+          <span class="pill">Meilisearch</span>
+          <span class="pill">Database search</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q60 -->
+    <div class="card laravel-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="q-num">Q60</span>
+        <span class="q-text">How do you handle errors and logging in a full stack app?</span>
+        <span class="q-toggle">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="ans-label">Answer</div>
+        <div class="ans-text">Use Laravel's logging, error handling, and monitoring tools for production apps.</div>
+        <pre><span class="cm">// Custom exception handler</span>
+<span class="kw">class</span> <span class="cls">Handler</span> <span class="kw">extends</span> <span class="cls">ExceptionHandler</span>
+{
+    <span class="kw">public function</span> render($request, Throwable $exception)
+    {
+        <span class="kw">if</span> ($request-><span class="fn">is</span>(<span class="str">'api/*'</span>)) {
+            <span class="kw">return</span> response()->json([
+                <span class="str">'error'</span> => <span class="str">'Something went wrong'</span>
+            ], <span class="num">500</span>);
+        }
+
+        <span class="kw">return parent</span>::<span class="fn">render</span>($request, $exception);
+    }
+}
+
+<span class="cm">// Logging</span>
+<span class="cls">Log</span>::<span class="fn">info</span>(<span class="str">'User logged in'</span>, [<span class="str">'user_id'</span> => $user->id]);
+<span class="cls">Log</span>::<span class="fn">error</span>(<span class="str">'Payment failed'</span>, $context);</pre>
+        <div class="pill-list">
+          <span class="pill">Monolog</span>
+          <span class="pill">Sentry</span>
+          <span class="pill">LogRocket</span>
+          <span class="pill">Custom middleware</span>
+          <span class="pill">Error boundaries</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Floating buttons -->
+<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+<button class="btt" id="bttBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+<div class="kbd-hint"><span class="kbd">J</span><span class="kbd">K</span> navigate <span class="kbd">Enter</span> toggle <span class="kbd">/</span> search <span class="kbd">D</span> dark mode</div>
+
+<script>
+/* ── Core functions ── */
+function toggleCard(card){card.classList.toggle('open');saveProgress();updateProgress()}
+function updateProgress(){
+  const total=document.querySelectorAll('.card').length;
+  const opened=document.querySelectorAll('.card.open').length;
+  const pct=(opened/total)*100;
+  document.getElementById('progressFill').style.width=pct+'%';
+}
+function filterSection(section,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.className='tab');
+  if(section==='all'){
     btn.classList.add('active-all');
-    document.querySelectorAll('.section-group').forEach(g => g.classList.remove('hidden'));
+    document.querySelectorAll('.section-group').forEach(g=>g.classList.remove('hidden'));
   } else {
-    const isPHP = ['php-basics','oop','php-advanced'].includes(section);
-    btn.classList.add(isPHP ? 'active-php' : 'active-laravel');
-    document.querySelectorAll('.section-group').forEach(g => {
-      g.classList.toggle('hidden', g.dataset.section !== section);
+    const isPHP=['php-basics','oop','php-advanced'].includes(section);
+    btn.classList.add(isPHP?'active-php':'active-laravel');
+    document.querySelectorAll('.section-group').forEach(g=>{
+      g.classList.toggle('hidden',g.dataset.section!==section);
     });
   }
 }
 
-// Staggered card animations
-document.querySelectorAll('.card').forEach((card, i) => {
-  card.style.animationDelay = (i * 0.04) + 's';
+/* ── Search ── */
+function searchCards(q){
+  q=q.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(c=>{
+    const txt=(c.querySelector('.q-text')||c).textContent.toLowerCase();
+    const body=(c.querySelector('.card-body')||c).textContent.toLowerCase();
+    c.style.display=(q===''||txt.includes(q)||body.includes(q))?'':'none';
+  });
+  document.querySelectorAll('.section-group').forEach(g=>{
+    const visible=g.querySelectorAll('.card:not([style*="display: none"])').length;
+    g.style.display=(q===''||visible>0)?'':'none';
+  });
+}
+
+/* ── Dark Mode ── */
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const isDark=document.body.classList.contains('dark');
+  localStorage.setItem('theme-laravel',isDark?'dark':'light');
+  document.getElementById('themeBtn').textContent=isDark?'☀️':'🌙';
+}
+(function(){
+  if(localStorage.getItem('theme-laravel')==='dark'){
+    document.body.classList.add('dark');
+    document.getElementById('themeBtn').textContent='☀️';
+  }
+})();
+
+/* ── LocalStorage Progress ── */
+function saveProgress(){
+  const opened=[];
+  document.querySelectorAll('.card.open').forEach(c=>{
+    const qn=c.querySelector('.q-num');
+    if(qn) opened.push(qn.textContent);
+  });
+  localStorage.setItem('progress-laravel',JSON.stringify(opened));
+}
+function loadProgress(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('progress-laravel')||'[]');
+    if(saved.length){
+      document.querySelectorAll('.card').forEach(c=>{
+        const qn=c.querySelector('.q-num');
+        if(qn&&saved.includes(qn.textContent)) c.classList.add('open');
+      });
+    }
+  }catch(e){}
+}
+loadProgress();
+
+/* ── Back to Top ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('bttBtn').classList.toggle('visible',window.scrollY>400);
 });
+
+/* ── Keyboard Shortcuts ── */
+let focusedCard=-1;
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  const cards=[...document.querySelectorAll('.card:not([style*="display: none"])')];
+  if(e.key==='j'||e.key==='J'){e.preventDefault();focusedCard=Math.min(focusedCard+1,cards.length-1);cards[focusedCard]?.scrollIntoView({behavior:'smooth',block:'center'})}
+  if(e.key==='k'||e.key==='K'){e.preventDefault();focusedCard=Math.max(focusedCard-1,0);cards[focusedCard]?.scrollIntoView({behavior:'smooth',block:'center'})}
+  if(e.key==='Enter'&&focusedCard>=0&&focusedCard<cards.length){e.preventDefault();toggleCard(cards[focusedCard])}
+  if(e.key==='/'){e.preventDefault();document.getElementById('searchBox').focus()}
+  if(e.key==='d'||e.key==='D'){toggleTheme()}
+  if(e.key==='Escape'){document.getElementById('searchBox').blur();document.getElementById('searchBox').value='';searchCards('')}
+});
+
+/* ── Init ── */
+document.querySelectorAll('.card').forEach((card,i)=>card.style.animationDelay=(i*0.04)+'s');
+updateProgress();
 </script>
 </body>
 </html>

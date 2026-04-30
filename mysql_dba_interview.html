@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySQL DBA Interview — Complete Q&A Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --border: #e8e4de;
+    --border-strong: #c8c0b4;
+    --text: #1a1714;
+    --text-muted: #6b6460;
+    --text-light: #9c958e;
+    --accent: #c0392b;
+    --accent-soft: #fdf2f0;
+    --green: #1a6b3c;
+    --green-soft: #f0f7f3;
+    --orange: #c05c00;
+    --orange-soft: #fff8f0;
+    --blue: #1a4a7a;
+    --blue-soft: #f0f5fb;
+    --yellow: #8a6800;
+    --yellow-soft: #fffbf0;
+    --trap: #6b1a6b;
+    --trap-soft: #fdf0fd;
+    --code-bg: #f4f1ec;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--text);
+    color: #fff;
+    padding: 56px 40px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.015) 40px,
+      rgba(255,255,255,0.015) 80px
+    );
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .site-header h1 span { color: var(--accent); }
+  .site-header .subtitle {
+    margin-top: 10px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    position: relative;
+  }
+  .badges {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .badge {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-red   { background: rgba(192,57,43,0.25); color: #ff9080; }
+  .badge-green { background: rgba(26,107,60,0.25); color: #7de0a0; }
+  .badge-blue  { background: rgba(26,74,122,0.25); color: #80b8ff; }
+
+  /* ── NAV ── */
+  .toc {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 20px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .toc-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .toc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-right: 8px;
+    text-transform: uppercase;
+  }
+  .toc a {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    text-decoration: none;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .toc a:hover { background: var(--text); color: #fff; border-color: var(--text); }
+  .toc a.trap-link { border-color: var(--trap); color: var(--trap); }
+  .toc a.trap-link:hover { background: var(--trap); color: #fff; }
+
+  /* ── MAIN ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    margin-top: 56px;
+    padding: 6px 16px;
+    border-radius: 4px;
+  }
+  .label-main { background: var(--code-bg); color: var(--text-muted); }
+  .label-trap { background: var(--trap-soft); color: var(--trap); border: 1px solid #d8a0d8; }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:hover { box-shadow: var(--shadow-lg); }
+
+  .q-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--border-strong);
+    min-width: 40px;
+    padding-top: 4px;
+  }
+  .q-meta { flex: 1; }
+  .q-topic {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .q-question {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+  }
+  .q-toggle {
+    font-size: 20px;
+    color: var(--text-light);
+    transition: transform 0.25s;
+    padding-top: 6px;
+    min-width: 24px;
+    text-align: center;
+  }
+  .q-card.open .q-toggle { transform: rotate(180deg); }
+
+  .q-body { display: none; padding: 28px; }
+  .q-card.open .q-body { display: block; }
+
+  /* difficulty colors */
+  .diff-easy   .q-num { color: #b8dfc8; }
+  .diff-easy   .q-topic { color: var(--green); }
+  .diff-medium .q-num { color: #f5d08a; }
+  .diff-medium .q-topic { color: var(--orange); }
+  .diff-hard   .q-num { color: #f5a89a; }
+  .diff-hard   .q-topic { color: var(--accent); }
+  .diff-trap   .q-num { color: #d8a0d8; }
+  .diff-trap   .q-topic { color: var(--trap); }
+  .diff-trap   { border-color: #d8a0d8; }
+
+  /* ── ANSWER BOX ── */
+  .answer-section { margin-bottom: 24px; }
+  .answer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .answer-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 15.5px;
+  }
+  .callout-green  { background: var(--green-soft);  border-color: var(--green);  color: #0f4024; }
+  .callout-red    { background: var(--accent-soft); border-color: var(--accent); color: #7a1a10; }
+  .callout-blue   { background: var(--blue-soft);   border-color: var(--blue);   color: #0f2d50; }
+  .callout-yellow { background: var(--yellow-soft); border-color: var(--yellow); color: #5a4200; }
+  .callout-trap   { background: var(--trap-soft);   border-color: var(--trap);   color: #4a0d4a; }
+  .callout strong { font-weight: 600; }
+
+  /* ── CODE BLOCKS ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 14px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #2a2420;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+  .comment { color: #8a8078; font-style: italic; }
+  .kw { color: #1a4a7a; font-weight: 600; }
+  .fn { color: #1a6b3c; }
+  .str { color: #8a3a1a; }
+  .num { color: var(--trap); }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  th {
+    background: var(--code-bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-strong);
+    color: var(--text-muted);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+  td code { font-size: 12.5px; }
+
+  /* ── SCORE BADGE ── */
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 14px 18px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .score-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); font-weight: 600; }
+  .score-dots { display: flex; gap: 4px; }
+  .dot { width: 18px; height: 18px; border-radius: 50%; }
+  .dot-fill { background: var(--green); }
+  .dot-half { background: var(--orange); }
+  .dot-empty { background: var(--border); }
+  .score-text { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; }
+  .score-low  { color: var(--accent); }
+  .score-mid  { color: var(--orange); }
+  .score-high { color: var(--green); }
+
+  /* ── TRAP ANSWER ── */
+  .trap-answer {
+    text-align: center;
+    padding: 32px;
+    background: var(--trap-soft);
+    border-radius: 10px;
+    border: 2px dashed #d8a0d8;
+    margin: 12px 0;
+  }
+  .trap-answer .one-word {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--trap);
+    display: block;
+    margin: 8px 0;
+  }
+  .trap-answer .why {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* ── FINAL SCORECARD ── */
+  .final-card {
+    background: var(--text);
+    color: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 48px;
+    text-align: center;
+  }
+  .final-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    margin-bottom: 28px;
+  }
+  .final-card h2 span { color: #ff9080; }
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .score-cell {
+    background: rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: left;
+  }
+  .score-cell .s-topic { font-size: 11px; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .score-cell .s-score { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; }
+  .s-low  { color: #ff9080; }
+  .s-mid  { color: #ffd080; }
+  .s-high { color: #80d4a0; }
+  .verdict-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 24px;
+    margin-top: 8px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.8;
+  }
+  .verdict-box strong { color: #fff; }
+
+  /* ── STUDY PLAN ── */
+  .study-plan {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-top: 32px;
+  }
+  .study-plan h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .week-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .week-row:last-child { border-bottom: none; }
+  .week-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--code-bg);
+    color: var(--text-muted);
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .week-topic { font-size: 15.5px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-light);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-card { animation: fadeIn 0.3s ease both; }
+  .q-card:nth-child(1) { animation-delay: 0.05s; }
+  .q-card:nth-child(2) { animation-delay: 0.10s; }
+  .q-card:nth-child(3) { animation-delay: 0.15s; }
+  .q-card:nth-child(4) { animation-delay: 0.20s; }
+  .q-card:nth-child(5) { animation-delay: 0.25s; }
+
+  p { margin-bottom: 12px; }
+  ul, ol { padding-left: 24px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  h4 { font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 16px; margin: 20px 0 8px; color: var(--text); }
+
+  @media (max-width: 600px) {
+    .toc { padding: 12px 16px; }
+    .container { padding: 32px 16px 60px; }
+    .q-header { padding: 18px 18px 16px; }
+    .q-body { padding: 20px 18px; }
+    .q-num { font-size: 24px; }
+    .final-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <h1>MySQL DBA <span>Interview</span> Sheet</h1>
+  <p class="subtitle">// 7 REAL QUESTIONS + 8 TRAP QUESTIONS — COMPLETE Q&A</p>
+  <div class="badges">
+    <span class="badge badge-red">5 Yrs Experience Level</span>
+    <span class="badge badge-green">InnoDB Internals</span>
+    <span class="badge badge-blue">Production Grade</span>
+  </div>
+</header>
+
+<!-- STICKY NAV -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">Jump to</span>
+    <a href="#q1">Q1 Slow Query</a>
+    <a href="#q2">Q2 EXPLAIN</a>
+    <a href="#q3">Q3 Deadlock</a>
+    <a href="#q4">Q4 Replication</a>
+    <a href="#q5">Q5 Optimization</a>
+    <a href="#q6">Q6 Partitioning</a>
+    <a href="#q7">Q7 Recovery</a>
+    <a href="#traps" class="trap-link">⚡ Trap Questions</a>
+    <a href="#scorecard">Scorecard</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ════ MAIN QUESTIONS ════ -->
+  <div class="section-label label-main">📋 Main Interview Questions</div>
+
+  <!-- Q1 -->
+  <div class="q-card diff-easy" id="q1">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">01</div>
+      <div class="q-meta">
+        <div class="q-topic">🟢 Slow Query / Index Usage</div>
+        <div class="q-question">This query runs on a 50M row table and takes 40 seconds. What is wrong and how do you fix it?
+          <pre style="margin-top:10px;font-size:13px;">SELECT * FROM orders WHERE YEAR(created_at) = 2023;</pre>
+        </div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--accent)">❌ The Problem</div>
+        <div class="callout callout-red">
+          <strong>Function on indexed column breaks index usage.</strong> <code>YEAR(created_at)</code> forces MySQL to evaluate every row — full table scan on 50M rows.
+        </div>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--accent)">⚠️ Common Wrong Fix</div>
+        <pre><span class="comment">-- ❌ Wrong date format (MySQL uses YYYY-MM-DD)</span>
+WHERE created_at <span class="kw">BETWEEN</span> <span class="str">"01-01-2023"</span> <span class="kw">AND</span> <span class="str">"31-12-2023"</span>
+
+<span class="comment">-- ❌ BETWEEN misses records after 2023-12-31 00:00:00</span>
+<span class="comment">-- e.g. 2023-12-31 14:35:22 is NOT included!</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ Correct Fix</div>
+        <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> created_at <span class="kw">>=</span> <span class="str">'2023-01-01'</span>
+  <span class="kw">AND</span> created_at <span class="kw"><</span> <span class="str">'2024-01-01'</span>;
+<span class="comment">-- Captures every millisecond of 2023 ✅
+-- Index on created_at is fully utilized ✅</span></pre>
+        <div class="callout callout-yellow">
+          <strong>Rule:</strong> Never wrap an indexed column in a function. Always use range conditions with correct YYYY-MM-DD format on DATETIME columns.
+        </div>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-mid">6/10 — Right problem, wrong date format</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card diff-medium" id="q2">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">02</div>
+      <div class="q-meta">
+        <div class="q-topic">🟡 EXPLAIN & Composite Index</div>
+        <div class="q-question">Table has index on <code>(status, created_at)</code>. What does EXPLAIN show and will it use the index?
+          <pre style="margin-top:10px;font-size:13px;">EXPLAIN SELECT * FROM orders WHERE status = 'pending' ORDER BY created_at DESC LIMIT 10;</pre>
+        </div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ Will It Use the Index?</div>
+        <p><strong>Yes — and very efficiently.</strong> Composite index follows left-prefix rule:</p>
+        <ul>
+          <li><code>status = 'pending'</code> → equality on 1st column ✅</li>
+          <li><code>ORDER BY created_at DESC</code> → sort on 2nd column ✅</li>
+          <li>MySQL walks index → rows already sorted → <strong>no extra sort needed</strong></li>
+        </ul>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">📊 Expected EXPLAIN Output</div>
+        <div class="tbl-wrap">
+          <table>
+            <tr><th>Column</th><th>Expected Value</th><th>Meaning</th></tr>
+            <tr><td><code>type</code></td><td><code>ref</code></td><td>Index lookup on status</td></tr>
+            <tr><td><code>key</code></td><td>your index name</td><td>Confirms index is used</td></tr>
+            <tr><td><code>rows</code></td><td>small estimate</td><td>Rows MySQL expects to read</td></tr>
+            <tr><td><code>Extra</code></td><td><em>nothing bad</em></td><td>No filesort, no full scan ✅</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--accent)">❌ What is Using filesort?</div>
+        <div class="callout callout-red">
+          <strong>Common misconception:</strong> It does NOT mean sorting to disk. It means MySQL had to do a <em>separate sorting pass</em> after fetching rows because the index couldn't provide pre-sorted data.
+        </div>
+        <pre><span class="comment">-- When would filesort appear here?</span>
+<span class="comment">-- If you use IN() instead of =</span>
+<span class="kw">WHERE</span> status <span class="kw">IN</span> (<span class="str">'pending'</span>, <span class="str">'failed'</span>) <span class="kw">ORDER BY</span> created_at <span class="kw">DESC</span>
+<span class="comment">-- IN() = range → loses sort optimization → Using filesort ❌</span></pre>
+        <div class="callout callout-blue">
+          <strong>Rule:</strong> <code>=</code> (equality) can use index for filter AND sort. <code>IN()</code>, <code>></code>, <code>BETWEEN</code> (range) can filter using index but LOSE the sort optimization.
+        </div>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-mid">5/10 — Index concept correct, EXPLAIN output unknown</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card diff-medium" id="q3">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">03</div>
+      <div class="q-meta">
+        <div class="q-topic">🟡 Deadlock Detection & Fix</div>
+        <div class="q-question">Two transactions updating the same rows in opposite order cause timeouts. Why is this a deadlock, how do you detect it, and how do you fix it?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">📋 Step-by-Step Deadlock</div>
+        <pre><span class="comment">T=1  Session A → locks row id=1 ✅</span>
+<span class="comment">T=2  Session B → locks row id=2 ✅</span>
+<span class="comment">T=3  Session A → wants id=2 ❌ BLOCKED (B holds it)</span>
+<span class="comment">T=4  Session B → wants id=1 ❌ BLOCKED (A holds it)</span>
+<span class="comment">Result: Circular wait → DEADLOCK 💀</span>
+<span class="comment">MySQL kills the cheaper transaction and returns:</span>
+<span class="comment">ERROR 1213: Deadlock found when trying to get lock</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--orange)">🔍 Detection Commands</div>
+        <pre><span class="comment">-- See the LAST deadlock in detail</span>
+<span class="kw">SHOW ENGINE INNODB STATUS\G</span>
+<span class="comment">-- Look for: LATEST DETECTED DEADLOCK section</span>
+
+<span class="comment">-- See who is waiting RIGHT NOW</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> performance_schema.data_lock_waits;
+
+<span class="comment">-- See what locks are held</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> performance_schema.data_locks;</pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ 4 Fix Strategies</div>
+        <h4>Fix 1 — Consistent Ordering</h4>
+        <pre><span class="comment">-- Always lock rows in same order: id=1 first, then id=2</span>
+<span class="comment">-- Breaks the circular wait ✅</span></pre>
+        <h4>Fix 2 — Keep Transactions Short</h4>
+        <pre><span class="kw">BEGIN</span>;
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="num">100</span> <span class="kw">WHERE</span> id = <span class="num">1</span>;
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="num">100</span> <span class="kw">WHERE</span> id = <span class="num">2</span>;
+<span class="kw">COMMIT</span>; <span class="comment">-- commit as fast as possible</span></pre>
+        <h4>Fix 3 — Lock Timeout</h4>
+        <pre><span class="kw">SET</span> innodb_lock_wait_timeout = <span class="num">5</span>; <span class="comment">-- kill after 5 seconds</span></pre>
+        <h4>Fix 4 — SELECT FOR UPDATE</h4>
+        <pre><span class="kw">BEGIN</span>;
+<span class="comment">-- Lock both rows upfront in consistent order</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> accounts <span class="kw">WHERE</span> id <span class="kw">IN</span> (<span class="num">1</span>,<span class="num">2</span>) <span class="kw">ORDER BY</span> id <span class="kw">FOR UPDATE</span>;
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="num">100</span> <span class="kw">WHERE</span> id = <span class="num">1</span>;
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="num">100</span> <span class="kw">WHERE</span> id = <span class="num">2</span>;
+<span class="kw">COMMIT</span>;</pre>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-low">4/10 — Concept known, detection & full fixes missed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card diff-hard" id="q4">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">04</div>
+      <div class="q-meta">
+        <div class="q-topic">🔴 Replication Lag</div>
+        <div class="q-question">Your MySQL replica is lagging 45 minutes behind the master. What are the causes, how do you diagnose it right now, and how do you fix it?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">⚙️ How Replication Works</div>
+        <pre><span class="comment">Master  → writes to Binary Log (binlog)</span>
+<span class="comment">Replica → IO Thread copies binlog → Relay Log</span>
+<span class="comment">Replica → SQL Thread replays relay log → applies changes</span>
+<span class="comment">Lag = SQL Thread replaying slower than master is writing</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--orange)">⚠️ Causes of Replica Lag</div>
+        <div class="tbl-wrap">
+          <table>
+            <tr><th>Cause</th><th>Why It Happens</th></tr>
+            <tr><td>Single-threaded SQL thread</td><td>Master writes parallel, replica replays one-by-one</td></tr>
+            <tr><td>Heavy queries on master</td><td>1 big DELETE takes 10min → replica also takes 10min</td></tr>
+            <tr><td>Network issues</td><td>Slow binlog transfer from master</td></tr>
+            <tr><td>Weaker replica hardware</td><td>Less CPU/RAM/disk than master</td></tr>
+            <tr><td>Missing indexes on replica</td><td>Same query slower on replica</td></tr>
+            <tr><td>Long running transactions</td><td>Blocks the SQL thread entirely</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">🔍 Diagnose Right Now</div>
+        <pre><span class="comment">-- Run this on the REPLICA</span>
+<span class="kw">SHOW REPLICA STATUS\G</span>
+
+<span class="comment">-- Key fields to check:</span>
+<span class="comment">Seconds_Behind_Master: 2700  ← 45 min confirmed</span>
+<span class="comment">SQL_Running: Yes             ← SQL thread alive?</span>
+<span class="comment">IO_Running: Yes              ← IO thread alive?</span>
+<span class="comment">Last_Error: ...              ← blocking error?</span>
+<span class="comment">-- NULL = replication broken entirely, not just lagging!</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ Fix Strategies</div>
+        <pre><span class="comment">-- Fix 1: Enable Parallel Replication (my.cnf on replica)</span>
+slave_parallel_workers = <span class="num">4</span>
+slave_parallel_type = LOGICAL_CLOCK
+
+<span class="comment">-- Fix 2: Find stuck query</span>
+<span class="kw">SHOW PROCESSLIST</span>; <span class="comment">-- look for "system user"</span>
+
+<span class="comment">-- Fix 3: Batch large deletes on master</span>
+<span class="kw">DELETE FROM</span> logs <span class="kw">WHERE</span> created_at < <span class="str">'2023-01-01'</span> <span class="kw">LIMIT</span> <span class="num">1000</span>;
+<span class="comment">-- Loop with sleep(0.1) between batches</span>
+
+<span class="comment">-- Fix 4: Emergency — remove replica from load balancer</span>
+<span class="comment">-- Stop sending reads to it until it catches up</span></pre>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-low">0/10 — Unknown topic, study immediately</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card diff-hard" id="q5">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">05</div>
+      <div class="q-meta">
+        <div class="q-topic">🔴 Query Optimization & Architecture</div>
+        <div class="q-question">This query on a 100M row table is causing 100% CPU spike. Find every problem and propose an architectural fix.
+          <pre style="margin-top:10px;font-size:13px;">SELECT user_id, COUNT(*) as total_orders, SUM(amount) as revenue
+FROM orders WHERE status != 'cancelled'
+GROUP BY user_id HAVING revenue > 10000 ORDER BY revenue DESC;</pre>
+        </div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--accent)">❌ Every Problem</div>
+        <div class="callout callout-red"><strong>Problem 1:</strong> <code>status != 'cancelled'</code> — negative condition. MySQL can't use index efficiently. Likely full scan.</div>
+        <div class="callout callout-red"><strong>Problem 2:</strong> <code>GROUP BY user_id</code> on 90M+ rows. Aggregates everything before filtering.</div>
+        <div class="callout callout-red"><strong>Problem 3:</strong> <code>HAVING</code> instead of <code>WHERE</code>. Filters after aggregation — can't reduce rows early.</div>
+        <div class="callout callout-red"><strong>Problem 4:</strong> No covering index. MySQL hits actual table rows for every <code>amount</code> — massive disk IO.</div>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">📐 Index Strategy</div>
+        <pre><span class="comment">-- ❌ Wrong order</span>
+<span class="kw">INDEX</span> (status, user_id, amount) <span class="comment">-- status with != is weak as leader</span>
+
+<span class="comment">-- ✅ Covering index — better order</span>
+<span class="kw">INDEX</span> (user_id, status, amount)
+<span class="comment">-- GROUP BY user_id benefits from leading column
+-- status filters within each user partition
+-- amount included → no table lookup = covering index</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ Rewrite Query</div>
+        <pre><span class="kw">SELECT</span> user_id,
+       <span class="fn">COUNT</span>(*) <span class="kw">as</span> total_orders,
+       <span class="fn">SUM</span>(amount) <span class="kw">as</span> revenue
+<span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> status <span class="kw">IN</span> (<span class="str">'completed'</span>, <span class="str">'pending'</span>, <span class="str">'processing'</span>) <span class="comment">-- positive list</span>
+<span class="kw">GROUP BY</span> user_id
+<span class="kw">HAVING</span> <span class="fn">SUM</span>(amount) > <span class="num">10000</span>
+<span class="kw">ORDER BY</span> revenue <span class="kw">DESC</span>;</pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--trap)">⭐ Architectural Fix — The Real Answer</div>
+        <div class="callout callout-trap">
+          <strong>Root cause:</strong> This is an OLAP query (analytics) running on an OLTP table (transactions). That's the architecture problem.
+        </div>
+        <pre><span class="comment">-- Fix 1: Summary Table (run via scheduled job)</span>
+<span class="kw">CREATE TABLE</span> user_order_summary (
+    user_id       <span class="kw">INT PRIMARY KEY</span>,
+    total_orders  <span class="kw">INT</span>,
+    total_revenue <span class="kw">DECIMAL</span>(<span class="num">15</span>,<span class="num">2</span>),
+    last_updated  <span class="kw">DATETIME</span>
+);
+<span class="comment">-- Dashboard query: milliseconds on thousands of rows ✅</span>
+
+<span class="comment">-- Fix 2: Read Replica for analytics</span>
+<span class="comment">-- Fix 3: Cache result in Redis every 15 minutes</span></pre>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-low">3/10 — Index instinct there, architecture missed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card diff-hard" id="q6">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">06</div>
+      <div class="q-meta">
+        <div class="q-topic">🔴 Table Partitioning</div>
+        <div class="q-question">You have a 500M row transactions table growing 2M rows/day. Should you partition it? What type, and what are the hidden risks?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">📋 Partition Types</div>
+        <div class="tbl-wrap">
+          <table>
+            <tr><th>Type</th><th>How It Works</th><th>Best For</th></tr>
+            <tr><td><code>RANGE</code></td><td>Rows go into partition based on column range</td><td>Dates, years ✅</td></tr>
+            <tr><td><code>LIST</code></td><td>Rows go into partition based on exact values</td><td>Country, status</td></tr>
+            <tr><td><code>HASH</code></td><td>Rows distributed evenly by hash</td><td>Even distribution</td></tr>
+            <tr><td><code>KEY</code></td><td>MySQL manages the hash</td><td>Primary key splits</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ Correct Implementation</div>
+        <pre><span class="comment">-- RANGE by MONTH (better than year for 2M/day)</span>
+<span class="kw">CREATE TABLE</span> transactions (
+    id         <span class="kw">BIGINT NOT NULL</span>,
+    user_id    <span class="kw">INT NOT NULL</span>,
+    amount     <span class="kw">DECIMAL</span>(<span class="num">15</span>,<span class="num">2</span>),
+    created_at <span class="kw">DATETIME NOT NULL</span>
+)
+<span class="kw">PARTITION BY RANGE</span> (<span class="fn">TO_DAYS</span>(created_at)) (
+    PARTITION p202401 <span class="kw">VALUES LESS THAN</span> (<span class="fn">TO_DAYS</span>(<span class="str">'2024-02-01'</span>)),
+    PARTITION p202402 <span class="kw">VALUES LESS THAN</span> (<span class="fn">TO_DAYS</span>(<span class="str">'2024-03-01'</span>)),
+    PARTITION p_future <span class="kw">VALUES LESS THAN MAXVALUE</span>
+);</pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--accent)">❌ Hidden Risks (Most Candidates Miss)</div>
+        <div class="callout callout-red"><strong>Risk 1 — Unique Key Must Include Partition Key:</strong><br>
+          <code>UNIQUE KEY (id)</code> ❌ fails. Must be <code>UNIQUE KEY (id, created_at)</code> ✅
+        </div>
+        <div class="callout callout-red"><strong>Risk 2 — Pruning Only on Partition Key:</strong><br>
+          <code>WHERE user_id = 1234</code> still scans ALL partitions! You must filter on <code>created_at</code>.
+        </div>
+        <div class="callout callout-red"><strong>Risk 3 — No Foreign Keys:</strong> Partitioned tables cannot have FK constraints.</div>
+        <div class="callout callout-red"><strong>Risk 4 — Function Kills Pruning:</strong><br>
+          <code>WHERE YEAR(created_at) = 2024</code> ❌ — No pruning!<br>
+          <code>WHERE created_at >= '2024-01-01' AND created_at &lt; '2025-01-01'</code> ✅
+        </div>
+
+        <div class="callout callout-green">
+          <strong>⭐ Biggest Benefit (Rarely Mentioned):</strong><br>
+          <code>ALTER TABLE transactions DROP PARTITION p2021;</code><br>
+          Instant deletion of millions of old rows. vs. <code>DELETE</code> which takes hours!
+        </div>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-fill"></div><div class="dot dot-fill"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-low">2/10 — Concept known, zero depth on risks</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card diff-hard" id="q7">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">07</div>
+      <div class="q-meta">
+        <div class="q-topic">🔴 Backup & Disaster Recovery</div>
+        <div class="q-question">3 AM. A developer ran UPDATE users SET password='hacked123' without a WHERE clause — 2 million users affected. What do you do?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--accent)">❌ Why Simple Rollback Won't Work</div>
+        <div class="callout callout-red">
+          <strong>ROLLBACK only works if the transaction is still OPEN.</strong> If the developer ran UPDATE and it auto-committed, the transaction is closed — there is NOTHING to rollback. This is a <strong>Point-in-Time Recovery (PITR)</strong> situation.
+        </div>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--orange)">🚨 First 5 Minutes</div>
+        <pre><span class="comment">Minute 1 → Block all user logins (stop the bleeding)</span>
+<span class="comment">Minute 2 → Put app in maintenance mode (stop writes)</span>
+<span class="comment">Minute 3 → Get EXACT timestamp of bad UPDATE from developer</span>
+<span class="comment">Minute 4 → Confirm you have backup + binlogs enabled</span>
+<span class="comment">Minute 5 → Start recovery, inform management</span>
+
+<span class="kw">REVOKE ALL ON</span> users <span class="kw">FROM</span> <span class="str">'app_user'</span>@<span class="str">'%'</span>; <span class="comment">-- restrict access</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--blue)">🔧 Point-in-Time Recovery</div>
+        <pre><span class="comment">-- Step 1: Restore last full backup (e.g. midnight backup)</span>
+mysql -u root -p < backup_midnight.sql
+<span class="comment">-- OR using XtraBackup (faster for large DBs)</span>
+xtrabackup --prepare --target-dir=/backup/midnight/
+xtrabackup --copy-back --target-dir=/backup/midnight/
+
+<span class="comment">-- Step 2: Find the bad query in binlog</span>
+mysqlbinlog /var/lib/mysql/mysql-bin.000123 | grep -i <span class="str">"UPDATE users"</span>
+
+<span class="comment">-- Step 3: Replay binlogs UP TO moment before disaster</span>
+mysqlbinlog /var/lib/mysql/mysql-bin.000123 \
+  --start-datetime=<span class="str">"2024-01-15 00:00:00"</span> \
+  --stop-datetime=<span class="str">"2024-01-15 03:17:22"</span> \
+  | mysql -u root -p
+
+<span class="comment">-- Step 4: Verify</span>
+<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> users <span class="kw">WHERE</span> password = <span class="str">'hacked123'</span>;
+<span class="comment">-- Must return 0 ✅</span></pre>
+      </div>
+
+      <div class="answer-section">
+        <div class="answer-label" style="color:var(--green)">✅ Prevention</div>
+        <pre><span class="comment">-- Safe mode: forces WHERE clause on UPDATE/DELETE</span>
+<span class="kw">SET</span> sql_safe_updates = <span class="num">1</span>;
+
+<span class="comment">-- Always SELECT before UPDATE to see impact</span>
+<span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> users; <span class="comment">-- check row count first</span>
+
+<span class="comment">-- Binlog settings in my.cnf (MUST always be ON)</span>
+log_bin = ON
+binlog_format = ROW      <span class="comment">-- logs actual row values, not just SQL</span>
+expire_logs_days = <span class="num">7</span>    <span class="comment">-- keep 7 days of binlogs</span></pre>
+        <div class="callout callout-yellow">
+          <strong>3-2-1 Backup Rule:</strong> 3 copies of data, 2 on different storage types, 1 offsite (S3/GCS). Test your backups monthly — a backup you've never restored is not a backup.
+        </div>
+      </div>
+
+      <div class="score-row">
+        <span class="score-label">SCORE</span>
+        <div class="score-dots">
+          <div class="dot dot-fill"></div>
+          <div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div><div class="dot dot-empty"></div>
+        </div>
+        <span class="score-text score-low">1/10 — Most dangerous gap. Study PITR immediately.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════ TRAP QUESTIONS ════ -->
+  <div class="section-label label-trap" id="traps">⚡ Trap Questions — One Word / Short Answers</div>
+  <p style="color:var(--text-muted);margin-bottom:28px;font-size:15px;font-style:italic;">These are trick questions interviewers ask to catch you off-guard. Each has a short definitive answer. Click to reveal.</p>
+
+  <!-- TRAP 1 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T1</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — Rollback</div>
+        <div class="q-question">Can you ROLLBACK a DROP TABLE statement in MySQL?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">ANSWER</span>
+        <span class="one-word">No</span>
+        <div class="why">DROP TABLE is a DDL statement. DDL statements in MySQL cause an <strong>implicit COMMIT</strong> before and after they execute. You cannot rollback DDL — the table is gone permanently. This is why we need backups.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAP 2 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T2</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — NULL Comparison</div>
+        <div class="q-question">Will this query return rows where <code>age</code> is NULL?
+          <pre style="margin-top:8px;font-size:13px;">SELECT * FROM users WHERE age != 25;</pre>
+        </div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">ANSWER</span>
+        <span class="one-word">No</span>
+        <div class="why">NULL is never equal to anything — not even NULL. Any comparison with NULL returns UNKNOWN, not TRUE. To include NULLs you must explicitly add <code>OR age IS NULL</code>. This is one of the most common production bugs.</div>
+      </div>
+      <pre style="margin-top:16px;"><span class="comment">-- ❌ Misses NULL rows</span>
+<span class="kw">WHERE</span> age != <span class="num">25</span>
+
+<span class="comment">-- ✅ Includes NULL rows</span>
+<span class="kw">WHERE</span> age != <span class="num">25</span> <span class="kw">OR</span> age <span class="kw">IS NULL</span></pre>
+    </div>
+  </div>
+
+  <!-- TRAP 3 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T3</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — Index on Low Cardinality</div>
+        <div class="q-question">Should you add an index on a <code>status</code> column that has only 3 values: 'active', 'inactive', 'pending'?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">ANSWER</span>
+        <span class="one-word">Depends</span>
+        <div class="why">Low cardinality index alone is often useless — MySQL may ignore it and prefer a full scan. BUT as part of a <strong>composite index</strong> where status is the leading column with equality, it can be very effective. Context is everything.</div>
+      </div>
+      <div class="callout callout-yellow" style="margin-top:16px;">
+        <strong>Rule:</strong> Standalone index on 3-value column — probably useless. Composite index <code>(status, created_at)</code> — very powerful for filtered queries.
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAP 4 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T4</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — COUNT Performance</div>
+        <div class="q-question">Which is faster on a 50M row InnoDB table?
+          <pre style="margin-top:8px;font-size:13px;">SELECT COUNT(*) FROM orders;
+SELECT COUNT(id) FROM orders;</pre>
+        </div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">ANSWER</span>
+        <span class="one-word">Same</span>
+        <div class="why"><code>COUNT(*)</code> and <code>COUNT(id)</code> are effectively the same speed in MySQL — the optimizer treats them identically. The real trap: InnoDB does NOT store row counts like MyISAM, so BOTH are slow on large tables without a covering index. Use a summary table for dashboard counts.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAP 5 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T5</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — TRUNCATE vs DELETE</div>
+        <div class="q-question">What is the difference between TRUNCATE and DELETE with no WHERE clause?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">KEY DIFFERENCE</span>
+        <span class="one-word">DDL vs DML</span>
+      </div>
+      <div class="tbl-wrap" style="margin-top:16px;">
+        <table>
+          <tr><th>Feature</th><th>TRUNCATE</th><th>DELETE</th></tr>
+          <tr><td>Type</td><td>DDL</td><td>DML</td></tr>
+          <tr><td>Rollback</td><td>❌ Cannot rollback</td><td>✅ Can rollback</td></tr>
+          <tr><td>Triggers</td><td>❌ Does not fire</td><td>✅ Fires DELETE triggers</td></tr>
+          <tr><td>Speed</td><td>Instant (deallocates pages)</td><td>Slow (row-by-row undo log)</td></tr>
+          <tr><td>AUTO_INCREMENT</td><td>Resets to 1</td><td>Does not reset</td></tr>
+          <tr><td>WHERE clause</td><td>❌ Not supported</td><td>✅ Supported</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAP 6 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T6</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — Index Usage</div>
+        <div class="q-question">You have an index on <code>email</code>. Will this query use it?
+          <pre style="margin-top:8px;font-size:13px;">SELECT * FROM users WHERE email LIKE '%gmail.com';</pre>
+        </div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">ANSWER</span>
+        <span class="one-word">No</span>
+        <div class="why">A leading wildcard <code>LIKE '%...'</code> cannot use a B-Tree index because MySQL doesn't know where to start in the index. It forces a full table scan. Only trailing wildcards <code>LIKE 'john%'</code> can use the index.</div>
+      </div>
+      <pre style="margin-top:16px;"><span class="comment">-- ❌ Full scan — leading wildcard</span>
+<span class="kw">WHERE</span> email <span class="kw">LIKE</span> <span class="str">'%gmail.com'</span>
+
+<span class="comment">-- ✅ Uses index — trailing wildcard</span>
+<span class="kw">WHERE</span> email <span class="kw">LIKE</span> <span class="str">'john%'</span></pre>
+    </div>
+  </div>
+
+  <!-- TRAP 7 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T7</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — Transaction Isolation</div>
+        <div class="q-question">What is MySQL's default transaction isolation level?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">ANSWER</span>
+        <span class="one-word">REPEATABLE READ</span>
+        <div class="why">Most databases default to READ COMMITTED — MySQL defaults to REPEATABLE READ. This is a common interview trap. REPEATABLE READ prevents dirty reads and non-repeatable reads but can still have phantom reads (though InnoDB prevents phantoms with gap locks).</div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:16px;">
+        <table>
+          <tr><th>Level</th><th>Dirty Read</th><th>Non-Repeatable</th><th>Phantom</th></tr>
+          <tr><td>READ UNCOMMITTED</td><td>✅ Possible</td><td>✅ Possible</td><td>✅ Possible</td></tr>
+          <tr><td>READ COMMITTED</td><td>❌ Prevented</td><td>✅ Possible</td><td>✅ Possible</td></tr>
+          <tr><td><strong>REPEATABLE READ ← Default</strong></td><td>❌</td><td>❌</td><td>✅ (InnoDB: ❌)</td></tr>
+          <tr><td>SERIALIZABLE</td><td>❌</td><td>❌</td><td>❌</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRAP 8 -->
+  <div class="q-card diff-trap">
+    <div class="q-header" onclick="toggle(this)">
+      <div class="q-num">T8</div>
+      <div class="q-meta">
+        <div class="q-topic">⚡ Trap — EXPLAIN type column</div>
+        <div class="q-question">In EXPLAIN output, which <code>type</code> value is the best and which is the worst?</div>
+      </div>
+      <div class="q-toggle">▾</div>
+    </div>
+    <div class="q-body">
+      <div class="trap-answer">
+        <span style="color:var(--text-muted);font-size:14px;font-family:'JetBrains Mono',monospace;">BEST → WORST</span>
+        <span class="one-word">system → ALL</span>
+        <div class="why">Most candidates know <code>ALL</code> is bad (full table scan) but don't know the full order. <code>system</code> and <code>const</code> are the best — single row lookups by primary key.</div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:16px;">
+        <table>
+          <tr><th>Type</th><th>Meaning</th><th>Performance</th></tr>
+          <tr><td><code>system</code></td><td>Table has only 1 row</td><td>🟢 Best</td></tr>
+          <tr><td><code>const</code></td><td>PK/unique match — 1 row</td><td>🟢 Excellent</td></tr>
+          <tr><td><code>eq_ref</code></td><td>Unique index join</td><td>🟢 Great</td></tr>
+          <tr><td><code>ref</code></td><td>Non-unique index lookup</td><td>🟡 Good</td></tr>
+          <tr><td><code>range</code></td><td>Index range scan</td><td>🟡 Acceptable</td></tr>
+          <tr><td><code>index</code></td><td>Full index scan</td><td>🟠 Poor</td></tr>
+          <tr><td><code>ALL</code></td><td>Full table scan</td><td>🔴 Worst</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FINAL SCORECARD -->
+  <div class="final-card" id="scorecard">
+    <h2>📊 Final <span>Scorecard</span></h2>
+    <div class="score-grid">
+      <div class="score-cell"><div class="s-topic">Q1 Slow Query</div><div class="s-score s-mid">6/10</div></div>
+      <div class="score-cell"><div class="s-topic">Q2 EXPLAIN</div><div class="s-score s-mid">5/10</div></div>
+      <div class="score-cell"><div class="s-topic">Q3 Deadlock</div><div class="s-score s-low">4/10</div></div>
+      <div class="score-cell"><div class="s-topic">Q4 Replication</div><div class="s-score s-low">0/10</div></div>
+      <div class="score-cell"><div class="s-topic">Q5 Optimization</div><div class="s-score s-low">3/10</div></div>
+      <div class="score-cell"><div class="s-topic">Q6 Partitioning</div><div class="s-score s-low">2/10</div></div>
+      <div class="score-cell"><div class="s-topic">Q7 Recovery</div><div class="s-score s-low">1/10</div></div>
+      <div class="score-cell" style="background:rgba(255,144,128,0.12);border:1px solid rgba(255,144,128,0.3)">
+        <div class="s-topic">Average</div><div class="s-score s-low">3.0/10</div>
+      </div>
+    </div>
+    <div class="verdict-box">
+      <strong>Hiring Decision:</strong> Not ready for Senior DBA. Current level is <strong>Junior-Mid MySQL Developer</strong>.<br><br>
+      <strong>Strengths:</strong> Good instincts on index concepts, honest when unsure — that's rare and valuable.<br><br>
+      <strong>Critical Gaps:</strong> Replication, PITR/Recovery, Partitioning risks, EXPLAIN reading, Production architecture.
+    </div>
+  </div>
+
+  <!-- STUDY PLAN -->
+  <div class="study-plan">
+    <h3>📚 6-Week Study Plan to Senior Level</h3>
+    <div class="week-row"><span class="week-num">Week 1</span><span class="week-topic">EXPLAIN output reading + index internals (B-Tree, composite, covering)</span></div>
+    <div class="week-row"><span class="week-num">Week 2</span><span class="week-topic">Replication — binlog, IO thread, SQL thread, lag diagnosis & parallel replication</span></div>
+    <div class="week-row"><span class="week-num">Week 3</span><span class="week-topic">Backup & Recovery — mysqldump, XtraBackup, Point-in-Time Recovery with mysqlbinlog</span></div>
+    <div class="week-row"><span class="week-num">Week 4</span><span class="week-topic">Partitioning — RANGE/LIST/HASH types, pruning rules, risks, DROP PARTITION pattern</span></div>
+    <div class="week-row"><span class="week-num">Week 5</span><span class="week-topic">Performance Schema + slow query log analysis + InnoDB lock monitoring</span></div>
+    <div class="week-row"><span class="week-num">Week 6</span><span class="week-topic">InnoDB internals — buffer pool, redo log, undo log, MVCC, gap locks</span></div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  MySQL DBA Interview Sheet &nbsp;·&nbsp; 7 Main Questions + 8 Trap Questions &nbsp;·&nbsp; Study hard, get hired 💪
+</footer>
+
+<script>
+  function toggle(header) {
+    const card = header.closest('.q-card');
+    card.classList.toggle('open');
+  }
+
+  // Auto-open first card
+  document.querySelector('.q-card').classList.add('open');
+</script>
+</body>
+</html>

@@ -7,14 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#07090F;
-  --s1:#0C0F1A;
-  --s2:#111520;
-  --bd:#1A2030;
-  --bd2:#232B40;
-  --text:#DDE4F0;
-  --muted:#5A6880;
-  --code:#060810;
+  --bg:#FFFFFF;
+  --s1:#F8F9FA;
+  --s2:#E9ECEF;
+  --bd:#DEE2E6;
+  --bd2:#CED4DA;
+  --text:#212529;
+  --muted:#6C757D;
+  --code:#F8F9FA;
   --g1:#F29111; /* mysql orange */
   --g2:#00758F; /* mysql blue  */
   --g3:#38A169; /* green       */
@@ -30,15 +30,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 /* grid bg */
 body::after{content:'';position:fixed;inset:0;
   background:
-    linear-gradient(rgba(0,117,143,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,117,143,.025) 1px,transparent 1px);
+    linear-gradient(rgba(0,0,0,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.02) 1px,transparent 1px);
   background-size:60px 60px;pointer-events:none;z-index:0}
 
 /* ── HERO ── */
 .hero{position:relative;z-index:1;padding:60px 20px 40px;text-align:center;overflow:hidden;border-bottom:1px solid var(--bd)}
 .hero-blob{position:absolute;top:-100px;left:50%;transform:translateX(-50%);
   width:800px;height:500px;
-  background:radial-gradient(ellipse,rgba(242,145,17,.08) 0%,rgba(0,117,143,.05) 45%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(242,145,17,.03) 0%,rgba(0,117,143,.02) 45%,transparent 70%);
   pointer-events:none}
 .label{display:inline-flex;align-items:center;gap:8px;
   background:rgba(128,90,213,.1);border:1px solid rgba(128,90,213,.3);
@@ -65,7 +65,7 @@ h1 .o{color:var(--g1)}h1 .b{color:var(--g2)}h1 .d{color:#2A3550}
 .prog-fill{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--g1),var(--g2),var(--g5));width:0;transition:width .5s ease}
 
 /* ── STICKY NAV ── */
-.nav{position:sticky;top:0;z-index:200;background:rgba(7,9,15,.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd)}
+.nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd)}
 .nav-inner{max-width:1060px;margin:0 auto;padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
 .nav-inner::-webkit-scrollbar{display:none}
 .nt{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;
@@ -141,12 +141,12 @@ pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:
 .op{color:#89DDFF}.vr{color:#F07178}.ok{color:#68D391}.bad{color:#FC8181}
 
 /* output block */
-.out{background:#030408;border:1px solid var(--bd);border-left:3px solid var(--g2);border-radius:6px;
+.out{background:var(--code);border:1px solid var(--bd);border-left:3px solid var(--g2);border-radius:6px;
   padding:12px 14px;margin:8px 0;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:#4D8FA8}
 
 /* table */
 .tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
-.tbl th{background:rgba(255,255,255,.04);padding:8px 12px;text-align:left;
+.tbl th{background:rgba(0,0,0,.04);padding:8px 12px;text-align:left;
   font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);
   border-bottom:1px solid var(--bd);white-space:nowrap}
 .tbl td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.03);color:#AAB8C8;vertical-align:top}
@@ -199,11 +199,79 @@ pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:
   font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6}
 .explain-key{color:#F6C766}.explain-val{color:#C3E88D}.explain-bad{color:#FC8181}.explain-good{color:#68D391}
 
+/* ── GLOBAL NAV BAR ── */
+.gnav{background:rgba(0,0,0,.03);border-bottom:1px solid var(--bd);padding:6px 20px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;position:relative;z-index:201}
+.gnav::-webkit-scrollbar{display:none}
+.gnav-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);white-space:nowrap;margin-right:4px}
+.gnav a{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.5px;text-decoration:none;
+  padding:4px 10px;border-radius:4px;border:1px solid transparent;white-space:nowrap;transition:all .15s}
+.gnav a:hover{border-color:var(--bd2);background:rgba(0,0,0,.03)}
+.gnav a.active{background:rgba(242,145,17,.1);color:var(--g1);border-color:rgba(242,145,17,.3)}
+.gnav a.gn-mysql{color:var(--g1)}.gnav a.gn-php{color:#8892BF}.gnav a.gn-oop{color:#A855F7}
+.gnav a.gn-linux{color:#22C55E}.gnav a.gn-js{color:#CA8A04}.gnav a.gn-deploy{color:#2563EB}
+.gnav a.gn-arch{color:#EC4899}.gnav a.gn-hub{color:var(--muted)}
+
+/* ── DARK MODE ── */
+body.dark{--bg:#0D1117;--s1:#161B22;--s2:#21262D;--bd:#30363D;--bd2:#484F58;--text:#E6EDF3;--muted:#8B949E;--code:#161B22}
+body.dark .gnav{background:rgba(255,255,255,.03)}
+body.dark .nav{background:rgba(13,17,23,.95)}
+body.dark .hero{border-bottom-color:var(--bd)}
+body.dark pre{background:#0D1117;border-color:#30363D}
+body.dark .tbl th{background:rgba(255,255,255,.04)}
+body.dark .an{color:#8B949E}
+body.dark h1 .d{color:#E6EDF3}
+body.dark .box{color:#8B949E}
+body.dark .out{color:#58A6FF}
+
+/* ── DARK/LIGHT TOGGLE ── */
+.theme-toggle{position:fixed;bottom:80px;right:20px;z-index:999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--bd2);background:var(--s1);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:18px;box-shadow:0 2px 10px rgba(0,0,0,.1);transition:all .2s}
+.theme-toggle:hover{transform:scale(1.1);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+
+/* ── SEARCH ── */
+.search-wrap{display:flex;align-items:center;gap:6px;margin-left:auto}
+.search-input{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 12px;border-radius:5px;
+  border:1px solid var(--bd2);background:transparent;color:var(--text);width:180px;outline:none;transition:all .2s}
+.search-input:focus{border-color:var(--g1);width:240px}
+.search-input::placeholder{color:var(--muted)}
+body.dark .search-input{color:var(--text)}
+
+/* ── BACK TO TOP ── */
+.btt{position:fixed;bottom:20px;right:20px;z-index:999;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--bd2);background:var(--s1);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:16px;box-shadow:0 2px 10px rgba(0,0,0,.1);transition:all .2s;opacity:0;pointer-events:none}
+.btt.visible{opacity:1;pointer-events:auto}
+.btt:hover{transform:scale(1.1);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+
+/* ── KEYBOARD HINT ── */
+.kbd-hint{position:fixed;bottom:20px;left:20px;z-index:999;display:flex;gap:6px;align-items:center;opacity:.4;transition:opacity .2s}
+.kbd-hint:hover{opacity:.8}
+.kbd{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border:1px solid var(--bd2);border-radius:3px;background:var(--s1);color:var(--muted)}
+
+/* ── PRINT ── */
+@media print{.gnav,.nav,.theme-toggle,.btt,.kbd-hint,.prog-wrap,.search-wrap{display:none!important}
+  .card .cb{display:block!important}.sg.hidden{display:block!important}body{background:#fff!important}}
+
 @keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){h1{font-size:2rem;letter-spacing:-1px}.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){h1{font-size:2rem;letter-spacing:-1px}.stats{grid-template-columns:repeat(3,1fr)}.search-input{width:120px}.search-input:focus{width:160px}.kbd-hint{display:none}}
 </style>
 </head>
 <body>
+
+<!-- GLOBAL NAV -->
+<div class="gnav">
+  <span class="gnav-label">📚 Sheets</span>
+  <a href="hub.html" class="gn-hub">Hub</a>
+  <a href="index.html" class="gn-mysql active">MySQL</a>
+  <a href="php_laravel_interview.html" class="gn-php">PHP & Laravel</a>
+  <a href="php_oop_interview.html" class="gn-oop">PHP OOP</a>
+  <a href="linux_devops_interview.html" class="gn-linux">Linux & DevOps</a>
+  <a href="javascript_frontend_interview.html" class="gn-js">JavaScript</a>
+  <a href="production_deployment_interview.html" class="gn-deploy">Deployment</a>
+  <a href="system_architecture_interview.html" class="gn-arch">Architecture</a>
+  <a href="mysql_dba_interview.html" class="gn-arch">MySQl DBA Interview</a>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -247,6 +315,8 @@ pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:
     <button class="nt" onclick="flt('monitoring',this)">Monitoring</button>
     <button class="nt" onclick="flt('traps',this)">Interview Traps</button>
     <button class="nt" onclick="flt('scenarios',this)">Production Scenarios</button>
+    <button class="nt" onclick="flt('fullstack',this)">Full Stack Integration</button>
+    <div class="search-wrap"><input class="search-input" id="searchBox" type="text" placeholder="Search questions… ( / )" oninput="searchCards(this.value)"></div>
   </div>
 </div>
 
@@ -259,7 +329,8 @@ pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:
   <div class="stat"><div class="sn r">10</div><div class="sl">Debugging</div></div>
   <div class="stat"><div class="sn p">12</div><div class="sl">Schema Design</div></div>
   <div class="stat"><div class="sn y">15</div><div class="sl">Trap Questions</div></div>
-  <div class="stat"><div class="sn b">74+</div><div class="sl">Total Questions</div></div>
+  <div class="stat"><div class="sn p">3</div><div class="sl">Full Stack DB</div></div>
+  <div class="stat"><div class="sn b">77+</div><div class="sl">Total Questions</div></div>
 </div>
 
 <!-- ═══ QUERY EXECUTION ORDER ═══ -->
@@ -2058,10 +2129,139 @@ performance_schema_instrument = '%=ON'</pre>
 </div>
 </div>
 
+<!-- ═══ FULL STACK INTEGRATION ═══ -->
+<div class="sg" data-s="fullstack">
+<div class="sh"><div class="si p">🌐</div><div class="sl2">Full Stack Database Integration</div><div class="sl3"></div></div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">FS1</span><span class="qt">How do you securely connect a web application to MySQL?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Full Stack Security Best Practices</div>
+    <div class="an">Database connections in web apps are a major attack vector. Never hardcode credentials, use connection pooling, and implement proper error handling.</div>
+    <div class="csub p">PHP/Laravel Example</div>
+    <pre><span class="cm">// .env file (never commit)</span>
+DB_HOST=localhost
+DB_USER=app_user
+DB_PASS=strong_password_123
+DB_NAME=myapp
+
+<span class="cm">// config/database.php</span>
+<span class="str">'mysql'</span> => [
+    <span class="str">'host'</span> => env(<span class="str">'DB_HOST'</span>),
+    <span class="str">'database'</span> => env(<span class="str">'DB_NAME'</span>),
+    <span class="str">'username'</span> => env(<span class="str">'DB_USER'</span>),
+    <span class="str">'password'</span> => env(<span class="str">'DB_PASS'</span>),
+    <span class="str">'charset'</span> => <span class="str">'utf8mb4'</span>,
+    <span class="str">'collation'</span> => <span class="str">'utf8mb4_unicode_ci'</span>,
+    <span class="str">'options'</span> => [
+        PDO::MYSQL_ATTR_SSL_CA => <span class="str">'/path/to/ca.pem'</span>, <span class="cm">// SSL required</span>
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true,
+    ],
+],</pre>
+    <div class="csub b">Connection Pooling</div>
+    <div class="an">For high-traffic apps, use connection pooling to reuse connections instead of creating new ones for each request.</div>
+    <pre><span class="cm">// Laravel with database connection pooling</span>
+<span class="str">'options'</span> => [
+    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+    PDO::MYSQL_ATTR_MAX_BUFFER_SIZE => 1024*1024, <span class="cm">// 1MB buffer</span>
+],</pre>
+    <div class="box br"><strong>🚨 Security Checklist:</strong>
+      <ul>
+        <li>Use environment variables, never hardcode</li>
+        <li>Restrict DB user permissions (no DROP, no FILE)</li>
+        <li>Enable SSL/TLS for all connections</li>
+        <li>Use prepared statements for all queries</li>
+        <li>Log connection errors without exposing credentials</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">FS2</span><span class="qt">How do you handle database transactions in a REST API?</span><span class="diff dp">Pro</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">API Transaction Management</div>
+    <div class="an">APIs often need to perform multiple database operations atomically. Use transactions to ensure data consistency.</div>
+    <div class="csub p">Laravel API Example</div>
+    <pre><span class="cm">// Transfer money between accounts</span>
+<span class="kw">public function</span> transfer(Request $request) {
+    <span class="kw">return</span> DB::transaction(<span class="kw">function</span>() <span class="kw">use</span> ($request) {
+        <span class="cm">// Lock rows for update</span>
+        $from = Account::where(<span class="str">'id'</span>, $request->from_id)
+                      ->lockForUpdate()->first();
+        $to = Account::where(<span class="str">'id'</span>, $request->to_id)
+                    ->lockForUpdate()->first();
+
+        <span class="kw">if</span> ($from->balance < $request->amount) {
+            <span class="kw">throw new</span> Exception(<span class="str">'Insufficient funds'</span>);
+        }
+
+        $from->decrement(<span class="str">'balance'</span>, $request->amount);
+        $to->increment(<span class="str">'balance'</span>, $request->amount);
+
+        <span class="cm">// Log transaction</span>
+        Transaction::create([
+            <span class="str">'from_id'</span> => $request->from_id,
+            <span class="str">'to_id'</span> => $request->to_id,
+            <span class="str">'amount'</span> => $request->amount,
+        ]);
+
+        <span class="kw">return</span> response()->json([<span class="str">'status'</span> => <span class="str">'success'</span>]);
+    });
+}</pre>
+    <div class="csub b">Transaction Isolation Levels</div>
+    <table class="tbl">
+      <tr><th>Level</th><th>Dirty Read</th><th>Non-Repeatable</th><th>Phantom</th><th>Use Case</th></tr>
+      <tr><td class="lc">READ UNCOMMITTED</td><td>❌</td><td>❌</td><td>❌</td><td>Rare, risky</td></tr>
+      <tr><td class="lc">READ COMMITTED</td><td>✅</td><td>❌</td><td>❌</td><td>Most web apps</td></tr>
+      <tr><td class="lc">REPEATABLE READ</td><td>✅</td><td>✅</td><td>❌</td><td>MySQL default</td></tr>
+      <tr><td class="lc">SERIALIZABLE</td><td>✅</td><td>✅</td><td>✅</td><td>High consistency needs</td></tr>
+    </table>
+    <div class="box bg"><strong>💡 Pro Tip:</strong> Use <code>SELECT ... FOR UPDATE</code> to lock rows during critical operations. Always handle deadlocks with retry logic.</div>
+  </div>
+</div>
+
+<div class="card pc" onclick="tog(this)">
+  <div class="ch"><span class="qn">FS3</span><span class="qt">How do you implement database pagination for large datasets in APIs?</span><span class="diff dm">Medium</span><span class="qtog">▾</span></div>
+  <div class="cb">
+    <div class="al">Efficient API Pagination</div>
+    <div class="an">Large datasets can crash your API. Implement cursor-based or offset-based pagination with proper indexing.</div>
+    <div class="csub p">Cursor-Based Pagination (Recommended)</div>
+    <pre><span class="cm">// Laravel example with cursor pagination</span>
+<span class="kw">public function</span> getUsers(Request $request) {
+    $users = User::orderBy(<span class="str">'created_at'</span>, <span class="str">'desc'</span>)
+                 ->cursorPaginate(<span class="num">50</span>);
+
+    <span class="kw">return</span> response()->json([
+        <span class="str">'data'</span> => $users->items(),
+        <span class="str">'next_cursor'</span> => $users->nextCursor(),
+        <span class="str">'has_more'</span> => $users->hasMorePages(),
+    ]);
+}
+
+<span class="cm">// Frontend usage</span>
+fetch(<span class="str">`/api/users?cursor=${nextCursor}`</span>)</pre>
+    <div class="csub b">Offset vs Cursor</div>
+    <table class="tbl">
+      <tr><th>Method</th><th>Pros</th><th>Cons</th><th>Best For</th></tr>
+      <tr><td class="lc">Offset</td><td>Simple, random access</td><td>Slow on large offsets</td><td>Small datasets</td></tr>
+      <tr><td class="lc">Cursor</td><td>Consistent performance</td><td>No random access</td><td>Large datasets</td></tr>
+    </table>
+    <div class="box bt"><strong>🔧 Performance:</strong> Always add indexes on cursor columns. For time-based cursors, use <code>(created_at, id)</code> composite index to handle duplicate timestamps.</div>
+  </div>
+</div>
+
+</div>
+
 </div><!-- /main -->
+<!-- Floating buttons -->
+<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+<button class="btt" id="bttBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+<div class="kbd-hint"><span class="kbd">J</span><span class="kbd">K</span> navigate <span class="kbd">Enter</span> toggle <span class="kbd">/</span> search <span class="kbd">D</span> dark mode</div>
 
 <script>
-function tog(card){card.classList.toggle('open');upd()}
+/* ── Core functions ── */
+function tog(card){card.classList.toggle('open');saveProgress();upd()}
 function upd(){
   const all=document.querySelectorAll('.card');
   const open=document.querySelectorAll('.card.open');
@@ -2079,7 +2279,7 @@ function flt(sec,btn){
     const blues=['execution','explain','connections','monitoring'];
     const greens=['scenarios'];
     const reds=['traps','debugging'];
-    const purples=['challenges','mysql8'];
+    const purples=['challenges','mysql8','fullstack'];
     if(blues.includes(sec)) btn.classList.add('ab');
     else if(greens.includes(sec)) btn.classList.add('ag');
     else if(reds.includes(sec)) btn.classList.add('ar');
@@ -2088,6 +2288,76 @@ function flt(sec,btn){
     document.querySelectorAll('.sg').forEach(g=>g.classList.toggle('hidden',g.dataset.s!==sec));
   }
 }
+
+/* ── Search ── */
+function searchCards(q){
+  q=q.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(c=>{
+    const txt=(c.querySelector('.qt')||c.querySelector('.q-text')||c).textContent.toLowerCase();
+    const body=(c.querySelector('.cb')||c.querySelector('.card-body')||c).textContent.toLowerCase();
+    c.style.display=(q===''||txt.includes(q)||body.includes(q))?'':'none';
+  });
+  document.querySelectorAll('.sg').forEach(g=>{
+    const visible=g.querySelectorAll('.card:not([style*="display: none"])').length;
+    g.style.display=(q===''||visible>0)?'':'none';
+  });
+}
+
+/* ── Dark Mode ── */
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const isDark=document.body.classList.contains('dark');
+  localStorage.setItem('theme-mysql',isDark?'dark':'light');
+  document.getElementById('themeBtn').textContent=isDark?'☀️':'🌙';
+}
+(function(){
+  if(localStorage.getItem('theme-mysql')==='dark'){
+    document.body.classList.add('dark');
+    document.getElementById('themeBtn').textContent='☀️';
+  }
+})();
+
+/* ── LocalStorage Progress ── */
+function saveProgress(){
+  const opened=[];
+  document.querySelectorAll('.card.open').forEach(c=>{
+    const qn=c.querySelector('.qn');
+    if(qn) opened.push(qn.textContent);
+  });
+  localStorage.setItem('progress-mysql',JSON.stringify(opened));
+}
+function loadProgress(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('progress-mysql')||'[]');
+    if(saved.length){
+      document.querySelectorAll('.card').forEach(c=>{
+        const qn=c.querySelector('.qn');
+        if(qn&&saved.includes(qn.textContent)) c.classList.add('open');
+      });
+    }
+  }catch(e){}
+}
+loadProgress();
+
+/* ── Back to Top ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('bttBtn').classList.toggle('visible',window.scrollY>400);
+});
+
+/* ── Keyboard Shortcuts ── */
+let focusedCard=-1;
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  const cards=[...document.querySelectorAll('.card:not([style*="display: none"])')];
+  if(e.key==='j'||e.key==='J'){e.preventDefault();focusedCard=Math.min(focusedCard+1,cards.length-1);cards[focusedCard]?.scrollIntoView({behavior:'smooth',block:'center'})}
+  if(e.key==='k'||e.key==='K'){e.preventDefault();focusedCard=Math.max(focusedCard-1,0);cards[focusedCard]?.scrollIntoView({behavior:'smooth',block:'center'})}
+  if(e.key==='Enter'&&focusedCard>=0&&focusedCard<cards.length){e.preventDefault();tog(cards[focusedCard])}
+  if(e.key==='/'){e.preventDefault();document.getElementById('searchBox').focus()}
+  if(e.key==='d'||e.key==='D'){toggleTheme()}
+  if(e.key==='Escape'){document.getElementById('searchBox').blur();document.getElementById('searchBox').value='';searchCards('')}
+});
+
+/* ── Init ── */
 document.querySelectorAll('.card').forEach((c,i)=>c.style.animationDelay=(i*.025)+'s');
 upd();
 </script>
