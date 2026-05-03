@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوالا خاندان · Buwala Family Heritage Tree</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Serif+Devanagari:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      /* Deep Islamic emerald & gold palette */
+      --emerald-darkest: #062421;
+      --emerald-deep: #0B3D36;
+      --emerald: #115E51;
+      --emerald-light: #1B7A6C;
+      --emerald-glow: #2DA08D;
+      --teal-soft: #5BAEA0;
+
+      --gold-darkest: #7A5418;
+      --gold-deep: #A8772A;
+      --gold: #D4A24C;
+      --gold-light: #E8C07C;
+      --gold-pale: #F4E0B0;
+      --gold-glow: #FFE9A8;
+
+      --ivory: #FBF6E9;
+      --ivory-warm: #F4EDD8;
+      --ivory-shadow: #E8DCBC;
+
+      --maroon-deep: #4A0F1F;
+      --maroon: #7A1A30;
+
+      --ink: #1A0F08;
+      --ink-soft: #3D2818;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body { width: 100%; overflow-x: hidden; }
+
+    body {
+      background: var(--emerald-darkest);
+      font-family: 'Inter', 'Noto Serif Devanagari', sans-serif;
+      color: var(--ivory);
+    }
+
+    .poster {
+      width: 100%;
+      max-width: 100%;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at top, #0E4A41 0%, #0B3D36 40%, #062421 100%);
+    }
+
+    /* ── Islamic geometric background pattern ── */
+    .poster::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23D4A24C' stroke-width='0.5' opacity='0.18'%3E%3Cpolygon points='40,8 50,30 72,30 54,44 60,68 40,54 20,68 26,44 8,30 30,30'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Cpath d='M40 22 L58 40 L40 58 L22 40 Z'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.5;
+    }
+
+    /* Subtle radial vignette */
+    .poster::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at center, transparent 30%, rgba(6, 36, 33, 0.7) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Decorative outer band ── */
+    .ornate-band {
+      position: absolute;
+      inset: 18px;
+      border: 2px solid var(--gold);
+      z-index: 2;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 0 1px rgba(212, 162, 76, 0.4),
+        inset 0 0 60px rgba(212, 162, 76, 0.08);
+    }
+    .ornate-band-inner {
+      position: absolute;
+      inset: 28px;
+      border: 1px solid rgba(212, 162, 76, 0.55);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .ornate-band-thin {
+      position: absolute;
+      inset: 33px;
+      border: 1px solid rgba(212, 162, 76, 0.25);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── Khatim corner stars ── */
+    .khatim {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      z-index: 3;
+    }
+    .khatim.tl { top: 8px; left: 8px; }
+    .khatim.tr { top: 8px; right: 8px; transform: scaleX(-1); }
+    .khatim.bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
+    .khatim.br { bottom: 8px; right: 8px; transform: scale(-1); }
+
+    /* ── Watermark ── */
+    .watermark {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 280px;
+      color: rgba(212, 162, 76, 0.04);
+      pointer-events: none;
+      z-index: 1;
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+    }
+
+    /* ── Content ── */
+    .content {
+      position: relative;
+      z-index: 5;
+      padding: 60px 90px 50px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER: Quranic verse ── */
+    .quran-frame {
+      text-align: center;
+      padding: 18px 60px 14px;
+      border-top: 1px solid rgba(212, 162, 76, 0.4);
+      border-bottom: 1px solid rgba(212, 162, 76, 0.4);
+      position: relative;
+      margin-bottom: 22px;
+    }
+    .quran-frame::before, .quran-frame::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
+    }
+    .quran-frame::before { top: -3px; }
+    .quran-frame::after { bottom: -3px; }
+
+    .quran-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 22px;
+      color: var(--gold-light);
+      line-height: 1.6;
+      direction: rtl;
+      letter-spacing: 0.02em;
+    }
+    .quran-trans {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--gold-pale);
+      margin-top: 6px;
+      opacity: 0.85;
+    }
+    .quran-ref {
+      font-family: 'Reem Kufi', sans-serif;
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 3px;
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+
+    /* ── BISMILLAH ── */
+    .bismillah-section {
+      text-align: center;
+      padding: 8px 0 18px;
+    }
+    .bismillah-text {
+      font-size: 64px;
+      color: var(--gold-glow);
+      line-height: 1.6;
+      filter: drop-shadow(0 4px 18px rgba(212, 162, 76, 0.4));
+      font-family: 'Amiri', 'Noto Nastaliq Urdu', serif;
+      display: block;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 10px 0 14px;
+    }
+    .bismillah-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-top: 14px;
+      font-weight: 500;
+    }
+
+    /* ── Star divider ── */
+    .star-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 14px 0 18px;
+    }
+    .star-divider .line {
+      flex: 1;
+      max-width: 240px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
+    }
+    .star-divider .star-icon {
+      color: var(--gold);
+      font-size: 16px;
+      filter: drop-shadow(0 0 8px rgba(212, 162, 76, 0.5));
+    }
+    .star-divider .star-icon.large { font-size: 22px; }
+
+    /* ── TITLE ── */
+    .title-wrap {
+      text-align: center;
+      padding: 28px 40px 24px;
+      margin: 8px 60px 18px;
+      position: relative;
+      background:
+        linear-gradient(135deg,
+          rgba(11, 61, 54, 0.85) 0%,
+          rgba(17, 94, 81, 0.7) 50%,
+          rgba(11, 61, 54, 0.85) 100%);
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      box-shadow:
+        0 8px 36px rgba(0, 0, 0, 0.5),
+        inset 0 0 60px rgba(212, 162, 76, 0.1),
+        inset 0 1px 0 rgba(255, 233, 168, 0.15);
+    }
+    .title-wrap::before, .title-wrap::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--gold-light);
+      transform: rotate(45deg);
+      background: var(--emerald-deep);
+    }
+    .title-wrap::before { top: -14px; left: 50%; margin-left: -12px; }
+    .title-wrap::after { bottom: -14px; left: 50%; margin-left: -12px; }
+
+    .title-wrap .corner-flourish {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      color: var(--gold-light);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cf-tl { top: 8px; left: 8px; }
+    .cf-tr { top: 8px; right: 8px; }
+    .cf-bl { bottom: 8px; left: 8px; }
+    .cf-br { bottom: 8px; right: 8px; }
+
+    .title-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 28px;
+      color: var(--gold-glow);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(212, 162, 76, 0.3);
+    }
+    .title-main {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 46px;
+      font-weight: 900;
+      color: var(--gold-pale);
+      line-height: 1.15;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 233, 168, 0.25);
+      letter-spacing: 1px;
+    }
+    .title-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 6px;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    .title-place {
+      font-size: 13px;
+      color: var(--gold-light);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      margin-top: 8px;
+      opacity: 0.92;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── GENERATION LABEL ── */
+    .gen-label {
+      text-align: center;
+      margin: 26px 0 16px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+    .gen-label::before, .gen-label::after {
+      content: '';
+      flex: 1;
+      max-width: 200px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(212, 162, 76, 0.6) 40%, var(--gold) 60%, rgba(212, 162, 76, 0.6) 80%, transparent);
+    }
+    .gen-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 22px;
+      background: linear-gradient(135deg, var(--emerald-deep), var(--emerald));
+      border: 1px solid var(--gold);
+      border-radius: 30px;
+      box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 233, 168, 0.15);
+      position: relative;
+    }
+    .gen-pill::before, .gen-pill::after {
+      content: '✦';
+      color: var(--gold-light);
+      font-size: 11px;
+    }
+    .gen-pill .gen-num {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 3px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .gen-pill .gen-hi {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 14px;
+      color: var(--gold-pale);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .gen-pill .gen-sep {
+      width: 1px;
+      height: 14px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+    .gen-meta {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 11px;
+      color: var(--gold-light);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+      font-style: italic;
+    }
+
+    /* ── NAME BOX ── */
+    .name-box {
+      background: linear-gradient(150deg, var(--ivory) 0%, var(--ivory-warm) 100%);
+      border: 2px solid var(--gold);
+      border-radius: 6px;
+      padding: 12px 18px 10px;
+      text-align: center;
+      box-shadow:
+        0 4px 14px rgba(0, 0, 0, 0.35),
+        0 1px 0 rgba(255, 233, 168, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      position: relative;
+      min-width: 144px;
+      max-width: 174px;
+      transition: transform 0.2s;
+    }
+    .name-box::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(212, 162, 76, 0.4);
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    /* Decorative top star */
+    .name-box .top-star {
+      position: absolute;
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      background: var(--emerald-deep);
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-light);
+      font-size: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .name-hi {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--maroon-deep);
+      line-height: 1.35;
+    }
+    .name-en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11.5px;
+      color: var(--gold-darkest);
+      line-height: 1.3;
+      margin-top: 3px;
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .name-ar {
+      font-family: 'Amiri', serif;
+      font-size: 12px;
+      color: var(--emerald);
+      margin-top: 3px;
+      direction: rtl;
+      font-weight: 700;
+    }
+
+    /* ── FOUNDER (Mihrab arch) ── */
+    .founder-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 4px 0 10px;
+    }
+    .mihrab-card {
+      position: relative;
+      width: 280px;
+      padding: 50px 28px 22px;
+      background:
+        linear-gradient(180deg, var(--ivory) 0%, var(--ivory-warm) 100%);
+      border: 3px solid var(--gold);
+      border-radius: 140px 140px 8px 8px;
+      box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 0 0 4px rgba(212, 162, 76, 0.2),
+        inset 0 0 30px rgba(212, 162, 76, 0.08);
+      text-align: center;
+    }
+    .mihrab-card::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(212, 162, 76, 0.5);
+      border-radius: 134px 134px 4px 4px;
+      pointer-events: none;
+    }
+    .mihrab-card .crown-star {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      color: var(--gold);
+      font-size: 28px;
+      filter: drop-shadow(0 2px 6px rgba(212, 162, 76, 0.5));
+    }
+    .mihrab-card .role-label {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      color: var(--gold-deep);
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .mihrab-card .name-hi {
+      font-size: 22px;
+      color: var(--maroon-deep);
+    }
+    .mihrab-card .name-en {
+      font-size: 14px;
+      color: var(--gold-deep);
+      margin-top: 4px;
+    }
+    .mihrab-card .name-ar {
+      font-size: 16px;
+      margin-top: 6px;
+      color: var(--emerald-deep);
+    }
+    .mihrab-card .corner-orn {
+      position: absolute;
+      bottom: 14px;
+      width: 16px;
+      color: var(--gold);
+      font-size: 12px;
+    }
+    .mihrab-card .corner-orn.l { left: 14px; }
+    .mihrab-card .corner-orn.r { right: 14px; }
+
+    /* ── Variants ── */
+    .name-box.gen1 {
+      min-width: 190px;
+      max-width: 210px;
+      padding: 14px 18px 12px;
+      background: linear-gradient(150deg, var(--ivory) 0%, var(--gold-pale) 100%);
+      border: 2.5px solid var(--gold);
+    }
+    .name-box.gen1 .name-hi { font-size: 16px; }
+
+    .name-box.lineage {
+      border: 2px solid var(--emerald);
+      background: linear-gradient(150deg, var(--ivory) 0%, #E8F0E5 100%);
+    }
+    .name-box.lineage .top-star {
+      background: var(--emerald);
+    }
+    .lineage-mark {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 1px 10px;
+      background: var(--emerald);
+      color: var(--gold-glow);
+      font-family: 'Cinzel', serif;
+      font-size: 8.5px;
+      letter-spacing: 1px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .name-box.spouse {
+      border: 2px dashed var(--maroon);
+      background: linear-gradient(150deg, var(--ivory) 0%, #F4E5DC 100%);
+    }
+    .name-box.husband {
+      border: 2px solid var(--maroon);
+      background: linear-gradient(150deg, var(--ivory) 0%, #F4E5DC 100%);
+    }
+    .name-box.spouse .role-tag,
+    .name-box.husband .role-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 8.5px;
+      color: var(--gold-darkest);
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .name-box.gen5 {
+      border: 2px solid var(--emerald-light);
+      background: linear-gradient(150deg, #F1FAEE 0%, #DCEDD3 100%);
+    }
+    .name-box.gen5 .top-star { background: var(--emerald); }
+    .name-box.gen5 .name-hi { color: var(--emerald-deep); }
+    .name-box.gen5 .name-en { color: var(--emerald); }
+
+    /* ── TREE CONNECTORS ── */
+    .tree-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .children {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 18px;
+      position: relative;
+      padding-top: 32px;
+    }
+    .children::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 18px;
+      background: linear-gradient(to bottom, var(--gold), var(--emerald-light));
+      transform: translateX(-50%);
+      box-shadow: 0 0 6px rgba(212, 162, 76, 0.5);
+    }
+    .children.multi::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: var(--bar-left, 0);
+      right: var(--bar-right, 0);
+      height: 2px;
+      background: linear-gradient(to right,
+        var(--gold) 0%, var(--gold) 4px,
+        var(--emerald-light) 4px, var(--emerald-light) calc(100% - 4px),
+        var(--gold) calc(100% - 4px), var(--gold) 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 4px rgba(212, 162, 76, 0.3);
+    }
+
+    .child {
+      position: relative;
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .child::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 16px;
+      background: var(--emerald-light);
+    }
+    .child::after {
+      content: '✦';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--gold);
+      font-size: 10px;
+      background: var(--emerald-darkest);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--gold);
+      z-index: 1;
+      filter: drop-shadow(0 0 4px rgba(212, 162, 76, 0.6));
+    }
+
+    .single-child {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      padding-top: 26px;
+    }
+    .single-child::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, var(--gold), var(--emerald-light));
+      transform: translateX(-50%);
+    }
+
+    /* ── BRANCH GROUP ── */
+    .branch-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .branch-sublabel {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 16px;
+      background: linear-gradient(135deg, rgba(212, 162, 76, 0.15), rgba(212, 162, 76, 0.05));
+      border: 1px solid rgba(212, 162, 76, 0.5);
+      border-radius: 14px;
+      margin-bottom: 8px;
+    }
+    .branch-sublabel .star {
+      color: var(--gold);
+      font-size: 9px;
+    }
+    .branch-sublabel .b-hi {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 11px;
+      color: var(--gold-pale);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── COUPLE ── */
+    .couple-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+    }
+    .couple-knot {
+      width: 42px;
+      height: 42px;
+      background:
+        radial-gradient(circle at 30% 30%, var(--gold-light), var(--gold) 50%, var(--gold-deep));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald-deep);
+      font-size: 18px;
+      border: 2px solid var(--gold-darkest);
+      flex-shrink: 0;
+      z-index: 2;
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 2px rgba(255, 233, 168, 0.5);
+      margin: 0 -3px;
+      font-weight: 700;
+    }
+
+    /* ── ORNAMENT ROWS ── */
+    .ornament-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin: 14px 0 10px;
+    }
+    .ornament-row .orn-line {
+      flex: 1;
+      max-width: 200px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
+    }
+    .ornament-row .orn-icon {
+      color: var(--gold);
+      font-size: 16px;
+      filter: drop-shadow(0 0 6px rgba(212, 162, 76, 0.5));
+    }
+
+    /* ── BRANCH CONTAINER ── */
+    .branch-container {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      align-items: flex-start;
+      margin-top: 4px;
+    }
+    .branch-container.tight { gap: 36px; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin: 24px 0 14px;
+      flex-wrap: wrap;
+      padding: 14px 26px;
+      background:
+        linear-gradient(135deg, rgba(11, 61, 54, 0.6), rgba(17, 94, 81, 0.4));
+      border: 1px solid rgba(212, 162, 76, 0.4);
+      border-radius: 4px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 11px;
+      color: var(--gold-pale);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+    .legend-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 24px 0 12px;
+      margin: 22px 60px 0;
+      position: relative;
+    }
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
+    }
+    .footer::after {
+      content: '✦';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--emerald-darkest);
+      color: var(--gold);
+      padding: 0 14px;
+      font-size: 14px;
+    }
+    .footer-icons {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      margin: 6px 0 12px;
+      align-items: center;
+    }
+    .footer-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 26px;
+      color: var(--gold-glow);
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+      filter: drop-shadow(0 2px 8px rgba(212, 162, 76, 0.3));
+    }
+    .footer-translation {
+      font-size: 12px;
+      color: var(--gold-light);
+      margin-top: 6px;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+    .footer-text {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-top: 14px;
+    }
+
+    /* ── BOTTOM PATTERN BAR ── */
+    .pattern-bar {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      padding: 0 50px;
+    }
+    .pattern-bar .pb-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="poster">
+
+    <!-- Watermark -->
+    <div class="watermark">﷽</div>
+
+    <!-- Border bands -->
+    <div class="ornate-band"></div>
+    <div class="ornate-band-inner"></div>
+    <div class="ornate-band-thin"></div>
+
+    <!-- Khatim corner stars -->
+    <svg class="khatim tl" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#D4A24C" stroke-width="1.2">
+        <polygon points="40,10 50,30 70,30 54,44 60,68 40,56 20,68 26,44 10,30 30,30" opacity="0.9" />
+        <polygon points="40,18 47,32 60,32 50,42 54,58 40,50 26,58 30,42 20,32 33,32" opacity="0.7" />
+        <circle cx="40" cy="40" r="6" fill="#D4A24C" opacity="0.9"/>
+        <circle cx="40" cy="40" r="3" fill="#FFE9A8" />
+      </g>
+      <g stroke="#E8C07C" stroke-width="0.8" fill="none" opacity="0.6">
+        <path d="M5 5 L75 5 L75 12 L12 12 L12 75 L5 75 Z" />
+      </g>
+    </svg>
+    <svg class="khatim tr" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#D4A24C" stroke-width="1.2">
+        <polygon points="40,10 50,30 70,30 54,44 60,68 40,56 20,68 26,44 10,30 30,30" opacity="0.9" />
+        <polygon points="40,18 47,32 60,32 50,42 54,58 40,50 26,58 30,42 20,32 33,32" opacity="0.7" />
+        <circle cx="40" cy="40" r="6" fill="#D4A24C" opacity="0.9"/>
+        <circle cx="40" cy="40" r="3" fill="#FFE9A8" />
+      </g>
+      <g stroke="#E8C07C" stroke-width="0.8" fill="none" opacity="0.6">
+        <path d="M5 5 L75 5 L75 12 L12 12 L12 75 L5 75 Z" />
+      </g>
+    </svg>
+    <svg class="khatim bl" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#D4A24C" stroke-width="1.2">
+        <polygon points="40,10 50,30 70,30 54,44 60,68 40,56 20,68 26,44 10,30 30,30" opacity="0.9" />
+        <polygon points="40,18 47,32 60,32 50,42 54,58 40,50 26,58 30,42 20,32 33,32" opacity="0.7" />
+        <circle cx="40" cy="40" r="6" fill="#D4A24C" opacity="0.9"/>
+        <circle cx="40" cy="40" r="3" fill="#FFE9A8" />
+      </g>
+      <g stroke="#E8C07C" stroke-width="0.8" fill="none" opacity="0.6">
+        <path d="M5 5 L75 5 L75 12 L12 12 L12 75 L5 75 Z" />
+      </g>
+    </svg>
+    <svg class="khatim br" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#D4A24C" stroke-width="1.2">
+        <polygon points="40,10 50,30 70,30 54,44 60,68 40,56 20,68 26,44 10,30 30,30" opacity="0.9" />
+        <polygon points="40,18 47,32 60,32 50,42 54,58 40,50 26,58 30,42 20,32 33,32" opacity="0.7" />
+        <circle cx="40" cy="40" r="6" fill="#D4A24C" opacity="0.9"/>
+        <circle cx="40" cy="40" r="3" fill="#FFE9A8" />
+      </g>
+      <g stroke="#E8C07C" stroke-width="0.8" fill="none" opacity="0.6">
+        <path d="M5 5 L75 5 L75 12 L12 12 L12 75 L5 75 Z" />
+      </g>
+    </svg>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- Quranic verse opener -->
+      <div class="quran-frame">
+        <div class="quran-arabic">وَجَعَلْنَا مِنَ الْمَاءِ كُلَّ شَيْءٍ حَيٍّ</div>
+        <div class="quran-trans">"And We made every living thing from water" — and from one soul, He has multiplied us into nations and tribes.</div>
+        <div class="quran-ref">— Surah Al-Anbiya · 21 : 30 —</div>
+      </div>
+
+      <!-- Bismillah -->
+      <div class="bismillah-section">
+        <span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+        <div class="bismillah-sub">In the Name of Allah · The Most Gracious · The Most Merciful</div>
+      </div>
+
+      <!-- Title -->
+      <div class="title-wrap">
+        <span class="corner-flourish cf-tl">❋</span>
+        <span class="corner-flourish cf-tr">❋</span>
+        <span class="corner-flourish cf-bl">❋</span>
+        <span class="corner-flourish cf-br">❋</span>
+        <div class="title-arabic">شَجَرَة عَائِلَة بُوَالَا</div>
+        <div class="title-main">बुवाला खानदान</div>
+        <div class="title-sub">BUWALA · FAMILY HERITAGE TREE</div>
+        <div class="title-place">माण्डल (Mandal) · राजस्थान · अंसारी खानदान</div>
+      </div>
+
+      <div class="star-divider">
+        <div class="line"></div>
+        <span class="star-icon">✦</span>
+        <span class="star-icon large">✺</span>
+        <span class="star-icon">✦</span>
+        <div class="line"></div>
+      </div>
+
+      <!-- ══════════════════════════════ -->
+      <!--             TREE              -->
+      <!-- ══════════════════════════════ -->
+
+      <!-- ROOT ANCESTOR -->
+      <div class="gen-label">
+        <div class="gen-pill">
+          <span class="gen-num">Founding Ancestor</span>
+          <span class="gen-sep"></span>
+          <span class="gen-hi">मूल पूर्वज</span>
+        </div>
+      </div>
+
+      <div class="founder-wrap">
+        <div class="mihrab-card">
+          <span class="crown-star">✺</span>
+          <span class="corner-orn l">❋</span>
+          <span class="corner-orn r">❋</span>
+          <div class="role-label">Patriarch · पूर्वज</div>
+          <div class="name-hi">अल्लारख जी अंसारी</div>
+          <div class="name-en">Allarakh Ji Ansari</div>
+          <div class="name-ar">الله ركھ جی انصاری</div>
+        </div>
+      </div>
+
+      <!-- ───── 1ST GENERATION ───── -->
+      <div class="gen-label">
+        <div class="gen-pill">
+          <span class="gen-num">1st Generation</span>
+          <span class="gen-sep"></span>
+          <span class="gen-hi">प्रथम पीढ़ी</span>
+        </div>
+      </div>
+
+      <div class="tree-row">
+        <div class="children multi" style="--bar-left: 105px; --bar-right: 105px; gap: 100px;">
+          <div class="child">
+            <div class="name-box gen1">
+              <span class="top-star">✦</span>
+              <div class="name-hi">हाजी अब्दुल रहमान</div>
+              <div class="name-en">Haji Abdul Rahman</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box gen1">
+              <span class="top-star">✦</span>
+              <div class="name-hi">अहमद नूर जी</div>
+              <div class="name-en">Ahmad Nur Ji</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ornament-row">
+        <div class="orn-line"></div>
+        <span class="orn-icon">❋</span>
+        <span class="orn-icon">✺</span>
+        <span class="orn-icon">❋</span>
+        <div class="orn-line"></div>
+      </div>
+
+      <!-- ───── 2ND GENERATION ───── -->
+      <div class="gen-label">
+        <div class="gen-pill">
+          <span class="gen-num">2nd Generation</span>
+          <span class="gen-sep"></span>
+          <span class="gen-hi">द्वितीय पीढ़ी</span>
+        </div>
+      </div>
+      <div class="gen-meta" style="text-align:center; margin-top:-8px; margin-bottom:8px;">
+        अहमद नूर जी के वंशज · Descendants of Ahmad Nur Ji
+      </div>
+
+      <div class="tree-row">
+        <div class="children multi" style="--bar-left: 80px; --bar-right: 80px; gap: 22px;">
+          <div class="child">
+            <div class="name-box">
+              <span class="top-star">✦</span>
+              <div class="name-hi">असगर अली</div>
+              <div class="name-en">Asgar Ali</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box">
+              <span class="top-star">✦</span>
+              <div class="name-hi">हमीदा बानू</div>
+              <div class="name-en">Hamida Banu</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box lineage">
+              <span class="top-star">✦</span>
+              <div class="name-hi">गनी मोहम्मद</div>
+              <div class="name-en">Gani Mohammad</div>
+              <div class="lineage-mark">वंश जारी ↓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Couple row -->
+      <div class="single-child">
+        <div class="couple-row">
+          <div class="name-box spouse" style="min-width:170px;max-width:190px;">
+            <div class="role-tag">पत्नी · WIFE</div>
+            <div class="name-hi">बिस्मिल्लाह बेगम</div>
+            <div class="name-en">Bismillah Begum</div>
+          </div>
+          <div class="couple-knot">۞</div>
+          <div class="name-box husband" style="min-width:170px;max-width:190px;">
+            <div class="role-tag">पति · HUSBAND</div>
+            <div class="name-hi">गनी मोहम्मद</div>
+            <div class="name-en">Gani Mohammad</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ───── 3RD GENERATION ───── -->
+      <div class="gen-label">
+        <div class="gen-pill">
+          <span class="gen-num">3rd Generation</span>
+          <span class="gen-sep"></span>
+          <span class="gen-hi">तृतीय पीढ़ी</span>
+        </div>
+      </div>
+      <div class="gen-meta" style="text-align:center; margin-top:-8px; margin-bottom:8px;">
+        गनी मोहम्मद के वंशज · Descendants of Gani Mohammad
+      </div>
+
+      <div class="tree-row">
+        <div class="children multi" style="--bar-left: 70px; --bar-right: 70px; gap: 14px;">
+          <div class="child">
+            <div class="name-box lineage" style="min-width:118px;max-width:140px;">
+              <span class="top-star">✦</span>
+              <div class="name-hi" style="font-size:13px;">अब्दुल लतीफ</div>
+              <div class="name-en">Abdul Latif</div>
+              <div class="lineage-mark">वंश जारी ↓</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <span class="top-star">✦</span>
+              <div class="name-hi" style="font-size:13px;">शहनाज</div>
+              <div class="name-en">Shahnaz</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <span class="top-star">✦</span>
+              <div class="name-hi" style="font-size:13px;">जरीना</div>
+              <div class="name-en">Jarina</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <span class="top-star">✦</span>
+              <div class="name-hi" style="font-size:13px;">मैमुना</div>
+              <div class="name-en">Maimuna</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <span class="top-star">✦</span>
+              <div class="name-hi" style="font-size:13px;">रिहाना</div>
+              <div class="name-en">Rihana</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box lineage" style="min-width:118px;max-width:140px;">
+              <span class="top-star">✦</span>
+              <div class="name-hi" style="font-size:13px;">शोकत अली</div>
+              <div class="name-en">Shokat Ali</div>
+              <div class="lineage-mark">वंश जारी ↓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ornament-row">
+        <div class="orn-line"></div>
+        <span class="orn-icon">❋</span>
+        <span class="orn-icon">✺</span>
+        <span class="orn-icon">❋</span>
+        <div class="orn-line"></div>
+      </div>
+
+      <!-- ───── 4TH GENERATION ───── -->
+      <div class="gen-label">
+        <div class="gen-pill">
+          <span class="gen-num">4th Generation</span>
+          <span class="gen-sep"></span>
+          <span class="gen-hi">चतुर्थ पीढ़ी</span>
+        </div>
+      </div>
+
+      <div class="branch-container">
+
+        <!-- Abdul Latif branch -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="star">✦</span>
+            <span class="b-hi">अब्दुल लतीफ के वंशज</span>
+            <span class="star">✦</span>
+          </div>
+          <div class="children multi" style="--bar-left: 65px; --bar-right: 65px; gap: 12px;">
+            <div class="child">
+              <div class="name-box lineage" style="min-width:108px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">ताहिर हुसैन</div>
+                <div class="name-en">Tahir Husain</div>
+                <div class="lineage-mark">↓</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box" style="min-width:108px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">साहिना बानू</div>
+                <div class="name-en">Sahina Banu</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box lineage" style="min-width:108px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">जाहिद हुसैन</div>
+                <div class="name-en">Zahid Husain</div>
+                <div class="lineage-mark">↓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shokat Ali branch -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="star">✦</span>
+            <span class="b-hi">शोकत अली के वंशज</span>
+            <span class="star">✦</span>
+          </div>
+          <div class="children multi" style="--bar-left: 58px; --bar-right: 58px; gap: 10px;">
+            <div class="child">
+              <div class="name-box" style="min-width:104px;max-width:120px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12px;">इतेफाक हुसैन</div>
+                <div class="name-en">Itefak Husain</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box" style="min-width:104px;max-width:120px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12px;">तोफिक अंसारी</div>
+                <div class="name-en">Tofik Ansari</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box lineage" style="min-width:104px;max-width:120px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12px;">साईस्ता परवीन</div>
+                <div class="name-en">Saista Praveen</div>
+                <div class="lineage-mark">↓</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box" style="min-width:104px;max-width:120px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12px;">आसिफ हुसैन</div>
+                <div class="name-en">Asif Husain</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ornament-row">
+        <div class="orn-line"></div>
+        <span class="orn-icon">❋</span>
+        <span class="orn-icon">✺</span>
+        <span class="orn-icon">❋</span>
+        <div class="orn-line"></div>
+      </div>
+
+      <!-- ───── 5TH GENERATION ───── -->
+      <div class="gen-label">
+        <div class="gen-pill">
+          <span class="gen-num">5th Generation</span>
+          <span class="gen-sep"></span>
+          <span class="gen-hi">पंचम पीढ़ी</span>
+        </div>
+      </div>
+
+      <div class="branch-container tight">
+
+        <!-- Tahir's children -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="star">✦</span>
+            <span class="b-hi">ताहिर हुसैन के वंशज</span>
+            <span class="star">✦</span>
+          </div>
+          <div class="children multi" style="--bar-left: 62px; --bar-right: 62px; gap: 12px;">
+            <div class="child">
+              <div class="name-box gen5" style="min-width:114px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">मिसबान अंसारी</div>
+                <div class="name-en">Misban Ansari</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box gen5" style="min-width:114px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">सरहान अंसारी</div>
+                <div class="name-en">Sarhan Ansari</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zahid's children -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="star">✦</span>
+            <span class="b-hi">जाहिद हुसैन के वंशज</span>
+            <span class="star">✦</span>
+          </div>
+          <div class="children multi" style="--bar-left: 62px; --bar-right: 62px; gap: 12px;">
+            <div class="child">
+              <div class="name-box gen5" style="min-width:114px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">सोहेब अंसारी</div>
+                <div class="name-en">Soheb Ansari</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box gen5" style="min-width:114px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">एनुल हसन</div>
+                <div class="name-en">Anul Hasan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asif's children -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="star">✦</span>
+            <span class="b-hi">आसिफ हुसैन के वंशज</span>
+            <span class="star">✦</span>
+          </div>
+          <div class="children multi" style="--bar-left: 62px; --bar-right: 62px; gap: 12px;">
+            <div class="child">
+              <div class="name-box gen5" style="min-width:114px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">अरहान रज़ा</div>
+                <div class="name-en">Arhan Raza</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box gen5" style="min-width:114px;max-width:128px;">
+                <span class="top-star">✦</span>
+                <div class="name-hi" style="font-size:12.5px;">हयात रज़ा</div>
+                <div class="name-en">Hayat Raza</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Star divider -->
+      <div class="star-divider">
+        <div class="line"></div>
+        <span class="star-icon">✦</span>
+        <span class="star-icon large">✺</span>
+        <span class="star-icon">✦</span>
+        <div class="line"></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px solid var(--gold);background:linear-gradient(150deg,#FBF6E9,#F4EDD8);"></div>
+          <span>Family Members</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px solid var(--emerald);background:linear-gradient(150deg,#FBF6E9,#E8F0E5);"></div>
+          <span>Lineage Continues</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px dashed var(--maroon);background:linear-gradient(150deg,#FBF6E9,#F4E5DC);"></div>
+          <span>Spouse</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px solid var(--emerald-light);background:linear-gradient(150deg,#F1FAEE,#DCEDD3);"></div>
+          <span>5th Generation</span>
+        </div>
+      </div>
+
+      <!-- Footer / Dua -->
+      <div class="footer">
+        <div class="footer-icons">
+          <span style="font-size:24px;">🕌</span>
+          <span style="color:var(--gold);font-size:22px;">☪</span>
+          <span style="font-size:24px;">🕌</span>
+        </div>
+        <div class="footer-arabic">اللَّهُمَّ بَارِكْ لَنَا فِي ذُرِّيَّتِنَا</div>
+        <div class="footer-translation">"O Allah, bless our descendants and grant them tranquility"</div>
+        <div class="footer-text">बुवाला खानदान &nbsp;·&nbsp; माण्डल, राजस्थान &nbsp;·&nbsp; अंसारी परिवार</div>
+      </div>
+
+      <!-- Bottom pattern bar -->
+      <div class="pattern-bar">
+        <div class="pb-line"></div>
+        <svg width="640" height="26" viewBox="0 0 640 26" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="islamicTile" x="0" y="0" width="52" height="26" patternUnits="userSpaceOnUse">
+              <rect width="52" height="26" fill="none" />
+              <polygon points="26,1 51,13 26,25 1,13" fill="none" stroke="#D4A24C" stroke-width="1" opacity="0.85" />
+              <polygon points="26,5 47,13 26,21 5,13" fill="none" stroke="#E8C07C" stroke-width="0.6" opacity="0.6" />
+              <polygon points="26,9 43,13 26,17 9,13" fill="#D4A24C" opacity="0.5" />
+              <circle cx="26" cy="13" r="1.5" fill="#FFE9A8" />
+              <circle cx="0" cy="13" r="1.2" fill="#D4A24C" opacity="0.5" />
+              <circle cx="52" cy="13" r="1.2" fill="#D4A24C" opacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="640" height="26" fill="url(#islamicTile)" />
+        </svg>
+        <div class="pb-line"></div>
+      </div>
+
+    </div><!-- end .content -->
+  </div><!-- end .poster -->
+</body>
+</html>
