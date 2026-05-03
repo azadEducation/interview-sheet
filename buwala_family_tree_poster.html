@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>बुवाला खानदान — Family Heritage Tree</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Serif+Devanagari:wght@400;500;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IM+Fell+English:ital@0;1&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold-deep: #A87422;
+      --gold: #C9922A;
+      --gold-light: #E8C56A;
+      --gold-pale: #F5E4B0;
+      --gold-glow: #FFD97A;
+      --maroon: #6B1226;
+      --maroon-deep: #3F0A18;
+      --maroon-warm: #8B1F35;
+      --parchment: #F6EEDB;
+      --parchment-dark: #EAD9B5;
+      --parchment-shadow: #DDC79A;
+      --green: #2D5A27;
+      --green-light: #4A8044;
+      --green-soft: #7BA86F;
+      --ink: #2A1A0E;
+      --shadow: rgba(80, 40, 8, 0.22);
+      --shadow-soft: rgba(80, 40, 8, 0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: var(--parchment);
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Serif Devanagari', serif;
+    }
+
+    .poster {
+      width: 100%;
+      max-width: 100%;
+      background: var(--parchment);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── PARCHMENT TEXTURE ── */
+    .poster::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at top left, rgba(255, 230, 180, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(180, 130, 60, 0.18) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .poster::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow:
+        inset 0 0 80px rgba(120, 70, 20, 0.2),
+        inset 0 0 200px rgba(80, 40, 10, 0.08);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── BORDER FRAMES ── */
+    .outer-frame {
+      position: absolute;
+      inset: 18px;
+      border: 3px solid var(--gold);
+      z-index: 2;
+      pointer-events: none;
+      border-radius: 1px;
+    }
+
+    .inner-frame {
+      position: absolute;
+      inset: 28px;
+      border: 1px solid var(--gold-light);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .third-frame {
+      position: absolute;
+      inset: 33px;
+      border: 1px solid rgba(201, 146, 42, 0.35);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── CORNER ORNAMENTS ── */
+    .corner {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      z-index: 3;
+    }
+
+    .corner.tl { top: 10px; left: 10px; }
+    .corner.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+    .corner.bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+    .corner.br { bottom: 10px; right: 10px; transform: scale(-1); }
+
+    /* ── VINE DECORATIONS ── */
+    .vine-left, .vine-right {
+      position: absolute;
+      top: 240px;
+      bottom: 120px;
+      width: 50px;
+      z-index: 3;
+      opacity: 0.5;
+    }
+    .vine-left { left: 42px; }
+    .vine-right { right: 42px; transform: scaleX(-1); }
+
+    /* ── WATERMARK ── */
+    .watermark {
+      position: absolute;
+      bottom: 200px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 220px;
+      color: rgba(201, 146, 42, 0.04);
+      pointer-events: none;
+      z-index: 1;
+      white-space: nowrap;
+      font-family: 'Noto Nastaliq Urdu', serif;
+    }
+
+    /* ── CONTENT AREA ── */
+    .content {
+      position: relative;
+      z-index: 5;
+      padding: 50px 95px 40px;
+    }
+
+    /* ── HEADER ── */
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .top-bar .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+      position: relative;
+    }
+    .top-bar .line::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(201, 146, 42, 0.6);
+    }
+    .top-bar .icons {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .top-bar .icon-gold {
+      color: var(--gold);
+      font-size: 22px;
+      filter: drop-shadow(0 1px 2px rgba(201, 146, 42, 0.4));
+    }
+    .top-bar .icon-star {
+      color: var(--gold-deep);
+      font-size: 14px;
+    }
+
+    /* ── BISMILLAH ── */
+    .bismillah-section {
+      text-align: center;
+      margin: 12px 0 22px;
+      padding: 18px 0 8px;
+    }
+    .bismillah-text {
+      font-size: 56px;
+      color: var(--maroon-deep);
+      line-height: 1.7;
+      filter: drop-shadow(0 2px 4px rgba(201, 146, 42, 0.4));
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      display: block;
+      letter-spacing: 0.02em;
+      padding: 10px 0 18px;
+    }
+    .bismillah-sub {
+      font-size: 11px;
+      color: var(--gold-deep);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-family: 'Cinzel Decorative', serif;
+      margin-top: 18px;
+      font-weight: 400;
+    }
+
+    /* ── ARABESQUE DIVIDER ── */
+    .ornament-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--gold);
+      font-size: 14px;
+      margin: 10px 0;
+      letter-spacing: 8px;
+    }
+    .ornament-row .dl {
+      flex: 1;
+      max-width: 180px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
+    }
+
+    /* ── TITLE FRAME ── */
+    .title-frame {
+      background:
+        linear-gradient(135deg, var(--maroon-deep) 0%, var(--maroon) 45%, var(--maroon-warm) 50%, var(--maroon) 55%, var(--maroon-deep) 100%);
+      border: 3px double var(--gold);
+      border-radius: 4px;
+      padding: 24px 60px 20px;
+      margin: 8px 50px 12px;
+      text-align: center;
+      position: relative;
+      box-shadow:
+        0 6px 28px rgba(60, 10, 20, 0.45),
+        inset 0 0 40px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 215, 130, 0.15);
+    }
+    .title-frame::before, .title-frame::after {
+      content: '✦';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold-light);
+      font-size: 22px;
+      filter: drop-shadow(0 0 6px rgba(232, 197, 106, 0.5));
+    }
+    .title-frame::before { left: 22px; }
+    .title-frame::after { right: 22px; }
+
+    .title-main {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 44px;
+      font-weight: 900;
+      color: var(--gold-pale);
+      line-height: 1.15;
+      text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(255, 217, 122, 0.3);
+      letter-spacing: 1px;
+    }
+    .title-sub {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 13px;
+      color: var(--gold-light);
+      letter-spacing: 5px;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+    .title-place {
+      font-size: 14px;
+      color: var(--gold-pale);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      margin-top: 6px;
+      opacity: 0.92;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── GENERATION LABEL ── */
+    .gen-label {
+      text-align: center;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 11px;
+      color: var(--maroon);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin: 22px 0 14px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-weight: 700;
+    }
+    .gen-label::before, .gen-label::after {
+      content: '';
+      flex: 1;
+      max-width: 220px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light) 40%, var(--gold) 50%, var(--gold-light) 60%, transparent);
+    }
+    .gen-label .gem {
+      color: var(--gold);
+      font-size: 10px;
+      filter: drop-shadow(0 0 4px rgba(201, 146, 42, 0.5));
+    }
+    .gen-label .gen-hi {
+      color: var(--maroon-deep);
+      font-family: 'Noto Serif Devanagari', serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .gen-label .gen-divider {
+      color: var(--gold);
+      opacity: 0.6;
+      margin: 0 4px;
+    }
+    .gen-label .gen-meta {
+      color: var(--maroon);
+      font-family: 'Noto Serif Devanagari', serif;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      font-size: 10.5px;
+    }
+
+    /* ── NAME BOXES ── */
+    .name-box {
+      background: linear-gradient(150deg, #FFFBF0 0%, #F8EFD2 100%);
+      border: 2px solid var(--gold);
+      border-radius: 5px;
+      padding: 10px 16px 9px;
+      text-align: center;
+      box-shadow:
+        0 3px 10px var(--shadow),
+        0 1px 2px var(--shadow-soft),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      position: relative;
+      min-width: 138px;
+      max-width: 168px;
+      transition: transform 0.2s;
+    }
+    .name-box::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(201, 146, 42, 0.32);
+      border-radius: 3px;
+      pointer-events: none;
+    }
+    .name-box::after {
+      content: '';
+      position: absolute;
+      top: -3px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      background: var(--gold);
+      border: 1px solid var(--gold-deep);
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(201, 146, 42, 0.5);
+      opacity: 0;
+    }
+
+    .name-hi {
+      font-family: 'Noto Serif Devanagari', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--maroon-deep);
+      line-height: 1.35;
+    }
+    .name-en {
+      font-family: 'IM Fell English', serif;
+      font-size: 10.5px;
+      color: var(--gold-deep);
+      line-height: 1.3;
+      margin-top: 3px;
+      font-style: italic;
+      letter-spacing: 0.3px;
+    }
+
+    /* Variants */
+    .name-box.founder {
+      min-width: 230px;
+      max-width: 270px;
+      border: 3px double var(--gold);
+      background:
+        radial-gradient(ellipse at top, #FFF6D8, #F5E4B0 70%, #EDD79A);
+      box-shadow:
+        0 6px 22px rgba(150, 100, 30, 0.35),
+        0 0 0 2px rgba(255, 217, 122, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      padding: 14px 22px 12px;
+    }
+    .name-box.founder::after {
+      opacity: 1;
+    }
+    .name-box.founder .name-hi {
+      font-size: 18px;
+      color: var(--maroon-deep);
+    }
+    .name-box.founder .name-en {
+      font-size: 12px;
+      color: var(--gold-deep);
+    }
+    .name-box.founder .crown {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      color: var(--gold);
+      filter: drop-shadow(0 1px 3px rgba(201, 146, 42, 0.5));
+    }
+
+    .name-box.gen1 {
+      min-width: 180px;
+      max-width: 200px;
+      border: 2.5px solid var(--gold);
+      padding: 12px 18px 10px;
+      background: linear-gradient(150deg, #FFFAEC 0%, #F5E8C4 100%);
+    }
+    .name-box.gen1 .name-hi { font-size: 15px; }
+
+    .name-box.lineage {
+      border: 2px solid var(--maroon);
+      background: linear-gradient(150deg, #FFF4E2 0%, #F0E0BC 100%);
+    }
+    .name-box.lineage .name-hi { color: var(--maroon-deep); }
+    .name-box.lineage .lineage-mark {
+      font-size: 9px;
+      color: var(--green);
+      margin-top: 3px;
+      font-family: 'Noto Serif Devanagari', serif;
+      letter-spacing: 0.5px;
+    }
+
+    .name-box.spouse {
+      border: 2px dashed var(--maroon);
+      background: linear-gradient(150deg, #FFF4E2 0%, #F0E0BC 100%);
+    }
+    .name-box.spouse .role-tag,
+    .name-box.husband .role-tag {
+      font-size: 9px;
+      color: var(--gold-deep);
+      font-family: 'Cinzel Decorative', serif;
+      letter-spacing: 1.5px;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+    .name-box.husband {
+      border: 2px solid var(--maroon);
+      background: linear-gradient(150deg, #FFF4E2 0%, #F0E0BC 100%);
+    }
+
+    .name-box.gen5 {
+      border: 2px solid var(--green);
+      background: linear-gradient(150deg, #F1F9ED 0%, #DBEED5 100%);
+    }
+    .name-box.gen5 .name-hi { color: var(--green); }
+    .name-box.gen5 .name-en { color: var(--green-light); }
+
+    /* ── TREE CONNECTOR SYSTEM (CSS-based, auto-aligned) ── */
+    .tree-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* Children container — flex of branches sharing a parent */
+    .children {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 18px;
+      position: relative;
+      padding-top: 28px;
+    }
+    /* Vertical drop from parent (always present, centered) */
+    .children::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 16px;
+      background: linear-gradient(to bottom, var(--gold), var(--green-light));
+      transform: translateX(-50%);
+      box-shadow: 0 0 4px rgba(201, 146, 42, 0.4);
+    }
+    /* Horizontal bar across children — only when more than one */
+    .children.multi::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: var(--bar-left, 0);
+      right: var(--bar-right, 0);
+      height: 2px;
+      background:
+        linear-gradient(to right,
+          var(--gold) 0%, var(--gold) 4px,
+          var(--green-light) 4px, var(--green-light) calc(100% - 4px),
+          var(--gold) calc(100% - 4px), var(--gold) 100%);
+      border-radius: 2px;
+    }
+
+    .child {
+      position: relative;
+      padding-top: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Each child's vertical stem from horizontal bar */
+    .child::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 14px;
+      background: var(--green-light);
+    }
+    /* Decorative dot at the top of each stem */
+    .child::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 1px solid var(--gold-deep);
+      box-shadow: 0 0 4px rgba(201, 146, 42, 0.5);
+      z-index: 1;
+    }
+
+    /* Single-child wrapper — only vertical stem, no horizontal bar */
+    .single-child {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      padding-top: 24px;
+    }
+    .single-child::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 22px;
+      background: linear-gradient(to bottom, var(--gold), var(--green-light));
+      transform: translateX(-50%);
+    }
+
+    /* Branch group with sub-label */
+    .branch-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .branch-sublabel {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 9px;
+      color: var(--maroon);
+      letter-spacing: 2.5px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border: 1px solid rgba(201, 146, 42, 0.4);
+      border-radius: 12px;
+      background: rgba(255, 251, 240, 0.6);
+    }
+    .branch-sublabel .b-hi {
+      font-family: 'Noto Serif Devanagari', serif;
+      letter-spacing: 0.5px;
+      color: var(--maroon-deep);
+    }
+
+    /* ── COUPLE ROW ── */
+    .couple-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin: 4px 0 0;
+      position: relative;
+    }
+    .couple-heart {
+      width: 36px; height: 36px;
+      background: radial-gradient(circle at 30% 30%, var(--maroon-warm), var(--maroon-deep));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-pale);
+      font-size: 14px;
+      border: 2px solid var(--gold);
+      flex-shrink: 0;
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(60, 10, 20, 0.5), inset 0 1px 2px rgba(255, 215, 130, 0.3);
+      margin: 0 -2px;
+    }
+
+    /* ── LEAF / ORNAMENT ROWS ── */
+    .leaf-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 8px 0 4px;
+      font-size: 14px;
+      opacity: 0.75;
+    }
+
+    /* ── SECTION SPACER ── */
+    .gen-section { margin-top: 4px; }
+
+    /* ── MULTI-BRANCH CONTAINER (4th & 5th gen) ── */
+    .branch-container {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      align-items: flex-start;
+    }
+    .branch-container.tight { gap: 40px; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin: 18px 0 10px;
+      flex-wrap: wrap;
+      padding: 12px 24px;
+      background: rgba(255, 251, 235, 0.4);
+      border: 1px solid rgba(201, 146, 42, 0.25);
+      border-radius: 4px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10.5px;
+      color: var(--ink);
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+    }
+    .legend-swatch {
+      width: 18px; height: 18px;
+      border-radius: 3px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 18px 0 10px;
+      border-top: 1px solid rgba(201, 146, 42, 0.4);
+      margin: 16px 50px 0;
+      position: relative;
+    }
+    .footer::before {
+      content: '✦';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--parchment);
+      color: var(--gold);
+      padding: 0 10px;
+      font-size: 14px;
+    }
+    .footer-icons {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .footer-icons .moon { font-size: 22px; color: var(--gold); }
+    .footer-icons .mosque { font-size: 24px; }
+    .footer-arabic {
+      font-size: 22px;
+      color: var(--maroon-deep);
+      margin-top: 4px;
+      font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+      letter-spacing: 0.02em;
+    }
+    .footer-translation {
+      font-size: 11px;
+      color: var(--gold-deep);
+      margin-top: 4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+    .footer-text {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 10px;
+      color: var(--gold-deep);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-top: 12px;
+    }
+
+    /* ── ISLAMIC PATTERN BAR ── */
+    .pattern-bar {
+      margin-top: 14px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 0 50px;
+    }
+    .pattern-bar .pb-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="poster">
+
+    <!-- Watermark -->
+    <div class="watermark">﷽</div>
+
+    <!-- Border Frames -->
+    <div class="outer-frame"></div>
+    <div class="inner-frame"></div>
+    <div class="third-frame"></div>
+
+    <!-- Corner SVG Ornaments -->
+    <svg class="corner tl" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 L85 5 L85 14 L14 14 L14 85 L5 85 Z" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M11 11 L78 11 L78 19 L19 19 L19 78 L11 78 Z" stroke="#E8C56A" stroke-width="0.8" fill="none" />
+      <circle cx="14" cy="14" r="5" fill="#C9922A" />
+      <circle cx="14" cy="14" r="2.5" fill="#F5E4B0" />
+      <path d="M28 5 Q44 16 33 32 Q22 48 44 60" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M5 28 Q16 44 32 33 Q48 22 60 44" stroke="#E8C56A" stroke-width="1" fill="none" />
+      <circle cx="44" cy="60" r="3" fill="#C9922A" opacity="0.7" />
+      <circle cx="60" cy="44" r="3" fill="#C9922A" opacity="0.7" />
+      <polygon points="14,3 15.5,7.5 20,7.5 16.5,10.5 18,15 14,12 10,15 11.5,10.5 8,7.5 12.5,7.5" fill="#C9922A" opacity="0.85" />
+      <path d="M40 30 Q50 40 40 50 Q30 40 40 30 Z" fill="none" stroke="#C9922A" stroke-width="1" opacity="0.6"/>
+      <circle cx="40" cy="40" r="2" fill="#C9922A" opacity="0.7"/>
+    </svg>
+    <svg class="corner tr" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 L85 5 L85 14 L14 14 L14 85 L5 85 Z" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M11 11 L78 11 L78 19 L19 19 L19 78 L11 78 Z" stroke="#E8C56A" stroke-width="0.8" fill="none" />
+      <circle cx="14" cy="14" r="5" fill="#C9922A" />
+      <circle cx="14" cy="14" r="2.5" fill="#F5E4B0" />
+      <path d="M28 5 Q44 16 33 32 Q22 48 44 60" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M5 28 Q16 44 32 33 Q48 22 60 44" stroke="#E8C56A" stroke-width="1" fill="none" />
+      <circle cx="44" cy="60" r="3" fill="#C9922A" opacity="0.7" />
+      <circle cx="60" cy="44" r="3" fill="#C9922A" opacity="0.7" />
+      <polygon points="14,3 15.5,7.5 20,7.5 16.5,10.5 18,15 14,12 10,15 11.5,10.5 8,7.5 12.5,7.5" fill="#C9922A" opacity="0.85" />
+      <path d="M40 30 Q50 40 40 50 Q30 40 40 30 Z" fill="none" stroke="#C9922A" stroke-width="1" opacity="0.6"/>
+      <circle cx="40" cy="40" r="2" fill="#C9922A" opacity="0.7"/>
+    </svg>
+    <svg class="corner bl" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 L85 5 L85 14 L14 14 L14 85 L5 85 Z" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M11 11 L78 11 L78 19 L19 19 L19 78 L11 78 Z" stroke="#E8C56A" stroke-width="0.8" fill="none" />
+      <circle cx="14" cy="14" r="5" fill="#C9922A" />
+      <circle cx="14" cy="14" r="2.5" fill="#F5E4B0" />
+      <path d="M28 5 Q44 16 33 32 Q22 48 44 60" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M5 28 Q16 44 32 33 Q48 22 60 44" stroke="#E8C56A" stroke-width="1" fill="none" />
+      <circle cx="44" cy="60" r="3" fill="#C9922A" opacity="0.7" />
+      <circle cx="60" cy="44" r="3" fill="#C9922A" opacity="0.7" />
+      <polygon points="14,3 15.5,7.5 20,7.5 16.5,10.5 18,15 14,12 10,15 11.5,10.5 8,7.5 12.5,7.5" fill="#C9922A" opacity="0.85" />
+      <path d="M40 30 Q50 40 40 50 Q30 40 40 30 Z" fill="none" stroke="#C9922A" stroke-width="1" opacity="0.6"/>
+      <circle cx="40" cy="40" r="2" fill="#C9922A" opacity="0.7"/>
+    </svg>
+    <svg class="corner br" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 L85 5 L85 14 L14 14 L14 85 L5 85 Z" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M11 11 L78 11 L78 19 L19 19 L19 78 L11 78 Z" stroke="#E8C56A" stroke-width="0.8" fill="none" />
+      <circle cx="14" cy="14" r="5" fill="#C9922A" />
+      <circle cx="14" cy="14" r="2.5" fill="#F5E4B0" />
+      <path d="M28 5 Q44 16 33 32 Q22 48 44 60" stroke="#C9922A" stroke-width="1.5" fill="none" />
+      <path d="M5 28 Q16 44 32 33 Q48 22 60 44" stroke="#E8C56A" stroke-width="1" fill="none" />
+      <circle cx="44" cy="60" r="3" fill="#C9922A" opacity="0.7" />
+      <circle cx="60" cy="44" r="3" fill="#C9922A" opacity="0.7" />
+      <polygon points="14,3 15.5,7.5 20,7.5 16.5,10.5 18,15 14,12 10,15 11.5,10.5 8,7.5 12.5,7.5" fill="#C9922A" opacity="0.85" />
+      <path d="M40 30 Q50 40 40 50 Q30 40 40 30 Z" fill="none" stroke="#C9922A" stroke-width="1" opacity="0.6"/>
+      <circle cx="40" cy="40" r="2" fill="#C9922A" opacity="0.7"/>
+    </svg>
+
+    <!-- Vine Left -->
+    <svg class="vine-left" viewBox="0 0 50 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M25 0 C25 60 12 90 25 140 C38 190 12 230 25 280 C38 330 10 370 25 420 C40 470 12 510 25 560 C38 610 10 650 25 700 C40 750 12 790 25 840 C38 890 10 930 25 1000"
+        stroke="#2D5A27" stroke-width="2" fill="none" />
+      <ellipse cx="11" cy="60" rx="9" ry="15" fill="#2D5A27" transform="rotate(-30 11 60)" />
+      <ellipse cx="38" cy="110" rx="9" ry="15" fill="#4A8044" transform="rotate(30 38 110)" />
+      <ellipse cx="9" cy="180" rx="9" ry="14" fill="#2D5A27" transform="rotate(-25 9 180)" />
+      <ellipse cx="40" cy="240" rx="8" ry="14" fill="#4A8044" transform="rotate(35 40 240)" />
+      <ellipse cx="10" cy="310" rx="9" ry="15" fill="#2D5A27" transform="rotate(-30 10 310)" />
+      <ellipse cx="39" cy="370" rx="9" ry="14" fill="#4A8044" transform="rotate(28 39 370)" />
+      <ellipse cx="9" cy="440" rx="8" ry="14" fill="#2D5A27" transform="rotate(-32 9 440)" />
+      <ellipse cx="40" cy="500" rx="9" ry="15" fill="#4A8044" transform="rotate(30 40 500)" />
+      <ellipse cx="10" cy="570" rx="8" ry="13" fill="#2D5A27" transform="rotate(-28 10 570)" />
+      <ellipse cx="39" cy="630" rx="9" ry="14" fill="#4A8044" transform="rotate(32 39 630)" />
+      <ellipse cx="9" cy="700" rx="9" ry="15" fill="#2D5A27" transform="rotate(-30 9 700)" />
+      <ellipse cx="40" cy="760" rx="8" ry="14" fill="#4A8044" transform="rotate(28 40 760)" />
+      <ellipse cx="10" cy="830" rx="9" ry="13" fill="#2D5A27" transform="rotate(-35 10 830)" />
+      <ellipse cx="39" cy="890" rx="8" ry="14" fill="#4A8044" transform="rotate(30 39 890)" />
+      <ellipse cx="9" cy="960" rx="9" ry="14" fill="#2D5A27" transform="rotate(-30 9 960)" />
+      <circle cx="25" cy="140" r="5" fill="#C9922A" opacity="0.75" />
+      <circle cx="25" cy="320" r="4" fill="#C9922A" opacity="0.65" />
+      <circle cx="25" cy="500" r="5" fill="#C9922A" opacity="0.75" />
+      <circle cx="25" cy="680" r="4" fill="#C9922A" opacity="0.65" />
+      <circle cx="25" cy="860" r="5" fill="#C9922A" opacity="0.75" />
+    </svg>
+    <svg class="vine-right" viewBox="0 0 50 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M25 0 C25 60 12 90 25 140 C38 190 12 230 25 280 C38 330 10 370 25 420 C40 470 12 510 25 560 C38 610 10 650 25 700 C40 750 12 790 25 840 C38 890 10 930 25 1000"
+        stroke="#2D5A27" stroke-width="2" fill="none" />
+      <ellipse cx="11" cy="60" rx="9" ry="15" fill="#2D5A27" transform="rotate(-30 11 60)" />
+      <ellipse cx="38" cy="110" rx="9" ry="15" fill="#4A8044" transform="rotate(30 38 110)" />
+      <ellipse cx="9" cy="180" rx="9" ry="14" fill="#2D5A27" transform="rotate(-25 9 180)" />
+      <ellipse cx="40" cy="240" rx="8" ry="14" fill="#4A8044" transform="rotate(35 40 240)" />
+      <ellipse cx="10" cy="310" rx="9" ry="15" fill="#2D5A27" transform="rotate(-30 10 310)" />
+      <ellipse cx="39" cy="370" rx="9" ry="14" fill="#4A8044" transform="rotate(28 39 370)" />
+      <ellipse cx="9" cy="440" rx="8" ry="14" fill="#2D5A27" transform="rotate(-32 9 440)" />
+      <ellipse cx="40" cy="500" rx="9" ry="15" fill="#4A8044" transform="rotate(30 40 500)" />
+      <ellipse cx="10" cy="570" rx="8" ry="13" fill="#2D5A27" transform="rotate(-28 10 570)" />
+      <ellipse cx="39" cy="630" rx="9" ry="14" fill="#4A8044" transform="rotate(32 39 630)" />
+      <ellipse cx="9" cy="700" rx="9" ry="15" fill="#2D5A27" transform="rotate(-30 9 700)" />
+      <ellipse cx="40" cy="760" rx="8" ry="14" fill="#4A8044" transform="rotate(28 40 760)" />
+      <ellipse cx="10" cy="830" rx="9" ry="13" fill="#2D5A27" transform="rotate(-35 10 830)" />
+      <ellipse cx="39" cy="890" rx="8" ry="14" fill="#4A8044" transform="rotate(30 39 890)" />
+      <ellipse cx="9" cy="960" rx="9" ry="14" fill="#2D5A27" transform="rotate(-30 9 960)" />
+      <circle cx="25" cy="140" r="5" fill="#C9922A" opacity="0.75" />
+      <circle cx="25" cy="320" r="4" fill="#C9922A" opacity="0.65" />
+      <circle cx="25" cy="500" r="5" fill="#C9922A" opacity="0.75" />
+      <circle cx="25" cy="680" r="4" fill="#C9922A" opacity="0.65" />
+      <circle cx="25" cy="860" r="5" fill="#C9922A" opacity="0.75" />
+    </svg>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="line"></div>
+        <div class="icons">
+          <span class="icon-gold">☾</span>
+          <span class="icon-star">✦</span>
+          <span class="icon-gold">✺</span>
+          <span class="icon-star">✦</span>
+          <span class="icon-gold">☾</span>
+        </div>
+        <div class="line"></div>
+      </div>
+
+      <!-- Bismillah -->
+      <div class="bismillah-section">
+        <span class="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+        <div class="bismillah-sub">In the Name of Allah, The Most Gracious, The Most Merciful</div>
+      </div>
+
+      <!-- Arabesque Divider -->
+      <div class="ornament-row">
+        <div class="dl"></div>
+        <span>❧&nbsp;✾&nbsp;❀&nbsp;✾&nbsp;❧</span>
+        <div class="dl"></div>
+      </div>
+
+      <!-- Title -->
+      <div class="title-frame">
+        <div class="title-main">बुवाला खानदान</div>
+        <div class="title-sub">BUWALA · FAMILY HERITAGE TREE</div>
+        <div class="title-place">माण्डल (Mandal) — अंसारी खानदान</div>
+      </div>
+
+      <div class="ornament-row">
+        <div class="dl"></div>
+        <span style="font-size:13px;">✦</span>
+        <div class="dl"></div>
+      </div>
+
+      <!-- ══════════════════════════════ -->
+      <!--             TREE              -->
+      <!-- ══════════════════════════════ -->
+
+      <!-- ROOT ANCESTOR -->
+      <div class="gen-label">
+        <span class="gem">✦</span>
+        <span class="gen-hi">मूल पूर्वज</span>
+        <span class="gen-divider">·</span>
+        <span>Founding Ancestor</span>
+        <span class="gem">✦</span>
+      </div>
+      <div class="tree-row">
+        <div class="name-box founder">
+          <span class="crown">✦</span>
+          <div class="name-hi">अल्लारख जी अंसारी</div>
+          <div class="name-en">Allarakh Ji Ansari</div>
+        </div>
+      </div>
+
+      <!-- ───── 1ST GENERATION ───── -->
+      <div class="gen-label">
+        <span class="gem">❖</span>
+        <span class="gen-hi">प्रथम पीढ़ी</span>
+        <span class="gen-divider">·</span>
+        <span>1st Generation</span>
+        <span class="gem">❖</span>
+      </div>
+
+      <div class="tree-row">
+        <div class="children multi" style="--bar-left: 105px; --bar-right: 105px; gap: 90px;">
+          <div class="child">
+            <div class="name-box gen1">
+              <div class="name-hi">हाजी अब्दुल रहमान</div>
+              <div class="name-en">Haji Abdul Rahman</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box gen1">
+              <div class="name-hi">अहमद नूर जी</div>
+              <div class="name-en">Ahmad Nur Ji</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="leaf-row">🌿&nbsp;🍃&nbsp;🌿&nbsp;🍃&nbsp;🌿</div>
+
+      <!-- ───── 2ND GENERATION ───── -->
+      <div class="gen-label">
+        <span class="gem">❖</span>
+        <span class="gen-hi">द्वितीय पीढ़ी</span>
+        <span class="gen-divider">·</span>
+        <span>2nd Generation</span>
+        <span class="gen-divider">|</span>
+        <span class="gen-meta">अहमद नूर जी के वंशज</span>
+        <span class="gem">❖</span>
+      </div>
+
+      <div class="tree-row">
+        <div class="children multi" style="--bar-left: 80px; --bar-right: 80px; gap: 22px;">
+          <div class="child">
+            <div class="name-box">
+              <div class="name-hi">असगर अली</div>
+              <div class="name-en">Asgar Ali</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box">
+              <div class="name-hi">हमीदा बानू</div>
+              <div class="name-en">Hamida Banu</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box lineage">
+              <div class="name-hi">गनी मोहम्मद</div>
+              <div class="name-en">Gani Mohammad</div>
+              <div class="lineage-mark">↓ वंश जारी</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector down to couple row -->
+      <div class="single-child">
+        <!-- couple row -->
+        <div class="couple-row">
+          <div class="name-box spouse" style="min-width:160px;max-width:180px;">
+            <div class="role-tag">पत्नी · WIFE</div>
+            <div class="name-hi">बिस्मिल्लाह बेगम</div>
+            <div class="name-en">Bismillah Begum</div>
+          </div>
+          <div class="couple-heart">۞</div>
+          <div class="name-box husband" style="min-width:160px;max-width:180px;">
+            <div class="role-tag">पति · HUSBAND</div>
+            <div class="name-hi">गनी मोहम्मद</div>
+            <div class="name-en">Gani Mohammad</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ───── 3RD GENERATION ───── -->
+      <div class="gen-label">
+        <span class="gem">❖</span>
+        <span class="gen-hi">तृतीय पीढ़ी</span>
+        <span class="gen-divider">·</span>
+        <span>3rd Generation</span>
+        <span class="gen-divider">|</span>
+        <span class="gen-meta">गनी मोहम्मद के वंशज</span>
+        <span class="gem">❖</span>
+      </div>
+
+      <div class="tree-row">
+        <div class="children multi" style="--bar-left: 70px; --bar-right: 70px; gap: 14px;">
+          <div class="child">
+            <div class="name-box lineage" style="min-width:118px;max-width:140px;">
+              <div class="name-hi" style="font-size:12.5px;">अब्दुल लतीफ</div>
+              <div class="name-en">Abdul Latif</div>
+              <div class="lineage-mark">↓ वंश जारी</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <div class="name-hi" style="font-size:12.5px;">शहनाज</div>
+              <div class="name-en">Shahnaz</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <div class="name-hi" style="font-size:12.5px;">जरीना</div>
+              <div class="name-en">Jarina</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <div class="name-hi" style="font-size:12.5px;">मैमुना</div>
+              <div class="name-en">Maimuna</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box" style="min-width:108px;max-width:128px;">
+              <div class="name-hi" style="font-size:12.5px;">रिहाना</div>
+              <div class="name-en">Rihana</div>
+            </div>
+          </div>
+          <div class="child">
+            <div class="name-box lineage" style="min-width:118px;max-width:140px;">
+              <div class="name-hi" style="font-size:12.5px;">शोकत अली</div>
+              <div class="name-en">Shokat Ali</div>
+              <div class="lineage-mark">↓ वंश जारी</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="leaf-row">🍃&nbsp;🌸&nbsp;🍃&nbsp;🌸&nbsp;🍃&nbsp;🌸&nbsp;🍃</div>
+
+      <!-- ───── 4TH GENERATION ───── -->
+      <div class="gen-label">
+        <span class="gem">❖</span>
+        <span class="gen-hi">चतुर्थ पीढ़ी</span>
+        <span class="gen-divider">·</span>
+        <span>4th Generation</span>
+        <span class="gem">❖</span>
+      </div>
+
+      <div class="branch-container">
+
+        <!-- Abdul Latif branch -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="b-hi">अब्दुल लतीफ के वंशज</span>
+          </div>
+          <div class="children multi" style="--bar-left: 65px; --bar-right: 65px; gap: 12px;">
+            <div class="child">
+              <div class="name-box lineage" style="min-width:108px;max-width:128px;">
+                <div class="name-hi" style="font-size:12px;">ताहिर हुसैन</div>
+                <div class="name-en">Tahir Husain</div>
+                <div class="lineage-mark">↓</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box" style="min-width:108px;max-width:128px;">
+                <div class="name-hi" style="font-size:12px;">साहिना बानू</div>
+                <div class="name-en">Sahina Banu</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box lineage" style="min-width:108px;max-width:128px;">
+                <div class="name-hi" style="font-size:12px;">जाहिद हुसैन</div>
+                <div class="name-en">Zahid Husain</div>
+                <div class="lineage-mark">↓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shokat Ali branch -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="b-hi">शोकत अली के वंशज</span>
+          </div>
+          <div class="children multi" style="--bar-left: 58px; --bar-right: 58px; gap: 10px;">
+            <div class="child">
+              <div class="name-box" style="min-width:102px;max-width:118px;">
+                <div class="name-hi" style="font-size:11.5px;">इतेफाक हुसैन</div>
+                <div class="name-en">Itefak Husain</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box" style="min-width:102px;max-width:118px;">
+                <div class="name-hi" style="font-size:11.5px;">तोफिक अंसारी</div>
+                <div class="name-en">Tofik Asari</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box lineage" style="min-width:102px;max-width:118px;">
+                <div class="name-hi" style="font-size:11.5px;">साईस्ता परवीन</div>
+                <div class="name-en">Saista Praveen</div>
+                <div class="lineage-mark">↓</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box" style="min-width:102px;max-width:118px;">
+                <div class="name-hi" style="font-size:11.5px;">आसिफ हुसैन</div>
+                <div class="name-en">Asif Husain</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="leaf-row">🌿&nbsp;🌺&nbsp;🌿&nbsp;🌺&nbsp;🌿&nbsp;🌺&nbsp;🌿</div>
+
+      <!-- ───── 5TH GENERATION ───── -->
+      <div class="gen-label">
+        <span class="gem">❖</span>
+        <span class="gen-hi">पंचम पीढ़ी</span>
+        <span class="gen-divider">·</span>
+        <span>5th Generation</span>
+        <span class="gem">❖</span>
+      </div>
+
+      <div class="branch-container tight">
+
+        <!-- Tahir Husain's children -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="b-hi">ताहिर हुसैन के वंशज</span>
+          </div>
+          <div class="children multi" style="--bar-left: 62px; --bar-right: 62px; gap: 12px;">
+            <div class="child">
+              <div class="name-box gen5" style="min-width:112px;max-width:126px;">
+                <div class="name-hi" style="font-size:12px;">मिसबान असारी</div>
+                <div class="name-en">Misban Asari</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box gen5" style="min-width:112px;max-width:126px;">
+                <div class="name-hi" style="font-size:12px;">सरहान असारी</div>
+                <div class="name-en">Sarhan Asari</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zahid Husain's children -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="b-hi">जाहिद हुसैन के वंशज</span>
+          </div>
+          <div class="children multi" style="--bar-left: 62px; --bar-right: 62px; gap: 12px;">
+            <div class="child">
+              <div class="name-box gen5" style="min-width:112px;max-width:126px;">
+                <div class="name-hi" style="font-size:12px;">सोहेब असारी</div>
+                <div class="name-en">Soheb Asari</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box gen5" style="min-width:112px;max-width:126px;">
+                <div class="name-hi" style="font-size:12px;">एनुल हसन</div>
+                <div class="name-en">Anul Hasan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asif Husain's children -->
+        <div class="branch-group">
+          <div class="branch-sublabel">
+            <span class="b-hi">आसिफ हुसैन के वंशज</span>
+          </div>
+          <div class="children multi" style="--bar-left: 62px; --bar-right: 62px; gap: 12px;">
+            <div class="child">
+              <div class="name-box gen5" style="min-width:112px;max-width:126px;">
+                <div class="name-hi" style="font-size:12px;">अरहान रज़ा</div>
+                <div class="name-en">Arhan Raza</div>
+              </div>
+            </div>
+            <div class="child">
+              <div class="name-box gen5" style="min-width:112px;max-width:126px;">
+                <div class="name-hi" style="font-size:12px;">हयात रज़ा</div>
+                <div class="name-en">Hayat Raza</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom arabesque divider -->
+      <div class="ornament-row" style="margin-top:30px;">
+        <div class="dl"></div>
+        <span>❧&nbsp;✾&nbsp;❀&nbsp;✾&nbsp;❧</span>
+        <div class="dl"></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px solid var(--gold);background:linear-gradient(150deg,#FFFBF0,#F8EFD2);"></div>
+          <span>Family Members</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px solid var(--maroon);background:linear-gradient(150deg,#FFF4E2,#F0E0BC);"></div>
+          <span>Lineage Continues ↓</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px dashed var(--maroon);background:linear-gradient(150deg,#FFF4E2,#F0E0BC);"></div>
+          <span>Spouse</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="border:2px solid var(--green);background:linear-gradient(150deg,#F1F9ED,#DBEED5);"></div>
+          <span>5th Generation</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="footer-icons">
+          <span class="mosque">🕌</span>
+          <span class="moon">☪</span>
+          <span class="mosque">🕌</span>
+        </div>
+        <div class="footer-arabic">اللَّهُمَّ بَارِكْ فِي ذُرِّيَّتِنَا</div>
+        <div class="footer-translation">"O Allah, bless our descendants"</div>
+        <div class="footer-text">बुवाला खानदान &nbsp;·&nbsp; माण्डल, राजस्थान &nbsp;·&nbsp; अंसारी परिवार</div>
+      </div>
+
+      <!-- Bottom Islamic Pattern Bar -->
+      <div class="pattern-bar">
+        <div class="pb-line"></div>
+        <svg width="600" height="24" viewBox="0 0 600 24" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="islamicTile" x="0" y="0" width="48" height="24" patternUnits="userSpaceOnUse">
+              <rect width="48" height="24" fill="none" />
+              <polygon points="24,1 47,12 24,23 1,12" fill="none" stroke="#C9922A" stroke-width="1" opacity="0.7" />
+              <polygon points="24,5 43,12 24,19 5,12" fill="none" stroke="#E8C56A" stroke-width="0.5" opacity="0.5" />
+              <line x1="0" y1="12" x2="48" y2="12" stroke="#C9922A" stroke-width="0.4" opacity="0.4" />
+              <circle cx="24" cy="12" r="1.8" fill="#C9922A" opacity="0.7" />
+              <circle cx="0" cy="12" r="1.2" fill="#C9922A" opacity="0.5" />
+              <circle cx="48" cy="12" r="1.2" fill="#C9922A" opacity="0.5" />
+            </pattern>
+          </defs>
+          <rect width="600" height="24" fill="url(#islamicTile)" />
+        </svg>
+        <div class="pb-line"></div>
+      </div>
+
+    </div><!-- end .content -->
+  </div><!-- end .poster -->
+</body>
+</html>
