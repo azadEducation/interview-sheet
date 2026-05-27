@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobApplyAI — Video Script Teleprompter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #0a0a14;
+      color: #e8e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── Sticky top nav ─── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 20, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #1f1f3a;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .topbar h1 {
+      font-size: 14px;
+      color: #9ca3af;
+      font-weight: 500;
+      margin-right: auto;
+    }
+    .topbar h1 strong {
+      color: #fff;
+      font-weight: 600;
+    }
+    .timer {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 6px 14px;
+      border-radius: 6px;
+      min-width: 90px;
+      text-align: center;
+    }
+    .timer.running { color: #fbbf24; background: rgba(251, 191, 36, 0.1); }
+    .ctrl-btn {
+      background: #1f1f3a;
+      color: #e8e8f0;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .ctrl-btn:hover { background: #2a2a4d; }
+    .ctrl-btn.primary { background: #4f46e5; color: #fff; }
+    .ctrl-btn.primary:hover { background: #4338ca; }
+    .ctrl-btn.danger { background: #7f1d1d; color: #fff; }
+
+    .font-controls {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .font-controls button {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      font-size: 16px;
+    }
+
+    /* ─── Section jump pills ─── */
+    .jumps {
+      display: flex;
+      gap: 6px;
+      padding: 10px 24px;
+      background: #0f0f23;
+      border-bottom: 1px solid #1f1f3a;
+      overflow-x: auto;
+      position: sticky;
+      top: 65px;
+      z-index: 99;
+    }
+    .jumps a {
+      flex-shrink: 0;
+      padding: 6px 12px;
+      background: #1f1f3a;
+      color: #d1d5db;
+      text-decoration: none;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .jumps a:hover, .jumps a.active {
+      background: #4f46e5;
+      color: #fff;
+    }
+
+    /* ─── Main content ─── */
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .meta-card {
+      background: #141428;
+      border: 1px solid #1f1f3a;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+    }
+    .meta-card h2 {
+      font-size: 13px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .meta-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+    .meta-row strong { color: #4f46e5; }
+
+    /* ─── Section blocks ─── */
+    .section {
+      margin-bottom: 48px;
+      scroll-margin-top: 130px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #1f1f3a;
+    }
+    .section-timestamp {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      color: #4f46e5;
+      background: rgba(79, 70, 229, 0.12);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-badge {
+      margin-left: auto;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .section-badge.hook { background: #7f1d1d; color: #fecaca; }
+    .section-badge.main { background: #1e3a8a; color: #93c5fd; }
+    .section-badge.trust { background: #064e3b; color: #6ee7b7; }
+    .section-badge.cta { background: #422006; color: #fdba74; }
+
+    /* ─── Voice text — BIGGEST + most readable ─── */
+    .voice {
+      font-size: var(--voice-size, 26px);
+      line-height: 1.55;
+      color: #fff;
+      margin: 16px 0;
+      padding: 18px 22px;
+      background: linear-gradient(135deg, #1a1a35 0%, #1f1f3a 100%);
+      border-left: 4px solid #4f46e5;
+      border-radius: 8px;
+      font-weight: 400;
+      letter-spacing: 0.005em;
+    }
+    .voice em { color: #fbbf24; font-style: italic; font-weight: 500; }
+    .voice strong { color: #6ee7b7; font-weight: 600; }
+    .voice .pause {
+      color: #6b7280;
+      font-style: italic;
+      font-size: 0.7em;
+      display: block;
+      margin: 8px 0;
+    }
+
+    /* ─── Screen directions — smaller, muted ─── */
+    .screen {
+      font-size: 14px;
+      color: #9ca3af;
+      margin: 12px 0;
+      padding: 10px 16px;
+      background: #0f0f23;
+      border-left: 3px solid #6b7280;
+      border-radius: 6px;
+      font-family: 'SF Mono', Consolas, monospace;
+    }
+    .screen::before {
+      content: '📺 SCREEN: ';
+      color: #6b7280;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .overlay {
+      display: inline-block;
+      background: #fbbf24;
+      color: #0a0a14;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0 4px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #9ca3af;
+      font-style: italic;
+      margin: 10px 0;
+      padding-left: 14px;
+      border-left: 2px solid #2a2a4d;
+    }
+
+    /* ─── Demo sub-blocks ─── */
+    .demo {
+      background: #0f0f23;
+      border: 1px solid #1f1f3a;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0;
+    }
+    .demo-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #6ee7b7;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .demo-title::before {
+      content: '🎬';
+    }
+    .demo-time {
+      font-family: 'SF Mono', monospace;
+      font-size: 11px;
+      color: #6b7280;
+      background: #1f1f3a;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: auto;
+    }
+
+    /* ─── Auto-scroll indicator ─── */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #4f46e5;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      display: none;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4);
+    }
+    .scroll-indicator.active { display: block; }
+
+    /* ─── Help footer ─── */
+    .help {
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 20px 24px;
+      background: #141428;
+      border: 1px solid #1f1f3a;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+    .help h3 {
+      color: #fff;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .help kbd {
+      background: #1f1f3a;
+      color: #e8e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', monospace;
+      font-size: 11px;
+      border: 1px solid #2a2a4d;
+    }
+
+    /* ─── Print styles for backup ─── */
+    @media print {
+      body { background: #fff; color: #000; }
+      .topbar, .jumps, .help, .scroll-indicator { display: none; }
+      .voice { background: #f5f5f5; color: #000; border-left-color: #000; }
+      .screen { background: #fafafa; }
+      .section { page-break-inside: avoid; }
+    }
+
+    /* ─── Small screens ─── */
+    @media (max-width: 700px) {
+      .voice { font-size: 20px !important; }
+      .container { padding: 16px; }
+      .section-title { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── TOP NAV ─── -->
+  <div class="topbar">
+    <h1>🎬 <strong>JobApplyAI</strong> · Video Script · 6:30 min</h1>
+
+    <div class="font-controls">
+      <button class="ctrl-btn" id="font-down" title="Decrease font size">A−</button>
+      <button class="ctrl-btn" id="font-up" title="Increase font size">A+</button>
+    </div>
+
+    <button class="ctrl-btn" id="autoscroll-btn">⬇ Auto-scroll</button>
+
+    <div class="timer" id="timer">00:00</div>
+    <button class="ctrl-btn primary" id="timer-btn">▶ Start</button>
+    <button class="ctrl-btn" id="timer-reset">Reset</button>
+  </div>
+
+  <!-- ─── SECTION JUMPS ─── -->
+  <div class="jumps">
+    <a href="#s-hook">⚡ 0:00 Hook</a>
+    <a href="#s-problem">0:10 Problem</a>
+    <a href="#s-solution">0:45 Solution</a>
+    <a href="#s-demo">🎬 1:20 Live Demo</a>
+    <a href="#s-trust">💡 4:30 Honest Talk</a>
+    <a href="#s-cta">5:30 Pricing/CTA</a>
+    <a href="#s-outro">6:15 Outro</a>
+  </div>
+
+  <div class="container">
+
+    <!-- ─── META CARD ─── -->
+    <div class="meta-card">
+      <h2>📋 Recording info</h2>
+      <div class="meta-row">
+        <span><strong>Title:</strong> Maine LinkedIn Pe 50 Jobs Apply Kiye 10 Min Me — Live Demo, No Faltu Talk</span>
+      </div>
+      <div class="meta-row" style="margin-top: 8px;">
+        <span><strong>Length:</strong> 6:30 - 7:00 min</span>
+        <span><strong>Tone:</strong> Calm builder-friend (Hitesh Choudhary style)</span>
+        <span><strong>Hinglish ratio:</strong> 70% Hindi structure + 30% English tech words</span>
+      </div>
+    </div>
+
+    <!-- ─── HOOK ─── -->
+    <section class="section" id="s-hook">
+      <div class="section-header">
+        <span class="section-timestamp">0:00 - 0:10</span>
+        <span class="section-title">The Hook</span>
+        <span class="section-badge hook">⚡ Critical</span>
+      </div>
+
+      <div class="screen">Already mid-action. LinkedIn feed visible. Cursor hovers over "Apply AI" button. Big overlay top-right: <span class="overlay">0:00 / 50 jobs</span></div>
+
+      <div class="voice">
+        LinkedIn pe 50 jobs apply karna manually — <strong>3 ghante</strong>. Maine ek Chrome extension banayi jo same kaam <strong>10 minute</strong> me karti hai. Cinematic intro nahi, faltu story nahi — seedha <em>live demo</em>. Timer start.
+      </div>
+
+      <div class="screen">Cursor clicks Apply AI. Timer starts ticking. Smooth cut.</div>
+
+      <div class="note">
+        💡 No "Hello dosto". Pattern interrupt. Specific numbers in first 5 sec. "Cinematic intro nahi" = anti-clickbait promise.
+      </div>
+    </section>
+
+    <!-- ─── PROBLEM ─── -->
+    <section class="section" id="s-problem">
+      <div class="section-header">
+        <span class="section-timestamp">0:10 - 0:45</span>
+        <span class="section-title">The Problem</span>
+      </div>
+
+      <div class="screen">Quick montage — LinkedIn job post → Gmail draft → copy-paste fatigue → 1 hour clock ticking</div>
+
+      <div class="voice">
+        Sochkar dekho — ek job apply karne me kya karte ho. Job post padho, resume tweak karo, cover letter likho, recruiter ka email dhundo, fir LinkedIn DM bhejo, post pe comment bhi karo. Ek job — easy <strong>30-40 minute</strong>.
+        <span class="pause">(short pause)</span>
+        50 jobs? <em>Pure din.</em> Aur honestly — 20th application tak energy hi nahi bachti personalize karne ki. Sab generic-sa nikalta hai. Result? Kam reply, kam interview.
+      </div>
+
+      <div class="screen">Stats appearing one by one — <span class="overlay">30-40 min per job</span> <span class="overlay">Generic emails</span> <span class="overlay">Low reply rate</span></div>
+    </section>
+
+    <!-- ─── SOLUTION ─── -->
+    <section class="section" id="s-solution">
+      <div class="section-header">
+        <span class="section-timestamp">0:45 - 1:20</span>
+        <span class="section-title">The Solution</span>
+      </div>
+
+      <div class="screen">Zoom into Chrome toolbar, JobApplyAI extension icon highlighted</div>
+
+      <div class="voice">
+        Toh maine ek tool banaya — naam hai <strong>JobApplyAI</strong>. Chrome extension hai. LinkedIn pe kisi bhi hiring post pe ek button add karta hai — "Apply AI". Dabate hi, AI tumhari profile aur job post dono read karta hai, fir teen cheezein generate karta hai: <strong>personalized email</strong> recruiter ke liye, <strong>LinkedIn DM</strong>, aur job post pe ek <strong>smart comment</strong>. Ek click me email Gmail se send bhi ho jaata hai.
+        <span class="pause">(slight pause, lower energy)</span>
+        Tutorial-style explain nahi karunga — directly use karke dikhata hu. Tum khud judge karna kitna kaam ka hai.
+      </div>
+
+      <div class="screen">Brief 2-sec preview of result panel UI</div>
+    </section>
+
+    <!-- ─── LIVE DEMO ─── -->
+    <section class="section" id="s-demo">
+      <div class="section-header">
+        <span class="section-timestamp">1:20 - 4:30</span>
+        <span class="section-title">Live Demo</span>
+        <span class="section-badge main">🔥 Main part</span>
+      </div>
+
+      <!-- Demo 1 -->
+      <div class="demo">
+        <div class="demo-title">Demo 1 — Software Engineer post <span class="demo-time">1:20 - 2:10</span></div>
+
+        <div class="screen">Scroll to "We're hiring: Senior Backend Engineer" post</div>
+
+        <div class="voice">
+          Pehla post — Senior Backend Engineer, koi startup hire kar rahi hai. Apply AI click karta hu.
+        </div>
+
+        <div class="screen">Click. Loading 5-8 sec. AI generates.</div>
+
+        <div class="voice">
+          Pichli baar setup kiya tha — profile me role, skills, experience daala. Ab har post pe wahi profile use ho raha hai automatic.
+        </div>
+
+        <div class="screen">AI output appears — Email + DM + Comment all visible</div>
+
+        <div class="voice">
+          Dekho output — email subject yeh hai. Body shuru hota hai is line se.
+          <span class="pause">(read out first 1-2 lines of AI email LIVE)</span>
+          Notice karo — yeh literally job post ke specific skills mention kar raha hai. Generic "I'm passionate about technology" wala bullshit nahi hai.
+        </div>
+
+        <div class="screen">Hover Send Email → click → confirmation toast</div>
+
+        <div class="voice">
+          Send Email click — Gmail OAuth se directly chala. No SMTP setup, no app password. Done. <strong>Ek job — 30 second.</strong>
+        </div>
+
+        <div class="screen">Counter: <span class="overlay">1 / 50 — 0:32 elapsed</span></div>
+      </div>
+
+      <!-- Demo 2 -->
+      <div class="demo">
+        <div class="demo-title">Demo 2 — Different domain <span class="demo-time">2:10 - 2:50</span></div>
+
+        <div class="screen">Marketing Manager or Product role post</div>
+
+        <div class="voice">
+          Dusra post — Marketing Manager ka. Same flow.
+        </div>
+
+        <div class="screen">Click → AI generates → output appears</div>
+
+        <div class="voice">
+          Yahan AI ne marketing-specific tone use kiya. Subject alag, body me growth metrics ki baat. <em>Same extension, alag-alag role pe alag-alag output.</em>
+        </div>
+
+        <div class="screen">Send → done. Counter updates.</div>
+      </div>
+
+      <!-- Demo 3 -->
+      <div class="demo">
+        <div class="demo-title">Demo 3 — LinkedIn DM + Auto Comment <span class="demo-time">2:50 - 3:30</span></div>
+
+        <div class="screen">Apply AI on a 3rd post</div>
+
+        <div class="voice">
+          Ab dikhata hu — sirf email nahi, <strong>LinkedIn DM bhi handle karta hai</strong>. Yahan dekho — generated DM. Send DM button daboge, automatic recruiter ke LinkedIn pe chala jayega.
+          <span class="pause">(pause for effect)</span>
+          Aur ek aur cheez — <strong>Auto Comment</strong>. Post pe ek smart comment automatically chipakta hai — "Interested, sent details via email" types. Ek baar comment hone pe duplicate detect karta hai, dobara post nahi karega.
+        </div>
+
+        <div class="screen">Demonstrate auto-comment posting on LinkedIn</div>
+      </div>
+
+      <!-- Demo 4 -->
+      <div class="demo">
+        <div class="demo-title">Demo 4 — Volume + Dashboard <span class="demo-time">3:30 - 4:30</span></div>
+
+        <div class="screen">Speed up 4x — apply on 5-6 more posts in quick succession</div>
+
+        <div class="voice">
+          Speed up karta hu — 5 aur posts pe apply karta hu back-to-back. Dekho — har ek pe different output, different recruiter, alag role.
+        </div>
+
+        <div class="screen">Counter goes 3 → 8 quickly</div>
+
+        <div class="voice">
+          Realistic mein bata du — LinkedIn ka rate limit hai, <strong>ek ghante me 10-15 applications hi sane hai</strong>. Beyond that, LinkedIn flag karta hai. Toh "50 in 10 min" ek session ka nahi — saare din ka 50 hai. Phir bhi vs manual 5-6 ghante — <strong>ye 30-40 min lagta hai total.</strong>
+        </div>
+
+        <div class="screen">Open dashboard at jobapplyai.in → show application history list</div>
+
+        <div class="voice">
+          Yahan jobapplyai.in pe dashboard hai — saari applications log hoti hain. Kis company, kis role, kab apply kiya — sab track.
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── TRUST / DISCLAIMERS ─── -->
+    <section class="section" id="s-trust">
+      <div class="section-header">
+        <span class="section-timestamp">4:30 - 5:30</span>
+        <span class="section-title">Honest Disclaimers</span>
+        <span class="section-badge trust">💡 Trust builder</span>
+      </div>
+
+      <div class="screen">Black screen with bullet text appearing one by one</div>
+
+      <div class="voice">
+        Ek honest baat. <em>Yeh magic wand nahi hai.</em>
+      </div>
+
+      <div class="voice">
+        Pehli baat — AI tumhe job dilata nahi hai. Wo recruiter karta hai. AI sirf manual <strong>80% kaam khatam karta hai</strong> jo waste tha. Reply rate tumhare profile aur job-skill match pe depend karta hai.
+      </div>
+
+      <div class="screen">Overlay: <span class="overlay">❌ AI doesn't get you the job</span></div>
+
+      <div class="voice">
+        Doosri — LinkedIn rate-limit hai. 100 applications ek ghante me bhejne ki koshish karoge, account flagged ho jayega. Tool deliberately humanize karta hai pacing — 5-10 per hour realistic.
+      </div>
+
+      <div class="screen">Overlay: <span class="overlay">✓ Pacing built in to stay LinkedIn-safe</span></div>
+
+      <div class="voice">
+        Teesri — har email perfect nahi hota. 5 me se 1 email tumhe lagega thoda generic hai. Tab <strong>regenerate button</strong> hai — ek aur version mil jata hai. Manual edit bhi kar sakte ho before send.
+      </div>
+
+      <div class="screen">Overlay: <span class="overlay">✓ Edit before send always available</span></div>
+
+      <div class="voice">
+        Aur sabse important — yeh <strong>Indian market ke liye banaya hai</strong>. UPI accept karta hai, Indian recruiters ka email format use karta hai, Hindi names ko sahi se handle karta hai. US tools ki copy nahi hai.
+      </div>
+
+      <div class="screen">Overlay: <span class="overlay">🇮🇳 Made in India, UPI accepted</span></div>
+    </section>
+
+    <!-- ─── PRICING / CTA ─── -->
+    <section class="section" id="s-cta">
+      <div class="section-header">
+        <span class="section-timestamp">5:30 - 6:15</span>
+        <span class="section-title">Pricing + CTA</span>
+        <span class="section-badge cta">🎯 Action</span>
+      </div>
+
+      <div class="screen">jobapplyai.in pricing page visible</div>
+
+      <div class="voice">
+        Pricing — simple. <strong>3 applications lifetime free</strong> hain. Card maangta nahi. Sign up karte hi free credits mil jate hain — Google sign-in se.
+        <span class="pause">(pause)</span>
+        Agar useful lage, paid packs <strong>₹X se start</strong> hote hain. Aaj ke date pe ek customer ne <strong>₹999 ka Enterprise pack</strong> liya hai — 1500 credits. Ek credit = ek application. Toh ₹1 per application aata hai roughly.
+        <span class="pause">(point to screen)</span>
+        Link description me hai. <em>Pehla pinned comment</em> me bhi extension ka link mil jayega — directly install karke try kar sakte ho.
+      </div>
+
+      <div class="screen">Quick zoom: jobapplyai.in URL → Chrome Web Store listing → free 3 applies highlight</div>
+    </section>
+
+    <!-- ─── OUTRO ─── -->
+    <section class="section" id="s-outro">
+      <div class="section-header">
+        <span class="section-timestamp">6:15 - 6:45</span>
+        <span class="section-title">Outro</span>
+      </div>
+
+      <div class="screen">Subscribe button animated, end-screen template</div>
+
+      <div class="voice">
+        Agar ye useful laga aur tum job hunt me ho — try kar do free, 30 second me setup ho jata hai. Comment me batao kaisi laga, ya koi feature chahiye to bata do — bana sakte hain.
+        <span class="pause">(slight smile in voice)</span>
+        Subscribe karo agar career-tech aur dev tools ki content chahiye. Aise tools aur banata rahunga. Milte hain next video me — <strong>Azad signing off.</strong>
+      </div>
+
+      <div class="screen">End screen — Subscribe button + 1 video suggestion + jobapplyai.in QR</div>
+    </section>
+
+  </div>
+
+  <!-- ─── HELP FOOTER ─── -->
+  <div class="help">
+    <h3>⌨️ Keyboard shortcuts</h3>
+    <p>
+      <kbd>Space</kbd> Start/stop timer ·
+      <kbd>R</kbd> Reset timer ·
+      <kbd>S</kbd> Toggle auto-scroll ·
+      <kbd>+</kbd> Bigger text ·
+      <kbd>−</kbd> Smaller text ·
+      <kbd>1-7</kbd> Jump to section
+    </p>
+    <p style="margin-top: 12px; color: #6b7280;">
+      <strong>Recording tip:</strong> Open this on laptop 1. Open OBS/screen recorder + LinkedIn on laptop 2. Place laptop 1 slightly above laptop 2's webcam line — feels natural like eye-line. Hit space + record at the same time. Speak from the voice boxes; ignore the screen direction boxes (those are for your editor/screen-recording reminder only).
+    </p>
+  </div>
+
+  <div class="scroll-indicator" id="scroll-indicator">⬇ Auto-scrolling…</div>
+
+  <script>
+    // ─── Timer ───
+    let timerStartedAt = null;
+    let timerOffset = 0;
+    let timerInterval = null;
+    const timerEl = document.getElementById('timer');
+    const timerBtn = document.getElementById('timer-btn');
+
+    function fmtTime(ms) {
+      const total = Math.floor(ms / 1000);
+      const m = String(Math.floor(total / 60)).padStart(2, '0');
+      const s = String(total % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimer() {
+      const elapsed = Date.now() - timerStartedAt + timerOffset;
+      timerEl.textContent = fmtTime(elapsed);
+    }
+
+    function startTimer() {
+      timerStartedAt = Date.now();
+      timerInterval = setInterval(updateTimer, 200);
+      timerBtn.textContent = '⏸ Pause';
+      timerBtn.classList.remove('primary');
+      timerBtn.classList.add('danger');
+      timerEl.classList.add('running');
+    }
+
+    function pauseTimer() {
+      if (timerInterval) {
+        timerOffset += Date.now() - timerStartedAt;
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerBtn.textContent = '▶ Resume';
+      timerBtn.classList.add('primary');
+      timerBtn.classList.remove('danger');
+      timerEl.classList.remove('running');
+    }
+
+    function resetTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      timerStartedAt = null;
+      timerOffset = 0;
+      timerEl.textContent = '00:00';
+      timerBtn.textContent = '▶ Start';
+      timerBtn.classList.add('primary');
+      timerBtn.classList.remove('danger');
+      timerEl.classList.remove('running');
+    }
+
+    timerBtn.addEventListener('click', () => {
+      if (timerInterval) pauseTimer();
+      else startTimer();
+    });
+    document.getElementById('timer-reset').addEventListener('click', resetTimer);
+
+    // ─── Font size ───
+    const rootStyle = document.documentElement.style;
+    let voiceSize = 26;
+    function setVoiceSize(px) {
+      voiceSize = Math.max(16, Math.min(48, px));
+      rootStyle.setProperty('--voice-size', voiceSize + 'px');
+    }
+    document.getElementById('font-up').addEventListener('click', () => setVoiceSize(voiceSize + 2));
+    document.getElementById('font-down').addEventListener('click', () => setVoiceSize(voiceSize - 2));
+
+    // ─── Auto-scroll ───
+    let scrollInterval = null;
+    const scrollIndicator = document.getElementById('scroll-indicator');
+    const autoscrollBtn = document.getElementById('autoscroll-btn');
+
+    function toggleAutoScroll() {
+      if (scrollInterval) {
+        clearInterval(scrollInterval);
+        scrollInterval = null;
+        scrollIndicator.classList.remove('active');
+        autoscrollBtn.textContent = '⬇ Auto-scroll';
+        autoscrollBtn.classList.remove('primary');
+      } else {
+        scrollInterval = setInterval(() => {
+          window.scrollBy({ top: 1, behavior: 'auto' });
+        }, 40); // ~25 px/sec — adjust to taste
+        scrollIndicator.classList.add('active');
+        autoscrollBtn.textContent = '⏸ Stop scroll';
+        autoscrollBtn.classList.add('primary');
+      }
+    }
+    autoscrollBtn.addEventListener('click', toggleAutoScroll);
+
+    // Stop autoscroll on user wheel/touch — they probably want to read at their own pace
+    let userScrolling = false;
+    window.addEventListener('wheel', () => {
+      if (scrollInterval) toggleAutoScroll();
+    });
+
+    // ─── Keyboard shortcuts ───
+    const sectionIds = ['s-hook', 's-problem', 's-solution', 's-demo', 's-trust', 's-cta', 's-outro'];
+    document.addEventListener('keydown', (e) => {
+      // Don't capture if typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (timerInterval) pauseTimer(); else startTimer();
+      } else if (e.key === 'r' || e.key === 'R') {
+        resetTimer();
+      } else if (e.key === 's' || e.key === 'S') {
+        toggleAutoScroll();
+      } else if (e.key === '+' || e.key === '=') {
+        setVoiceSize(voiceSize + 2);
+      } else if (e.key === '-' || e.key === '_') {
+        setVoiceSize(voiceSize - 2);
+      } else if (/^[1-7]$/.test(e.key)) {
+        const target = document.getElementById(sectionIds[parseInt(e.key) - 1]);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // ─── Active section highlight in jumps nav ───
+    const jumpLinks = document.querySelectorAll('.jumps a');
+    const sections = sectionIds.map(id => document.getElementById(id));
+    function updateActiveJump() {
+      const scrollPos = window.scrollY + 200;
+      let activeIdx = 0;
+      for (let i = 0; i < sections.length; i++) {
+        if (sections[i].offsetTop <= scrollPos) activeIdx = i;
+      }
+      jumpLinks.forEach((link, i) => link.classList.toggle('active', i === activeIdx));
+    }
+    window.addEventListener('scroll', updateActiveJump);
+    updateActiveJump();
+  </script>
+</body>
+</html>
